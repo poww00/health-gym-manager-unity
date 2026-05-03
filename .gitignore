@@ -1,0 +1,40 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# IDE and local tooling
+.vs/
+.vscode/
+.idea/
+.dotnet/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+
+# Unity generated files
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.xcworkspace
+*.xcuserstate
+sysinfo.txt
+
+# Crash and memory captures
+*.stackdump
+*.dmp
+
+# Local recovery snapshots
+Assets/_Recovery/
+Assets/_Recovery.meta
+Assets/_Project/_Archive/
+Assets/_Project/_Archive.meta

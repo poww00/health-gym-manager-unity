@@ -1,0 +1,309 @@
+{
+  "source": "C:\\Users\\kki02\\.codex\\generated_images\\019dbe4b-5ee8-7a72-85c0-c50b44706ab2\\ig_013fd7b3c603da440169ec58c7a8e081918cef3e4cb254c05a.png",
+  "size": [
+    1254,
+    1254
+  ],
+  "assets": [
+    {
+      "name": "hud_base_bar",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\hud_base_bar.png",
+      "box": [
+        23,
+        23,
+        1230,
+        146
+      ],
+      "size": [
+        1207,
+        123
+      ],
+      "pixels": 142772
+    },
+    {
+      "name": "header_bar_blue",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\header_bar_blue.png",
+      "box": [
+        523,
+        164,
+        1215,
+        243
+      ],
+      "size": [
+        692,
+        79
+      ],
+      "pixels": 50804
+    },
+    {
+      "name": "title_menu_panel_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\title_menu_panel_base.png",
+      "box": [
+        31,
+        167,
+        485,
+        646
+      ],
+      "size": [
+        454,
+        479
+      ],
+      "pixels": 213439
+    },
+    {
+      "name": "button_green_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\button_green_base.png",
+      "box": [
+        523,
+        260,
+        848,
+        342
+      ],
+      "size": [
+        325,
+        82
+      ],
+      "pixels": 24797
+    },
+    {
+      "name": "button_beige_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\button_beige_base.png",
+      "box": [
+        872,
+        260,
+        1218,
+        342
+      ],
+      "size": [
+        346,
+        82
+      ],
+      "pixels": 26484
+    },
+    {
+      "name": "slot_row_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\slot_row_base.png",
+      "box": [
+        523,
+        357,
+        1216,
+        438
+      ],
+      "size": [
+        693,
+        81
+      ],
+      "pixels": 52563
+    },
+    {
+      "name": "hud_info_box_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\hud_info_box_base.png",
+      "box": [
+        523,
+        454,
+        927,
+        544
+      ],
+      "size": [
+        404,
+        90
+      ],
+      "pixels": 34158
+    },
+    {
+      "name": "nav_base_bar",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\nav_base_bar.png",
+      "box": [
+        521,
+        552,
+        1229,
+        650
+      ],
+      "size": [
+        708,
+        98
+      ],
+      "pixels": 65762
+    },
+    {
+      "name": "operate_panel_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\operate_panel_base.png",
+      "box": [
+        21,
+        666,
+        331,
+        1005
+      ],
+      "size": [
+        310,
+        339
+      ],
+      "pixels": 101914
+    },
+    {
+      "name": "install_panel_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\install_panel_base.png",
+      "box": [
+        347,
+        667,
+        627,
+        1062
+      ],
+      "size": [
+        280,
+        395
+      ],
+      "pixels": 107433
+    },
+    {
+      "name": "category_tab_beige_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\category_tab_beige_base.png",
+      "box": [
+        638,
+        667,
+        855,
+        753
+      ],
+      "size": [
+        217,
+        86
+      ],
+      "pixels": 17265
+    },
+    {
+      "name": "panel_large_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\panel_large_base.png",
+      "box": [
+        868,
+        667,
+        1233,
+        1007
+      ],
+      "size": [
+        365,
+        340
+      ],
+      "pixels": 121014
+    },
+    {
+      "name": "category_tab_small_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\category_tab_small_base.png",
+      "box": [
+        638,
+        764,
+        855,
+        824
+      ],
+      "size": [
+        217,
+        60
+      ],
+      "pixels": 11553
+    },
+    {
+      "name": "install_card_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\install_card_base.png",
+      "box": [
+        638,
+        836,
+        855,
+        943
+      ],
+      "size": [
+        217,
+        107
+      ],
+      "pixels": 21754
+    },
+    {
+      "name": "button_small_beige_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\button_small_beige_base.png",
+      "box": [
+        638,
+        954,
+        855,
+        1015
+      ],
+      "size": [
+        217,
+        61
+      ],
+      "pixels": 11749
+    },
+    {
+      "name": "selected_info_box_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\selected_info_box_base.png",
+      "box": [
+        638,
+        1030,
+        958,
+        1119
+      ],
+      "size": [
+        320,
+        89
+      ],
+      "pixels": 26501
+    },
+    {
+      "name": "toast_small_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\toast_small_base.png",
+      "box": [
+        1005,
+        1043,
+        1158,
+        1104
+      ],
+      "size": [
+        153,
+        61
+      ],
+      "pixels": 8254
+    },
+    {
+      "name": "bar_long_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\bar_long_base.png",
+      "box": [
+        19,
+        1126,
+        700,
+        1223
+      ],
+      "size": [
+        681,
+        97
+      ],
+      "pixels": 62638
+    },
+    {
+      "name": "tab_active_green_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\tab_active_green_base.png",
+      "box": [
+        713,
+        1135,
+        962,
+        1217
+      ],
+      "size": [
+        249,
+        82
+      ],
+      "pixels": 18660
+    },
+    {
+      "name": "tab_inactive_beige_base",
+      "path": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\ui_v2\\tab_inactive_beige_base.png",
+      "box": [
+        969,
+        1135,
+        1227,
+        1217
+      ],
+      "size": [
+        258,
+        82
+      ],
+      "pixels": 19356
+    }
+  ]
+}

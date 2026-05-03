@@ -1,0 +1,152 @@
+[
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/bench_press.png",
+    "sha12": "3353aaef84c5",
+    "bytes": 148116
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/door.png",
+    "sha12": "b50f78e1347b",
+    "bytes": 95402
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/dumbbell_rack.png",
+    "sha12": "c66888b4969b",
+    "bytes": 109873
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/exercise_bike.png",
+    "sha12": "88acdcc1cbeb",
+    "bytes": 111060
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/floor_tile.png",
+    "sha12": "845c14251925",
+    "bytes": 121067
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/potted_plant.png",
+    "sha12": "841a9cbb3c4a",
+    "bytes": 63983
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/reception_desk.png",
+    "sha12": "5bd803fb445d",
+    "bytes": 188612
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/treadmill.png",
+    "sha12": "10ec03879bc4",
+    "bytes": 94973
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/wall_poster.png",
+    "sha12": "058078f1e0b9",
+    "bytes": 54768
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/water_cooler.png",
+    "sha12": "18d681d3b1ea",
+    "bytes": 63991
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/window.png",
+    "sha12": "15989dda0b90",
+    "bytes": 129089
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/title/title_background_v2.png",
+    "sha12": "8024291ac1c4",
+    "bytes": 2744254
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/title/title_logo_v2.png",
+    "sha12": "8945507a8a8e",
+    "bytes": 1407008
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/bottom_nav_frame.png",
+    "sha12": "af9b53cf70ca",
+    "bytes": 232903
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/button_beige.png",
+    "sha12": "8b5ed1263c46",
+    "bytes": 54324
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/button_green.png",
+    "sha12": "5f0aa51f91b1",
+    "bytes": 50561
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/cancel_button_beige.png",
+    "sha12": "f3f16f79033a",
+    "bytes": 49907
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/category_tab_beige.png",
+    "sha12": "34ed0fd7b6ff",
+    "bytes": 18066
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/category_tab_green.png",
+    "sha12": "3fe779edac5d",
+    "bytes": 22365
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/confirm_button_green.png",
+    "sha12": "94ba68c47584",
+    "bytes": 44384
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/hud_info_box.png",
+    "sha12": "6c509bf2ce3f",
+    "bytes": 52952
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/install_card_row.png",
+    "sha12": "e84ee4bdd5a7",
+    "bytes": 55211
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/install_panel_frame.png",
+    "sha12": "b0c18b63b955",
+    "bytes": 166328
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/operate_card_row.png",
+    "sha12": "9b7725f29a36",
+    "bytes": 55049
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/operate_panel_frame.png",
+    "sha12": "fa2daf1c9f67",
+    "bytes": 200405
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/selected_info_row.png",
+    "sha12": "b44e4812eebc",
+    "bytes": 55811
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/slot_row.png",
+    "sha12": "0b0ddba0b1e1",
+    "bytes": 112857
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/small_panel.png",
+    "sha12": "4786393eed60",
+    "bytes": 51900
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/small_panel_alt.png",
+    "sha12": "9f9b49e90131",
+    "bytes": 50556
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/ui/title_menu_panel.png",
+    "sha12": "0dcd08a17fbb",
+    "bytes": 197779
+  }
+]
