@@ -24,6 +24,13 @@ public sealed class GameRuntimeUIController : RuntimeGameUIController
         MarkSceneDirty();
     }
 
+    [ContextMenu("Preview Menu Popup")]
+    private void ContextPreviewMenuPopup()
+    {
+        PreviewMenuPopupForEditMode();
+        MarkSceneDirty();
+    }
+
     private void MarkSceneDirty()
     {
         UnityEditor.EditorUtility.SetDirty(this);

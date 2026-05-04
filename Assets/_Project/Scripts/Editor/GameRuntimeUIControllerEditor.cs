@@ -11,9 +11,22 @@ public sealed class GameRuntimeUIControllerEditor : Editor
 {
     public override void OnInspectorGUI()
     {
+        EditorGUI.BeginChangeCheck();
         DrawDefaultInspector();
+        bool inspectorChanged = EditorGUI.EndChangeCheck();
 
         GameRuntimeUIController controller = (GameRuntimeUIController)target;
+
+        if (inspectorChanged && !Application.isPlaying)
+        {
+            controller.RefreshMenuPopupPreviewForEditMode();
+            EditorUtility.SetDirty(controller);
+            EditorUtility.SetDirty(controller.gameObject);
+            if (controller.gameObject.scene.IsValid())
+            {
+                EditorSceneManager.MarkSceneDirty(controller.gameObject.scene);
+            }
+        }
 
         EditorGUILayout.Space(10f);
         EditorGUILayout.LabelField("Panel Preview", EditorStyles.boldLabel);
@@ -41,6 +54,28 @@ public sealed class GameRuntimeUIControllerEditor : Editor
             if (GUILayout.Button("리뷰 프리뷰"))
             {
                 ReviewPanelEditModeBuilder.PreviewExistingReviewPanel(controller);
+            }
+        }
+
+        EditorGUILayout.Space(6f);
+        EditorGUILayout.LabelField("Menu Popup Preview", EditorStyles.boldLabel);
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("Preview Menu Popup"))
+            {
+                Undo.RegisterFullObjectHierarchyUndo(controller.gameObject, "Preview Menu Popup");
+                controller.PreviewMenuPopupForEditMode();
+                EditorUtility.SetDirty(controller.gameObject);
+                EditorSceneManager.MarkSceneDirty(controller.gameObject.scene);
+            }
+
+            if (GUILayout.Button("Refresh Menu Layout"))
+            {
+                Undo.RegisterFullObjectHierarchyUndo(controller.gameObject, "Refresh Menu Popup Layout");
+                controller.RefreshMenuPopupPreviewForEditMode();
+                EditorUtility.SetDirty(controller.gameObject);
+                EditorSceneManager.MarkSceneDirty(controller.gameObject.scene);
             }
         }
 

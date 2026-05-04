@@ -102,7 +102,7 @@ public static class SimpleGameUIBootstrap
     }
 }
 
-public class RuntimeGameUIController : MonoBehaviour
+public partial class RuntimeGameUIController
 {
     private enum PanelMode
     {
@@ -490,7 +490,7 @@ public class RuntimeGameUIController : MonoBehaviour
     private void BindStaticButtons()
     {
         BindButton(FindDeepComponent<Button>(runtimeRoot, "StaffButton"), OpenStaffPopup);
-        BindButton(FindDeepComponent<Button>(runtimeRoot, "MenuButton"), () => ShowToast("메뉴 팝업은 다음 구현 범위입니다."));
+        BindButton(FindDeepComponent<Button>(runtimeRoot, "MenuButton"), OpenMenuPopup);
         BindButton(operateTabButton, ToggleOperatePanel);
         BindButton(installTabButton, ToggleInstallPanel);
         BindButton(economyTabButton, ToggleEconomyPanel);
@@ -608,7 +608,7 @@ public class RuntimeGameUIController : MonoBehaviour
         starCoinValueText = CreateHudBox(frame.transform, "StarCoinBox", "스타코인", 94f, 0f, 126f, 124f);
         memberValueText = CreateHudBox(frame.transform, "MemberBox", "회원", 228f, 0f, 126f, 124f);
         CreateHudButton(frame.transform, "StaffButton", "직원", 350f, 0f, 104f, 124f, OpenStaffPopup);
-        CreateHudButton(frame.transform, "MenuButton", "메뉴", 456f, 0f, 104f, 124f, () => ShowToast("메뉴 팝업은 다음 구현 범위입니다."));
+        CreateHudButton(frame.transform, "MenuButton", "메뉴", 456f, 0f, 104f, 124f, OpenMenuPopup);
     }
 
     private void BuildSharedContentPanel()
