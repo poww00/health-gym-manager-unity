@@ -118,12 +118,6 @@ public class PlacementManager : MonoBehaviour
             return true;
         }
 
-        if (!BuildPlayModeManager.IsBuildMode)
-        {
-            state = default;
-            return false;
-        }
-
         return TryGetSelectedObjectHudState(out state);
     }
 
@@ -670,10 +664,31 @@ public class PlacementManager : MonoBehaviour
 
     private void HandleCellClicked(GridCell cell)
     {
-        if (!BuildPlayModeManager.IsBuildMode || cell == null) return;
+        if (cell == null)
+        {
+            if (!isRelocatingSelectedObject && !isPlacementPreviewActive)
+            {
+                ClearSelectedPlacedObject();
+            }
+
+            return;
+        }
 
         currentAnchorX = cell.X;
         currentAnchorY = cell.Y;
+
+        if (!BuildPlayModeManager.IsBuildMode)
+        {
+            if (TryGetPlacedObjectIndexAtCell(cell.X, cell.Y, out int playModeObjectIndex))
+            {
+                SelectPlacedObject(playModeObjectIndex);
+                HidePreviewVisualOnly();
+                return;
+            }
+
+            ClearSelectedPlacedObject();
+            return;
+        }
 
         if (isRelocatingSelectedObject || isPlacementPreviewActive)
         {

@@ -10,11 +10,15 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
     private const int MinimumRowCount = 5;
     private const string ReviewAssetPath = "GeneratedRuntimeUI/ui_v2/review/";
     private const float RuntimeFirstRowY = 100f;
-    private const int RuntimeCommentFontSize = 28;
+    private const int RuntimeCommentFontSize = 24;
     private const float RuntimeCommentMinHeight = 40f;
     private const float RuntimeSummaryCardVisibleBottomInset = 36f;
     private const float RuntimeViewportTopGap = 0f;
     private const float RuntimeViewportBottomGap = 4f;
+    private const float RuntimeUserNameX = -300f;
+    private const float RuntimeUserNameWidth = 170f;
+    private const float RuntimeCommentX = 55f;
+    private const float RuntimeCommentWidth = 500f;
     private const string EmptyReviewMessage = "아직 작성된 리뷰가 없습니다.";
 
     private enum ReviewFilterMode
@@ -440,6 +444,7 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
             CopyRect(templateCommentRect, row.commentRect);
             CopyTextStyle(templateUser, row.userName);
             CopyTextStyle(templateComment, row.comment);
+            ApplyRuntimeUserNameStyle(row.userName, row.userNameRect);
             ApplyRuntimeCommentStyle(row.comment, row.commentRect);
             CopyRect(templateStarsRect, row.starsRootRect);
             for (int star = 0; star < templateStarRects.Length; star++)
@@ -586,6 +591,8 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
             }
 
             row.root.SetActive(true);
+            ApplyRuntimeUserNameStyle(row.userName, row.userNameRect);
+            ApplyRuntimeCommentStyle(row.comment, row.commentRect);
             SetMood(row, visible[i].stars);
             SetText(row.userName, visible[i].authorName);
             SetText(row.comment, visible[i].text);
@@ -918,12 +925,40 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
 
         comment.fontSize = RuntimeCommentFontSize;
         comment.resizeTextForBestFit = false;
-        comment.horizontalOverflow = HorizontalWrapMode.Overflow;
-        comment.verticalOverflow = VerticalWrapMode.Overflow;
+        comment.alignment = TextAnchor.MiddleLeft;
+        comment.horizontalOverflow = HorizontalWrapMode.Wrap;
+        comment.verticalOverflow = VerticalWrapMode.Truncate;
 
         if (commentRect != null && commentRect.sizeDelta.y < RuntimeCommentMinHeight)
         {
             commentRect.sizeDelta = new Vector2(commentRect.sizeDelta.x, RuntimeCommentMinHeight);
+        }
+
+        if (commentRect != null)
+        {
+            commentRect.anchoredPosition = new Vector2(RuntimeCommentX, commentRect.anchoredPosition.y);
+            commentRect.sizeDelta = new Vector2(RuntimeCommentWidth, Mathf.Max(commentRect.sizeDelta.y, RuntimeCommentMinHeight));
+        }
+    }
+
+    private static void ApplyRuntimeUserNameStyle(Text userName, RectTransform userNameRect)
+    {
+        if (!Application.isPlaying || userName == null)
+        {
+            return;
+        }
+
+        userName.alignment = TextAnchor.MiddleLeft;
+        userName.resizeTextForBestFit = true;
+        userName.resizeTextMinSize = 18;
+        userName.resizeTextMaxSize = Mathf.Max(22, userName.fontSize);
+        userName.horizontalOverflow = HorizontalWrapMode.Wrap;
+        userName.verticalOverflow = VerticalWrapMode.Truncate;
+
+        if (userNameRect != null)
+        {
+            userNameRect.anchoredPosition = new Vector2(RuntimeUserNameX, userNameRect.anchoredPosition.y);
+            userNameRect.sizeDelta = new Vector2(RuntimeUserNameWidth, Mathf.Max(userNameRect.sizeDelta.y, 36f));
         }
     }
 

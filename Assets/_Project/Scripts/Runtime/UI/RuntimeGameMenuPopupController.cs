@@ -1,11 +1,11 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public partial class RuntimeGameUIController
 {
     private const string MenuPanelSprite = "GeneratedRuntimeUI/ui_v2/staff/staff_window_base";
     private const string MenuInfoBoxSprite = "GeneratedRuntimeUI/ui_v2/staff/staff_list_row_base";
-    private const string MenuSmallBoxSprite = "GeneratedRuntimeUI/ui_v2/button_small_beige_base";
     private const string MenuGreenButtonSprite = "GeneratedRuntimeUI/ui_v2/button_green_base";
     private const string MenuBeigeButtonSprite = "GeneratedRuntimeUI/ui_v2/button_beige_base";
     private const string SliderTrackSprite = "GeneratedRuntimeUI/ui_v2/settings/settings_slider_track_base";
@@ -21,7 +21,6 @@ public partial class RuntimeGameUIController
     [SerializeField] private float menuSummaryY = 258f;
     [SerializeField] private float menuFooterY = -376f;
     [SerializeField] private Vector2 menuSummaryIconPosition = new Vector2(-242f, 0f);
-    [SerializeField] private Vector2 menuSummaryIconBackSize = new Vector2(148f, 138f);
     [SerializeField] private Vector2 menuSummaryIconSize = new Vector2(126f, 114f);
     [SerializeField] private float menuSummaryTextX = 8f;
     [SerializeField] private float menuSummaryNameY = 46f;
@@ -42,6 +41,8 @@ public partial class RuntimeGameUIController
     private Text relocationSummaryText;
     private Text relocationCostText;
     private Button relocationExecuteButton;
+    private RuntimeSettingsSliderControl backgroundMusicSlider;
+    private RuntimeSettingsSliderControl effectSoundSlider;
 
     private InGameMenuManager inGameMenuManager;
 
@@ -86,6 +87,37 @@ public partial class RuntimeGameUIController
         HideRuntimeMenuPopup(relocationPopupRoot);
         HideRuntimeMenuPopup(settingsPopupRoot);
         inGameMenuManager?.SetMenuOpen(false);
+    }
+
+    private void RemoveSavedRuntimeMenuPopupRoots()
+    {
+        DestroySavedRuntimeMenuPopupRoot("RuntimeGameMenuPopupRoot");
+        DestroySavedRuntimeMenuPopupRoot("RuntimeRelocationPopupRoot");
+        DestroySavedRuntimeMenuPopupRoot("RuntimeSettingsPopupRoot");
+
+        menuPopupRoot = null;
+        relocationPopupRoot = null;
+        settingsPopupRoot = null;
+    }
+
+    private void DestroySavedRuntimeMenuPopupRoot(string rootName)
+    {
+        if (runtimeRoot == null)
+        {
+            return;
+        }
+
+        for (int i = runtimeRoot.childCount - 1; i >= 0; i--)
+        {
+            Transform popup = runtimeRoot.GetChild(i);
+            if (popup.name != rootName)
+            {
+                continue;
+            }
+
+            popup.gameObject.SetActive(false);
+            GameUiFactory.DestroyObject(popup.gameObject);
+        }
     }
 
     private void EnsureMenuPopups()
@@ -176,6 +208,69 @@ public partial class RuntimeGameUIController
         }
     }
 
+    public void ApplyMenuPopupPreviewLayoutForEditMode()
+    {
+        if (Application.isPlaying)
+        {
+            return;
+        }
+
+        if (runtimeRoot == null)
+        {
+            runtimeRoot = transform.Find("RuntimeGameUIRoot");
+        }
+
+        Transform previewRoot = FindRuntimeMenuPopupRoot("RuntimeGameMenuPopupRoot");
+        if (previewRoot == null)
+        {
+            Debug.LogWarning("[RuntimeGameUIController] 메뉴 팝업 프리뷰가 없습니다. Preview Menu Popup을 먼저 실행하세요.", this);
+            return;
+        }
+
+        RectTransform frame = FindMenuPreviewRect(previewRoot, "MenuPopupFrame");
+        RectTransform title = FindMenuPreviewRect(previewRoot, "MenuPopupTitle");
+        RectTransform summary = FindMenuPreviewRect(previewRoot, "MenuSummaryCard");
+        RectTransform firstButton = FindMenuPreviewRect(previewRoot, "RelocateButton");
+        RectTransform footer = FindMenuPreviewRect(previewRoot, "MenuAutosaveNotice");
+        RectTransform icon = FindMenuPreviewRect(previewRoot, "LocationIcon");
+        RectTransform gymName = FindMenuPreviewRect(previewRoot, "GymName");
+        RectTransform memberCount = FindMenuPreviewRect(previewRoot, "MemberCount");
+        RectTransform cashAmount = FindMenuPreviewRect(previewRoot, "CashAmount");
+
+        menuWindowSize = GetMenuPreviewSize(frame, menuWindowSize);
+        menuTitleY = GetMenuPreviewY(title, menuTitleY);
+        menuButtonSize = GetMenuPreviewSize(firstButton != null ? firstButton : footer, menuButtonSize);
+        menuSummarySize = GetMenuPreviewSize(summary, menuSummarySize);
+        menuSummaryY = GetMenuPreviewY(summary, menuSummaryY);
+        menuFooterY = GetMenuPreviewY(footer, menuFooterY);
+        menuSummaryIconPosition = GetMenuPreviewPosition(icon, menuSummaryIconPosition);
+        menuSummaryIconSize = GetMenuPreviewSize(icon, menuSummaryIconSize);
+        menuSummaryTextX = GetMenuPreviewX(gymName, menuSummaryTextX);
+        menuSummaryNameY = GetMenuPreviewY(gymName, menuSummaryNameY);
+        menuSummaryMemberY = GetMenuPreviewY(memberCount, menuSummaryMemberY);
+        menuSummaryCashY = GetMenuPreviewY(cashAmount, menuSummaryCashY);
+
+        RefreshMenuPopupPreviewForEditMode();
+    }
+
+    public void CloseMenuPopupPreviewForEditMode()
+    {
+        if (Application.isPlaying)
+        {
+            CloseRuntimeMenuPopups();
+            return;
+        }
+
+        if (runtimeRoot == null)
+        {
+            runtimeRoot = transform.Find("RuntimeGameUIRoot");
+        }
+
+        DestroyRuntimeMenuPopup(ref menuPopupRoot, "RuntimeGameMenuPopupRoot");
+        DestroyRuntimeMenuPopup(ref relocationPopupRoot, "RuntimeRelocationPopupRoot");
+        DestroyRuntimeMenuPopup(ref settingsPopupRoot, "RuntimeSettingsPopupRoot");
+    }
+
     private void EnsureMenuPopupPreviewRoot()
     {
         if (theme == null)
@@ -219,6 +314,32 @@ public partial class RuntimeGameUIController
         return FindRuntimeMenuPopupRoot("RuntimeGameMenuPopupRoot") != null ||
                FindRuntimeMenuPopupRoot("RuntimeRelocationPopupRoot") != null ||
                FindRuntimeMenuPopupRoot("RuntimeSettingsPopupRoot") != null;
+    }
+
+    private static RectTransform FindMenuPreviewRect(Transform root, string name)
+    {
+        Transform target = FindDeepChild(root, name);
+        return target != null ? target.GetComponent<RectTransform>() : null;
+    }
+
+    private static Vector2 GetMenuPreviewPosition(RectTransform rect, Vector2 fallback)
+    {
+        return rect != null ? rect.anchoredPosition : fallback;
+    }
+
+    private static Vector2 GetMenuPreviewSize(RectTransform rect, Vector2 fallback)
+    {
+        return rect != null ? rect.sizeDelta : fallback;
+    }
+
+    private static float GetMenuPreviewX(RectTransform rect, float fallback)
+    {
+        return rect != null ? rect.anchoredPosition.x : fallback;
+    }
+
+    private static float GetMenuPreviewY(RectTransform rect, float fallback)
+    {
+        return rect != null ? rect.anchoredPosition.y : fallback;
     }
 
     private bool IsPopupActive(Transform cachedRoot, string name)
@@ -280,11 +401,8 @@ public partial class RuntimeGameUIController
         GameObject frame = CreateGeneratedImage(menuPopupRoot, "MenuPopupFrame", MenuPanelSprite, 0f, 0f, menuWindowSize.x, menuWindowSize.y, false, true);
 
         CreateText(frame.transform, "MenuPopupTitle", "메뉴", 45, theme.Ink, TextAnchor.MiddleCenter, 0f, menuTitleY, 420f, 64f, true);
-        Button closeButton = CreateIconButton(frame.transform, "MenuPopupClose", "X", menuClosePosition.x, menuClosePosition.y, 78f, 78f);
-        closeButton.onClick.AddListener(CloseRuntimeMenuPopups);
 
         GameObject summary = CreateGeneratedImage(frame.transform, "MenuSummaryCard", MenuInfoBoxSprite, 0f, menuSummaryY, menuSummarySize.x, menuSummarySize.y, false, true);
-        CreateGeneratedImage(summary.transform, "LocationIconBack", MenuSmallBoxSprite, menuSummaryIconPosition.x, menuSummaryIconPosition.y, menuSummaryIconBackSize.x, menuSummaryIconBackSize.y, false, true);
         menuLocationIconImage = CreateGeneratedImage(summary.transform, "LocationIcon", GetLocationIconPath(GymLocationType.Neighborhood), menuSummaryIconPosition.x, menuSummaryIconPosition.y, menuSummaryIconSize.x, menuSummaryIconSize.y, true, true).GetComponent<Image>();
 
         menuGymNameText = CreateText(summary.transform, "GymName", "동네 헬스장", 32, theme.Ink, TextAnchor.MiddleLeft, menuSummaryTextX, menuSummaryNameY, 410f, 48f, true);
@@ -377,19 +495,18 @@ public partial class RuntimeGameUIController
         GameObject frame = CreateGeneratedImage(settingsPopupRoot, "SettingsPopupFrame", MenuPanelSprite, 0f, 0f, menuWindowSize.x, menuWindowSize.y, false, true);
 
         CreateText(frame.transform, "SettingsTitle", "설정", 45, theme.Ink, TextAnchor.MiddleCenter, 0f, menuTitleY, 420f, 64f, true);
-        Button closeButton = CreateIconButton(frame.transform, "SettingsClose", "X", menuClosePosition.x, menuClosePosition.y, 78f, 78f);
-        closeButton.onClick.AddListener(CloseRuntimeMenuPopups);
 
-        GameObject content = CreateGeneratedImage(frame.transform, "SettingsContentBox", MenuInfoBoxSprite, 0f, 80f, 590f, 430f, false, true);
-        CreateSettingsSliderRow(content.transform, "BackgroundMusic", "배경음", 104f, 0.70f);
-        CreateSettingsSliderRow(content.transform, "EffectSound", "효과음", -92f, 0.80f);
-        CreateText(content.transform, "SettingsPendingNote", "사운드 시스템 연결 전 UI 표시만 제공합니다", 22, theme.MutedInk, TextAnchor.MiddleCenter, 0f, -174f, 500f, 42f, true);
+        GameObject content = GameUiFactory.CreateNode(frame.transform, "SettingsContentRoot");
+        SetRect(content.GetComponent<RectTransform>(), 0f, 44f, 646f, 604f, true);
+        backgroundMusicSlider = CreateSettingsSliderRow(content.transform, "BackgroundMusic", "배경음", 156f, GameplayBgmPlayer.BackgroundVolume);
+        CreateSettingsDivider(content.transform, 26f);
+        effectSoundSlider = CreateSettingsSliderRow(content.transform, "EffectSound", "효과음", -126f, 0.80f);
 
-        Button applyButton = CreateSpriteButton(frame.transform, "SettingsApplyButton", MenuGreenButtonSprite, "적용", -130f, -306f, 230f, 78f, theme.BrightInk, out Text applyLabel, 32);
+        Button applyButton = CreateSpriteButton(frame.transform, "SettingsApplyButton", MenuGreenButtonSprite, "적용", -130f, -386f, 250f, 78f, theme.BrightInk, out Text applyLabel, 32);
         applyLabel.fontSize = 32;
-        applyButton.onClick.AddListener(() => ShowToast("사운드 시스템 연결 후 적용됩니다."));
+        applyButton.onClick.AddListener(ApplySettingsSliderValues);
 
-        Button closeListButton = CreateSpriteButton(frame.transform, "SettingsCloseButton", MenuBeigeButtonSprite, "닫기", 150f, -306f, 230f, 78f, theme.Ink, out Text closeLabel, 32);
+        Button closeListButton = CreateSpriteButton(frame.transform, "SettingsCloseButton", MenuBeigeButtonSprite, "닫기", 150f, -386f, 250f, 78f, theme.Ink, out Text closeLabel, 32);
         closeLabel.fontSize = 32;
         closeListButton.onClick.AddListener(CloseRuntimeMenuPopups);
         SetRuntimeMenuTextNormal(settingsPopupRoot);
@@ -439,13 +556,66 @@ public partial class RuntimeGameUIController
         return button;
     }
 
-    private void CreateSettingsSliderRow(Transform parent, string name, string label, float y, float normalizedValue)
+    private void CreateSettingsDivider(Transform parent, float y)
     {
-        CreateText(parent, $"{name}_Label", label, 30, theme.Ink, TextAnchor.MiddleLeft, -178f, y, 150f, 44f, true);
-        CreateGeneratedImage(parent, $"{name}_Track", SliderTrackSprite, 78f, y, 260f, 30f, false, true);
-        CreateGeneratedImage(parent, $"{name}_Fill", SliderFillSprite, 35f + normalizedValue * 54f, y, 220f * Mathf.Clamp01(normalizedValue), 26f, false, true);
-        CreateGeneratedImage(parent, $"{name}_Knob", SliderKnobSprite, -52f + normalizedValue * 216f, y, 44f, 52f, true, true);
-        CreateText(parent, $"{name}_Value", $"{Mathf.RoundToInt(normalizedValue * 100f)}%", 30, theme.Ink, TextAnchor.MiddleRight, 228f, y, 96f, 44f, true);
+        Color dashColor = new Color(0.70f, 0.42f, 0.16f, 0.62f);
+        const int dashCount = 24;
+        const float dashWidth = 16f;
+        const float gap = 8f;
+        float startX = -((dashCount - 1) * (dashWidth + gap)) * 0.5f;
+
+        for (int i = 0; i < dashCount; i++)
+        {
+            CreateSolid(parent, "SettingsDividerDash_" + i, dashColor, startX + (i * (dashWidth + gap)), y, dashWidth, 3f, true);
+        }
+    }
+
+    private RuntimeSettingsSliderControl CreateSettingsSliderRow(Transform parent, string name, string label, float y, float normalizedValue)
+    {
+        float value = Mathf.Clamp01(normalizedValue);
+        const float trackX = 54f;
+        const float trackWidth = 320f;
+        const float trackHeight = 32f;
+        float trackLeft = trackX - (trackWidth * 0.5f);
+        float fillWidth = trackWidth * value;
+        float fillX = trackLeft + (fillWidth * 0.5f);
+        float knobX = trackLeft + (trackWidth * value);
+
+        CreateText(parent, $"{name}_Label", label, 36, theme.Ink, TextAnchor.MiddleLeft, -240f, y, 160f, 54f, true);
+        CreateGeneratedImage(parent, $"{name}_Track", SliderTrackSprite, trackX, y, trackWidth, trackHeight, false, true);
+        RectTransform fillRect = CreateGeneratedImage(parent, $"{name}_Fill", SliderFillSprite, fillX, y, fillWidth, 28f, false, true).GetComponent<RectTransform>();
+        RectTransform knobRect = CreateGeneratedImage(parent, $"{name}_Knob", SliderKnobSprite, knobX, y, 46f, 58f, true, true).GetComponent<RectTransform>();
+        Text valueText = CreateText(parent, $"{name}_Value", $"{Mathf.RoundToInt(value * 100f)}%", 34, theme.Ink, TextAnchor.MiddleRight, 260f, y, 96f, 50f, true);
+
+        GameObject hitArea = CreateSolid(parent, $"{name}_SliderHitArea", new Color(0f, 0f, 0f, 0f), trackX, y, trackWidth + 92f, 104f, true);
+        Image hitImage = hitArea.GetComponent<Image>();
+        if (hitImage != null)
+        {
+            hitImage.raycastTarget = true;
+        }
+
+        RuntimeSettingsSliderControl slider = hitArea.AddComponent<RuntimeSettingsSliderControl>();
+        RectTransform trackRect = FindDeepChild(parent, $"{name}_Track")?.GetComponent<RectTransform>();
+        slider.Initialize(trackRect, fillRect, knobRect, valueText, value);
+        if (name == "BackgroundMusic")
+        {
+            slider.ValueChanged += GameplayBgmPlayer.SetBackgroundVolume;
+        }
+
+        hitArea.transform.SetAsLastSibling();
+        return slider;
+    }
+
+    private void ApplySettingsSliderValues()
+    {
+        int bgm = backgroundMusicSlider != null ? Mathf.RoundToInt(backgroundMusicSlider.Value * 100f) : 70;
+        int sfx = effectSoundSlider != null ? Mathf.RoundToInt(effectSoundSlider.Value * 100f) : 80;
+        if (backgroundMusicSlider != null)
+        {
+            GameplayBgmPlayer.SetBackgroundVolume(backgroundMusicSlider.Value);
+        }
+
+        ShowToast($"설정값: 배경음 {bgm}% / 효과음 {sfx}%");
     }
 
     private void RefreshMenuPopup()
@@ -572,5 +742,84 @@ public partial class RuntimeGameUIController
         {
             popup.gameObject.SetActive(false);
         }
+    }
+}
+
+internal sealed class RuntimeSettingsSliderControl : MonoBehaviour, IPointerDownHandler, IDragHandler
+{
+    public float Value { get; private set; }
+    public event System.Action<float> ValueChanged;
+
+    private RectTransform trackRect;
+    private RectTransform fillRect;
+    private RectTransform knobRect;
+    private Text valueText;
+    private float fillHeight;
+    private float knobY;
+
+    public void Initialize(RectTransform track, RectTransform fill, RectTransform knob, Text valueLabel, float initialValue)
+    {
+        trackRect = track;
+        fillRect = fill;
+        knobRect = knob;
+        valueText = valueLabel;
+        fillHeight = fillRect != null ? fillRect.sizeDelta.y : 28f;
+        knobY = knobRect != null ? knobRect.anchoredPosition.y : 0f;
+        SetValue(initialValue);
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        SetValueFromPointer(eventData);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        SetValueFromPointer(eventData);
+    }
+
+    private void SetValueFromPointer(PointerEventData eventData)
+    {
+        if (trackRect == null)
+        {
+            return;
+        }
+
+        Camera eventCamera = eventData != null ? eventData.pressEventCamera : null;
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(trackRect, eventData.position, eventCamera, out Vector2 localPoint))
+        {
+            return;
+        }
+
+        float width = Mathf.Max(1f, trackRect.rect.width);
+        SetValue((localPoint.x + (width * 0.5f)) / width);
+    }
+
+    private void SetValue(float value)
+    {
+        Value = Mathf.Clamp01(value);
+        float width = trackRect != null ? Mathf.Max(1f, trackRect.rect.width) : 1f;
+        float centerX = trackRect != null ? trackRect.anchoredPosition.x : 0f;
+        float left = centerX - (width * 0.5f);
+        float fillWidth = width * Value;
+        float knobX = left + (width * Value);
+
+        if (fillRect != null)
+        {
+            fillRect.sizeDelta = new Vector2(fillWidth, fillHeight);
+            fillRect.anchoredPosition = new Vector2(left + (fillWidth * 0.5f), fillRect.anchoredPosition.y);
+        }
+
+        if (knobRect != null)
+        {
+            knobRect.anchoredPosition = new Vector2(knobX, knobY);
+        }
+
+        if (valueText != null)
+        {
+            valueText.text = $"{Mathf.RoundToInt(Value * 100f)}%";
+        }
+
+        ValueChanged?.Invoke(Value);
     }
 }

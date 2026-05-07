@@ -190,6 +190,7 @@ public partial class RuntimeGameUIController
     private Text selectedItemDescText;
     private Text comingSoonText;
     private Text toastText;
+    private CanvasGroup toastCanvasGroup;
     private Text placementEyebrowText;
     private Text placementTitleText;
     private Text placementStatusText;
@@ -224,16 +225,24 @@ public partial class RuntimeGameUIController
     private bool sharedPanelPositionCaptured;
     private bool sharedPanelCollapsed;
     private bool sharedPanelAnimating;
+    private bool sharedPanelPauseApplied;
     private bool staffShowingApplicants = true;
     private StaffManager boundStaffManager;
 
     private const float SharedPanelClosedExtraOffset = 190f;
     private const float SharedPanelSpringStrength = 62f;
     private const float SharedPanelDamping = 12f;
+    private const float ToastVisibleSeconds = 3f;
+    private const float ToastFadeSeconds = 0.7f;
+
+    private float toastVisibleUntil;
+    private float toastFadeStartedAt;
+    private bool toastFading;
 
     public void Initialize()
     {
         theme = GameUiTheme.CreateDefault();
+        GameplayBgmPlayer.EnsurePlaying();
         SimpleGameUIBootstrap.HideLegacySceneCanvases();
         ResolveReferences();
 
@@ -242,11 +251,13 @@ public partial class RuntimeGameUIController
 
         if (TryBindExistingUi())
         {
+            RemoveSavedRuntimeMenuPopupRoots();
             HideLegacyRuntimeFloorMockup();
             HideToast();
             EnsureEconomyPanelContent();
             EnsurePlacementActionOverlay();
             EnsureStaffPopup();
+            BindMonthlySettlementPopupEvents();
             EnsureInstallCategoryTabs();
             BindStaticButtons();
             ShowOperatePanel();
@@ -274,6 +285,7 @@ public partial class RuntimeGameUIController
         BuildToast();
         EnsurePlacementActionOverlay();
         EnsureStaffPopup();
+        BindMonthlySettlementPopupEvents();
         HideLegacyRuntimeFloorMockup();
         HideToast();
 
@@ -357,8 +369,10 @@ public partial class RuntimeGameUIController
         }
 
         ResolveReferences();
+        ApplySharedPanelPauseState();
         UpdateSharedPanelMotion();
         RefreshPlacementActionOverlay();
+        UpdateToastFade();
 
         if (Time.unscaledTime < nextDataRefreshAt)
         {
@@ -372,6 +386,8 @@ public partial class RuntimeGameUIController
 
     private void OnDestroy()
     {
+        UnbindMonthlySettlementPopupEvents();
+
         if (boundStaffManager == null)
         {
             return;
@@ -422,10 +438,12 @@ public partial class RuntimeGameUIController
         placementActionRoot = FindDeepChild(root, "PlacementActionRoot");
 
         dateValueText = FindDeepComponent<Text>(root, "Value", "DateBox");
+        ConfigureDateHudValueText();
         branchValueText = FindDeepComponent<Text>(root, "Value", "BranchBox");
         cashValueText = FindDeepComponent<Text>(root, "Value", "MoneyBox");
         starCoinValueText = FindDeepComponent<Text>(root, "Value", "StarCoinBox");
         memberValueText = FindDeepComponent<Text>(root, "Value", "MemberBox");
+        ConfigureMemberHudValueText();
         sharedPanelTitleText = FindDeepComponent<Text>(root, "SharedPanelTitle");
         operateGoalText = FindDeepComponent<Text>(root, "Value", "GoalCard");
         operateStatusText = FindDeepComponent<Text>(root, "Value", "StatusCard");
@@ -440,6 +458,7 @@ public partial class RuntimeGameUIController
         selectedItemDescText = FindDeepComponent<Text>(root, "SelectedDesc");
         comingSoonText = FindDeepComponent<Text>(root, "ComingSoonMessage");
         toastText = FindDeepComponent<Text>(root, "Message", "ToastFrame");
+        EnsureToastCanvasGroup();
         placementEyebrowText = FindDeepComponent<Text>(root, "PlacementActionEyebrow");
         placementTitleText = FindDeepComponent<Text>(root, "PlacementActionTitle");
         placementStatusText = FindDeepComponent<Text>(root, "PlacementActionStatus");
@@ -603,10 +622,13 @@ public partial class RuntimeGameUIController
         GameObject frame = CreateGeneratedImage(topHudRoot, "TopHUDFrame", "GeneratedRuntimeUI/ui_v2/hud_base_bar", 0f, 0f, 1056f, 190f, false, true);
 
         dateValueText = CreateHudBox(frame.transform, "DateBox", "날짜", -410f, 0f, 188f, 124f);
+        ConfigureDateHudValueText();
+
         branchValueText = CreateHudBox(frame.transform, "BranchBox", "지점", -208f, 0f, 202f, 124f);
         cashValueText = CreateHudBox(frame.transform, "MoneyBox", "자금", -40f, 0f, 126f, 124f);
         starCoinValueText = CreateHudBox(frame.transform, "StarCoinBox", "스타코인", 94f, 0f, 126f, 124f);
         memberValueText = CreateHudBox(frame.transform, "MemberBox", "회원", 228f, 0f, 126f, 124f);
+        ConfigureMemberHudValueText();
         CreateHudButton(frame.transform, "StaffButton", "직원", 350f, 0f, 104f, 124f, OpenStaffPopup);
         CreateHudButton(frame.transform, "MenuButton", "메뉴", 456f, 0f, 104f, 124f, OpenMenuPopup);
     }
@@ -885,8 +907,13 @@ public partial class RuntimeGameUIController
     {
         toastRoot = GameUiFactory.CreateNode(runtimeRoot, "RuntimeToast").transform;
         SetRect(toastRoot.GetComponent<RectTransform>(), 0f, 1060f, 700f, 250f);
+        EnsureToastCanvasGroup();
+        if (toastCanvasGroup != null)
+        {
+            toastCanvasGroup.alpha = 0f;
+        }
 
-        GameObject frame = CreateGeneratedImage(toastRoot, "ToastFrame", "GeneratedRuntimeUI/ui_v2/panel_large_base", 0f, 0f, 700f, 250f, false, true);
+        GameObject frame = CreateGeneratedImage(toastRoot, "ToastFrame", "GeneratedRuntimeUI/ui_v2/staff/staff_list_row_base", 0f, 0f, 700f, 250f, false, true);
         toastText = CreateText(frame.transform, "Message", "", 26, theme.Ink, TextAnchor.MiddleCenter, 0f, 0f, 610f, 172f, true);
         toastRoot.gameObject.SetActive(false);
     }
@@ -1298,7 +1325,7 @@ public partial class RuntimeGameUIController
         placementActionButtons.Clear();
         placementActionButtonTexts.Clear();
 
-        GameObject frame = CreateGeneratedImage(placementActionRoot, "PlacementActionFrame", "GeneratedRuntimeUI/ui_v2/panel_large_base", 0f, 0f, 700f, 286f, false, true);
+        GameObject frame = CreateGeneratedImage(placementActionRoot, "PlacementActionFrame", "GeneratedRuntimeUI/ui_v2/staff/staff_list_row_base", 0f, 0f, 700f, 260f, false, true);
         placementEyebrowText = CreateText(frame.transform, "PlacementActionEyebrow", "", 20, theme.MutedInk, TextAnchor.MiddleCenter, 0f, 104f, 560f, 28f, true);
         placementTitleText = CreateText(frame.transform, "PlacementActionTitle", "", 32, theme.Ink, TextAnchor.MiddleCenter, 0f, 70f, 600f, 42f, true);
         placementStatusText = CreateText(frame.transform, "PlacementActionStatus", "", 25, theme.Ink, TextAnchor.MiddleCenter, 0f, 28f, 610f, 34f, true);
@@ -1463,6 +1490,34 @@ public partial class RuntimeGameUIController
         return CreateText(box.transform, "Value", "-", 25, theme.Ink, TextAnchor.MiddleCenter, 0f, -16f, width - 24f, 46f, true);
     }
 
+    private void ConfigureDateHudValueText()
+    {
+        if (dateValueText == null)
+        {
+            return;
+        }
+
+        dateValueText.fontSize = 22;
+        dateValueText.resizeTextForBestFit = true;
+        dateValueText.resizeTextMinSize = 18;
+        dateValueText.resizeTextMaxSize = 22;
+    }
+
+    private void ConfigureMemberHudValueText()
+    {
+        if (memberValueText == null)
+        {
+            return;
+        }
+
+        memberValueText.fontSize = 22;
+        memberValueText.resizeTextForBestFit = true;
+        memberValueText.resizeTextMinSize = 17;
+        memberValueText.resizeTextMaxSize = 22;
+        memberValueText.horizontalOverflow = HorizontalWrapMode.Overflow;
+        memberValueText.verticalOverflow = VerticalWrapMode.Overflow;
+    }
+
     private Button CreateHudButton(Transform parent, string name, string label, float x, float y, float width, float height, UnityEngine.Events.UnityAction action)
     {
         Text labelText;
@@ -1543,6 +1598,8 @@ public partial class RuntimeGameUIController
             sharedPanelCanvasGroup.interactable = !collapsed;
             sharedPanelCanvasGroup.blocksRaycasts = !collapsed;
         }
+
+        ApplySharedPanelPauseState();
 
         if (!Application.isPlaying || immediate || sharedPanelRectTransform == null)
         {
@@ -1628,6 +1685,47 @@ public partial class RuntimeGameUIController
 
         float panelHeight = Mathf.Max(0f, sharedPanelRectTransform.rect.height);
         return sharedPanelOpenAnchoredPosition.y - panelHeight - SharedPanelClosedExtraOffset;
+    }
+
+    private void ApplySharedPanelPauseState()
+    {
+        if (!Application.isPlaying)
+        {
+            return;
+        }
+
+        if (timeManager == null)
+        {
+            ResolveReferences();
+        }
+
+        if (timeManager == null)
+        {
+            return;
+        }
+
+        bool shouldPauseForPanel =
+            sharedPanelRoot != null &&
+            sharedPanelRoot.gameObject.activeInHierarchy &&
+            !sharedPanelCollapsed;
+
+        if (shouldPauseForPanel)
+        {
+            timeManager.SetPaused(true);
+            sharedPanelPauseApplied = true;
+            return;
+        }
+
+        if (!sharedPanelPauseApplied)
+        {
+            return;
+        }
+
+        sharedPanelPauseApplied = false;
+        if (!InGameMenuManager.IsMenuOpen)
+        {
+            timeManager.SetPaused(false);
+        }
     }
 
     private void ToggleOperatePanel()
@@ -1887,7 +1985,7 @@ public partial class RuntimeGameUIController
         SetText(branchValueText, BuildBranchLabel());
         SetText(cashValueText, walletManager != null ? $"{GetCash():N0}G" : "연결 대기");
         SetText(starCoinValueText, walletManager != null ? $"{GetStarCoin():N0}" : "연결 대기");
-        SetText(memberValueText, economyManager != null ? $"총 {GetActiveMembers():N0}명" : "연결 대기");
+        SetText(memberValueText, economyManager != null ? $"총{GetActiveMembers():N0}명" : "연결 대기");
     }
 
     private void RefreshOperatePanel()
@@ -2132,8 +2230,7 @@ public partial class RuntimeGameUIController
         int year = Mathf.Max(1, timeManager.CurrentYear);
         int month = Mathf.Clamp(timeManager.CurrentMonth, 1, 12);
         int day = Mathf.Clamp(timeManager.CurrentDay, 1, Mathf.Max(1, timeManager.DaysPerMonth));
-        int week = Mathf.Clamp(Mathf.CeilToInt(day / 7f), 1, 5);
-        return $"{year}년 {month}월 {week}주차";
+        return $"{year}년 {month}월 {day}일";
     }
 
     private string BuildBranchLabel()
@@ -2403,6 +2500,15 @@ public partial class RuntimeGameUIController
 
     private void HideToast()
     {
+        toastVisibleUntil = 0f;
+        toastFadeStartedAt = 0f;
+        toastFading = false;
+
+        if (toastCanvasGroup != null)
+        {
+            toastCanvasGroup.alpha = 0f;
+        }
+
         if (toastRoot != null)
         {
             toastRoot.gameObject.SetActive(false);
@@ -2418,7 +2524,67 @@ public partial class RuntimeGameUIController
         }
 
         toastText.text = message;
+        EnsureToastCanvasGroup();
+        if (toastCanvasGroup != null)
+        {
+            toastCanvasGroup.alpha = 1f;
+        }
+
+        toastVisibleUntil = Time.unscaledTime + ToastVisibleSeconds;
+        toastFadeStartedAt = 0f;
+        toastFading = false;
         toastRoot.gameObject.SetActive(true);
+        toastRoot.SetAsLastSibling();
+    }
+
+    private void UpdateToastFade()
+    {
+        if (toastRoot == null || !toastRoot.gameObject.activeSelf)
+        {
+            return;
+        }
+
+        EnsureToastCanvasGroup();
+
+        float now = Time.unscaledTime;
+        if (!toastFading)
+        {
+            if (now < toastVisibleUntil)
+            {
+                return;
+            }
+
+            toastFading = true;
+            toastFadeStartedAt = now;
+        }
+
+        float fadeProgress = ToastFadeSeconds <= 0f ? 1f : Mathf.Clamp01((now - toastFadeStartedAt) / ToastFadeSeconds);
+        if (toastCanvasGroup != null)
+        {
+            toastCanvasGroup.alpha = 1f - fadeProgress;
+        }
+
+        if (fadeProgress >= 1f)
+        {
+            HideToast();
+        }
+    }
+
+    private void EnsureToastCanvasGroup()
+    {
+        if (toastRoot == null)
+        {
+            return;
+        }
+
+        toastCanvasGroup = toastRoot.GetComponent<CanvasGroup>();
+        if (toastCanvasGroup == null)
+        {
+            toastCanvasGroup = toastRoot.gameObject.AddComponent<CanvasGroup>();
+        }
+
+        toastCanvasGroup.interactable = false;
+        toastCanvasGroup.blocksRaycasts = false;
     }
 
     private GameObject CreateGeneratedImage(Transform parent, string name, string spritePath, float x, float y, float width, float height, bool preserveAspect, bool localParent)

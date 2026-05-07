@@ -79,6 +79,31 @@ public sealed class GameRuntimeUIControllerEditor : Editor
             }
         }
 
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("Apply Preview Edits"))
+            {
+                Undo.RegisterFullObjectHierarchyUndo(controller.gameObject, "Apply Menu Popup Preview Edits");
+                Undo.RecordObject(controller, "Apply Menu Popup Preview Edits");
+                controller.ApplyMenuPopupPreviewLayoutForEditMode();
+                EditorUtility.SetDirty(controller);
+                EditorUtility.SetDirty(controller.gameObject);
+                EditorSceneManager.MarkSceneDirty(controller.gameObject.scene);
+            }
+
+            if (GUILayout.Button("Close Menu Preview"))
+            {
+                Undo.RegisterFullObjectHierarchyUndo(controller.gameObject, "Close Menu Popup Preview");
+                controller.CloseMenuPopupPreviewForEditMode();
+                EditorUtility.SetDirty(controller.gameObject);
+                EditorSceneManager.MarkSceneDirty(controller.gameObject.scene);
+            }
+        }
+
+        EditorGUILayout.HelpBox(
+            "프리뷰 오브젝트를 직접 움직인 경우 Apply Preview Edits를 눌러 Layout 숫자에 반영해야 실제 플레이에도 적용됩니다.",
+            MessageType.Info);
+
         EditorGUILayout.HelpBox(
             "프리뷰 버튼 4개만 남겼습니다. 레이아웃을 덮어쓰는 Rebuild/Repair/Bind 버튼은 숨겼습니다.",
             MessageType.Info);

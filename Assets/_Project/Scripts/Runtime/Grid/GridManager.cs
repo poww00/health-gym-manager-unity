@@ -292,11 +292,6 @@ public class GridManager : MonoBehaviour
         }
 
         GridCell hitCell = GetCellUnderMousePointer();
-        if (hitCell == null)
-        {
-            return;
-        }
-
         CellClicked?.Invoke(hitCell);
     }
 
@@ -498,7 +493,7 @@ public class GridManager : MonoBehaviour
         }
 
         tappedCell = GetCellFromScreenPosition(releaseScreenPosition);
-        return tappedCell != null;
+        return true;
     }
 
     private bool ShouldTemporarilyBlockGridInput()

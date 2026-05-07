@@ -87,6 +87,27 @@ public class MonthlySettlementManager : MonoBehaviour
 
     public string LastSettlementText => lastSettlementText;
 
+    public struct MonthlySettlementPopupData
+    {
+        public int monthNumber;
+        public string locationLabel;
+        public int totalIncome;
+        public int totalExpense;
+        public int netProfit;
+        public int membershipIncome;
+        public int ptIncome;
+        public int ancillaryIncome;
+        public int rentExpense;
+        public int laborExpense;
+        public int maintenanceExpense;
+        public int variableExpense;
+        public int activeMembers;
+        public int placedObjectCount;
+        public bool settlementWasCapped;
+        public bool usesProjectedOperatingData;
+        public string comment;
+    }
+
     private struct SettlementBreakdown
     {
         public int monthNumber;
@@ -167,6 +188,47 @@ public class MonthlySettlementManager : MonoBehaviour
         int currentMonth = timeManager != null ? Mathf.Max(1, timeManager.CurrentMonth) : 1;
         SettlementBreakdown breakdown = BuildSettlementBreakdown(currentMonth);
         return breakdown.totalCost;
+    }
+
+    public MonthlySettlementPopupData GetMonthlySettlementPopupData()
+    {
+        ResolveReferences();
+
+        int currentMonth = timeManager != null ? Mathf.Max(1, timeManager.CurrentMonth) : 1;
+        SettlementBreakdown breakdown = hasLastSettlementBreakdown
+            ? lastSettlementBreakdown
+            : BuildSettlementBreakdown(currentMonth);
+
+        int daysPerMonth = timeManager != null ? Mathf.Max(1, timeManager.DaysPerMonth) : 30;
+        int membershipIncome = gymEconomyManager != null ? gymEconomyManager.GetDailyMembershipRevenue() * daysPerMonth : 0;
+        int ptIncome = gymEconomyManager != null ? gymEconomyManager.GetDailyPtRevenue() * daysPerMonth : 0;
+        int ancillaryIncome = gymEconomyManager != null ? gymEconomyManager.GetDailyAncillaryRevenue() * daysPerMonth : 0;
+        int variableExpense = gymEconomyManager != null ? gymEconomyManager.GetDailyVariableCost() * daysPerMonth : 0;
+
+        int totalIncome = membershipIncome + ptIncome + ancillaryIncome;
+        int totalExpense = variableExpense + breakdown.rentCost + breakdown.laborCost + breakdown.maintenanceCost;
+        int netProfit = totalIncome - totalExpense;
+
+        return new MonthlySettlementPopupData
+        {
+            monthNumber = breakdown.monthNumber,
+            locationLabel = breakdown.locationLabel,
+            totalIncome = totalIncome,
+            totalExpense = totalExpense,
+            netProfit = netProfit,
+            membershipIncome = membershipIncome,
+            ptIncome = ptIncome,
+            ancillaryIncome = ancillaryIncome,
+            rentExpense = breakdown.rentCost,
+            laborExpense = breakdown.laborCost,
+            maintenanceExpense = breakdown.maintenanceCost,
+            variableExpense = variableExpense,
+            activeMembers = breakdown.activeMembers,
+            placedObjectCount = breakdown.placedObjectCount,
+            settlementWasCapped = breakdown.settlementWasCapped,
+            usesProjectedOperatingData = true,
+            comment = BuildMonthlySettlementPopupComment(netProfit, breakdown)
+        };
     }
 
     private void ResolveReferences()
@@ -374,6 +436,31 @@ public class MonthlySettlementManager : MonoBehaviour
             previewMonthlyOperatingNet = previewMonthlyOperatingNet,
             previewMonthlyAfterSettlement = previewMonthlyAfterSettlement
         };
+    }
+
+    private static string BuildMonthlySettlementPopupComment(int netProfit, SettlementBreakdown breakdown)
+    {
+        if (breakdown.placedObjectCount <= 0)
+        {
+            return "아직 수익 기반이 약합니다. 다음 달에는 기구 설치부터 챙겨볼까요?";
+        }
+
+        if (netProfit < 0)
+        {
+            return "이번 달은 비용 부담이 큽니다. 지출을 줄이고 회원 유입을 늘려야 합니다.";
+        }
+
+        if (breakdown.settlementWasCapped)
+        {
+            return "안전 완화가 적용되었습니다. 다음 달에는 더 안정적인 현금흐름을 만들어봅시다.";
+        }
+
+        if (netProfit < 1500)
+        {
+            return "흑자는 냈지만 여유가 크지 않습니다. 작은 개선을 꾸준히 쌓아봅시다.";
+        }
+
+        return "좋습니다. 이번 달 운영 흐름이 안정적입니다. 다음 달도 이 기세로 갑시다.";
     }
 
     private float GetMonthRampFactor(int monthNumber)
