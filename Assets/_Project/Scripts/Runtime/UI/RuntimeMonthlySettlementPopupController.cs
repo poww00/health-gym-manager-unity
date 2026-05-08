@@ -30,6 +30,8 @@ public partial class RuntimeGameUIController
         }
 
         ResolveMonthlySettlementReferences();
+        EnsureMonthlySettlementPopup();
+        HideRuntimeMenuPopup(monthlySettlementPopupRoot);
 
         if (boundMonthlySettlementManager == monthlySettlementManager)
         {
@@ -58,6 +60,47 @@ public partial class RuntimeGameUIController
     {
         OpenMonthlySettlementPopup();
     }
+
+#if UNITY_EDITOR
+    public void PreviewMonthlySettlementPopupForEditMode()
+    {
+        if (Application.isPlaying)
+        {
+            OpenMonthlySettlementPopup();
+            return;
+        }
+
+        EnsureMenuPopupPreviewRoot();
+        DestroyRuntimeMenuPopup(ref menuPopupRoot, "RuntimeGameMenuPopupRoot");
+        DestroyRuntimeMenuPopup(ref relocationPopupRoot, "RuntimeRelocationPopupRoot");
+        DestroyRuntimeMenuPopup(ref settingsPopupRoot, "RuntimeSettingsPopupRoot");
+
+        monthlySettlementPopupRoot = FindSavedMonthlySettlementPopupRoot();
+        EnsureMonthlySettlementPopup();
+        RefreshMonthlySettlementPopup();
+        ShowRuntimeMenuPopup(monthlySettlementPopupRoot);
+    }
+
+    public void CloseAllRuntimePopupPreviewsForEditMode()
+    {
+        if (Application.isPlaying)
+        {
+            CloseRuntimeMenuPopups();
+            CloseMonthlySettlementPopup();
+            return;
+        }
+
+        if (runtimeRoot == null)
+        {
+            runtimeRoot = transform.Find("RuntimeGameUIRoot");
+        }
+
+        DestroyRuntimeMenuPopup(ref menuPopupRoot, "RuntimeGameMenuPopupRoot");
+        DestroyRuntimeMenuPopup(ref relocationPopupRoot, "RuntimeRelocationPopupRoot");
+        DestroyRuntimeMenuPopup(ref settingsPopupRoot, "RuntimeSettingsPopupRoot");
+        DestroyRuntimeMenuPopup(ref monthlySettlementPopupRoot, "RuntimeMonthlySettlementPopupRoot");
+    }
+#endif
 
     private void OpenMonthlySettlementPopup()
     {
@@ -115,7 +158,15 @@ public partial class RuntimeGameUIController
 
         if (monthlySettlementPopupRoot == null)
         {
-            BuildMonthlySettlementPopup();
+            monthlySettlementPopupRoot = FindSavedMonthlySettlementPopupRoot();
+            if (monthlySettlementPopupRoot != null)
+            {
+                BindExistingMonthlySettlementPopup();
+            }
+            else
+            {
+                BuildMonthlySettlementPopup();
+            }
         }
     }
 
@@ -124,8 +175,11 @@ public partial class RuntimeGameUIController
         monthlySettlementPopupRoot = CreatePopupRoot("RuntimeMonthlySettlementPopupRoot");
         GameObject frame = CreateGeneratedImage(monthlySettlementPopupRoot, "MonthlySettlementFrame", MenuPanelSprite, 0f, 0f, menuWindowSize.x, menuWindowSize.y, false, true);
 
-        CreateText(frame.transform, "MonthlySettlementTitle", "월말 결산", 43, theme.Ink, TextAnchor.MiddleCenter, 0f, menuTitleY, 430f, 62f, true);
-        monthlySubtitleText = CreateText(frame.transform, "MonthlySettlementSubtitle", "", 22, theme.MutedInk, TextAnchor.MiddleCenter, 0f, 366f, 520f, 34f, true);
+        CreateText(frame.transform, "MonthlySettlementTitle", "월말 결산", 47, theme.Ink, TextAnchor.MiddleCenter, 0f, menuTitleY, 430f, 62f, true);
+        monthlySubtitleText = CreateText(frame.transform, "MonthlySettlementSubtitle", "", 27, theme.MutedInk, TextAnchor.MiddleCenter, 0f, 380f, 520f, 34f, true);
+        monthlySubtitleText.resizeTextForBestFit = true;
+        monthlySubtitleText.resizeTextMinSize = 21;
+        monthlySubtitleText.resizeTextMaxSize = 27;
 
         GameObject closeNode = CreateGeneratedImage(frame.transform, "MonthlySettlementClose", "GeneratedRuntimeUI/ui_v2/staff/staff_close_button", menuClosePosition.x, menuClosePosition.y, 86f, 86f, true, true);
         Image closeImage = closeNode.GetComponent<Image>();
@@ -134,15 +188,15 @@ public partial class RuntimeGameUIController
         closeButton.targetGraphic = closeImage;
         closeButton.onClick.AddListener(CloseMonthlySettlementPopup);
 
-        monthlyIncomeValueText = CreateMonthlySummaryCard(frame.transform, "MonthlyIncomeCard", -220f, 268f, "총수입", monthlyPositiveColor);
-        monthlyExpenseValueText = CreateMonthlySummaryCard(frame.transform, "MonthlyExpenseCard", 0f, 268f, "총지출", monthlyNegativeColor);
-        monthlyNetValueText = CreateMonthlySummaryCard(frame.transform, "MonthlyNetCard", 220f, 268f, "순이익", monthlyPositiveColor);
+        monthlyIncomeValueText = CreateMonthlySummaryCard(frame.transform, "MonthlyIncomeCard", -220f, 258f, "총수입", monthlyPositiveColor);
+        monthlyExpenseValueText = CreateMonthlySummaryCard(frame.transform, "MonthlyExpenseCard", 0f, 258f, "총지출", monthlyNegativeColor);
+        monthlyNetValueText = CreateMonthlySummaryCard(frame.transform, "MonthlyNetCard", 220f, 258f, "순이익", monthlyPositiveColor);
 
-        GameObject breakdownPanel = CreateGeneratedImage(frame.transform, "MonthlyBreakdownPanel", MonthlyBreakdownPanelSprite, 0f, 0f, 650f, 380f, false, true);
-        CreateSolid(breakdownPanel.transform, "IncomeHeaderDot", monthlyPositiveColor, -284f, 130f, 15f, 15f, true);
-        CreateText(breakdownPanel.transform, "IncomeHeader", "수입 내역", 29, theme.Ink, TextAnchor.MiddleLeft, -248f, 128f, 230f, 42f, true);
-        CreateSolid(breakdownPanel.transform, "ExpenseHeaderDot", monthlyNegativeColor, 34f, 130f, 15f, 15f, true);
-        CreateText(breakdownPanel.transform, "ExpenseHeader", "지출 내역", 29, theme.Ink, TextAnchor.MiddleLeft, 70f, 128f, 230f, 42f, true);
+        GameObject breakdownPanel = CreateGeneratedImage(frame.transform, "MonthlyBreakdownPanel", MonthlyBreakdownPanelSprite, 0f, -20f, 650f, 380f, false, true);
+        CreateSolid(breakdownPanel.transform, "IncomeHeaderDot", monthlyPositiveColor, -285f, 130f, 15f, 15f, true);
+        CreateText(breakdownPanel.transform, "IncomeHeader", "수입 내역", 31, theme.Ink, TextAnchor.MiddleLeft, -150f, 128f, 230f, 42f, true);
+        CreateSolid(breakdownPanel.transform, "ExpenseHeaderDot", monthlyNegativeColor, 35f, 130f, 15f, 15f, true);
+        CreateText(breakdownPanel.transform, "ExpenseHeader", "지출 내역", 31, theme.Ink, TextAnchor.MiddleLeft, 170f, 130f, 230f, 42f, true);
         CreateMonthlyBreakdownDivider(breakdownPanel.transform, 0f, 6f, 260f);
 
         monthlyIncomeRowValues[0] = CreateMonthlyBreakdownRow(breakdownPanel.transform, "MembershipIncome", -164f, 70f, "회원권 수익", monthlyPositiveColor, "GeneratedRuntimeUI/ui_v2/economy/economy_icon_income_up");
@@ -151,49 +205,149 @@ public partial class RuntimeGameUIController
 
         monthlyExpenseRowValues[0] = CreateMonthlyBreakdownRow(breakdownPanel.transform, "RentExpense", 164f, 70f, "월세", monthlyNegativeColor, "GeneratedRuntimeUI/ui_v2/economy/economy_icon_expense_down");
         monthlyExpenseRowValues[1] = CreateMonthlyBreakdownRow(breakdownPanel.transform, "LaborExpense", 164f, 10f, "직원 급여", monthlyNegativeColor, "GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_00");
-        monthlyExpenseRowValues[2] = CreateMonthlyBreakdownRow(breakdownPanel.transform, "MaintenanceExpense", 164f, -50f, "유지비", monthlyNegativeColor, "GeneratedRuntimeUI/objects/dumbbell_rack");
-        monthlyExpenseRowValues[3] = CreateMonthlyBreakdownRow(breakdownPanel.transform, "VariableExpense", 164f, -110f, "전기세/관리비", monthlyNegativeColor, "GeneratedRuntimeUI/objects/water_cooler");
+        monthlyExpenseRowValues[2] = CreateMonthlyBreakdownRow(breakdownPanel.transform, "MaintenanceExpense", 164f, -50f, "유지비", monthlyNegativeColor, "GeneratedRuntimeUI/ui_v2/monthly_settlement/icon_monthly_maintenance");
+        monthlyExpenseRowValues[3] = CreateMonthlyBreakdownRow(breakdownPanel.transform, "VariableExpense", 164f, -110f, "전기세/관리비", monthlyNegativeColor, "GeneratedRuntimeUI/ui_v2/monthly_settlement/icon_monthly_electricity");
 
-        CreateText(frame.transform, "MonthlyCommentTitle", "이번 달 한마디", 28, theme.Ink, TextAnchor.MiddleLeft, -292f, -222f, 300f, 42f, true);
         CreateGeneratedImage(frame.transform, "MonthlyCommentPortrait", "GeneratedRuntimeUI/ui_v2/economy/economy_manager_character", -262f, -308f, 116f, 155f, true, true);
-        GameObject commentBubble = CreateGeneratedImage(frame.transform, "MonthlyCommentBubble", MonthlyCommentBubbleSprite, 100f, -310f, 500f, 118f, true, true);
-        monthlyCommentText = CreateText(commentBubble.transform, "MonthlyCommentText", "", 24, theme.Ink, TextAnchor.MiddleLeft, 44f, 0f, 390f, 76f, true);
+        GameObject commentBubble = CreateGeneratedImage(frame.transform, "MonthlyCommentBubble", MonthlyCommentBubbleSprite, 70f, -310f, 500f, 118f, true, true);
+        monthlyCommentText = CreateText(commentBubble.transform, "MonthlyCommentText", "", 27, theme.Ink, TextAnchor.MiddleLeft, 15f, 0f, 390f, 76f, true);
+        monthlyCommentText.resizeTextForBestFit = true;
+        monthlyCommentText.resizeTextMinSize = 22;
+        monthlyCommentText.resizeTextMaxSize = 27;
 
         Button confirmButton = CreateSpriteButton(frame.transform, "MonthlyConfirmButton", MenuBeigeButtonSprite, "확인", -150f, -426f, 250f, 78f, theme.Ink, out Text confirmLabel, 32);
-        confirmLabel.fontSize = 32;
+        confirmLabel.fontSize = 34;
         confirmButton.onClick.AddListener(CloseMonthlySettlementPopup);
 
         Button nextMonthButton = CreateSpriteButton(frame.transform, "MonthlyNextMonthButton", MenuGreenButtonSprite, "다음 달 시작", 150f, -426f, 250f, 78f, theme.BrightInk, out Text nextLabel, 29);
-        nextLabel.fontSize = 29;
+        nextLabel.fontSize = 31;
         nextMonthButton.onClick.AddListener(CloseMonthlySettlementPopup);
 
         SetRuntimeMenuTextNormal(monthlySettlementPopupRoot);
         monthlySettlementPopupRoot.gameObject.SetActive(false);
     }
 
+    private Transform FindSavedMonthlySettlementPopupRoot()
+    {
+        if (runtimeRoot == null)
+        {
+            Transform existingRoot = transform.Find("RuntimeGameUIRoot");
+            if (existingRoot != null)
+            {
+                runtimeRoot = existingRoot;
+            }
+        }
+
+        return runtimeRoot != null ? runtimeRoot.Find("RuntimeMonthlySettlementPopupRoot") : null;
+    }
+
+    private void BindExistingMonthlySettlementPopup()
+    {
+        if (monthlySettlementPopupRoot == null)
+        {
+            return;
+        }
+
+        monthlySubtitleText = FindMonthlyText("MonthlySettlementSubtitle");
+        monthlyIncomeValueText = FindMonthlyText("Value", "MonthlyIncomeCard");
+        monthlyExpenseValueText = FindMonthlyText("Value", "MonthlyExpenseCard");
+        monthlyNetValueText = FindMonthlyText("Value", "MonthlyNetCard");
+        monthlyIncomeRowValues[0] = FindMonthlyText("MembershipIncome_Value");
+        monthlyIncomeRowValues[1] = FindMonthlyText("PtIncome_Value");
+        monthlyIncomeRowValues[2] = FindMonthlyText("AncillaryIncome_Value");
+        monthlyExpenseRowValues[0] = FindMonthlyText("RentExpense_Value");
+        monthlyExpenseRowValues[1] = FindMonthlyText("LaborExpense_Value");
+        monthlyExpenseRowValues[2] = FindMonthlyText("MaintenanceExpense_Value");
+        monthlyExpenseRowValues[3] = FindMonthlyText("VariableExpense_Value");
+        monthlyCommentText = FindMonthlyText("MonthlyCommentText");
+
+        AssignMonthlyImage("MaintenanceExpense_Icon", "GeneratedRuntimeUI/ui_v2/monthly_settlement/icon_monthly_maintenance");
+        AssignMonthlyImage("VariableExpense_Icon", "GeneratedRuntimeUI/ui_v2/monthly_settlement/icon_monthly_electricity");
+
+        BindMonthlyButton("MonthlySettlementClose", CloseMonthlySettlementPopup);
+        BindMonthlyButton("MonthlyConfirmButton", CloseMonthlySettlementPopup);
+        BindMonthlyButton("MonthlyNextMonthButton", CloseMonthlySettlementPopup);
+        SetRuntimeMenuTextNormal(monthlySettlementPopupRoot);
+    }
+
+    private Text FindMonthlyText(string objectName, string parentName = null)
+    {
+        Transform target = FindDeepChild(monthlySettlementPopupRoot, objectName, parentName);
+        return target != null ? target.GetComponent<Text>() : null;
+    }
+
+    private void AssignMonthlyImage(string objectName, string spritePath)
+    {
+        Transform target = FindDeepChild(monthlySettlementPopupRoot, objectName);
+        Image image = target != null ? target.GetComponent<Image>() : null;
+        if (image != null)
+        {
+            GeneratedRuntimeSprites.Assign(image, spritePath, true);
+        }
+    }
+
+    private void BindMonthlyButton(string objectName, UnityEngine.Events.UnityAction action)
+    {
+        Transform target = FindDeepChild(monthlySettlementPopupRoot, objectName);
+        if (target == null)
+        {
+            return;
+        }
+
+        Button button = target.GetComponent<Button>();
+        if (button == null)
+        {
+            button = target.gameObject.AddComponent<Button>();
+        }
+
+        Image image = target.GetComponent<Image>();
+        if (image != null)
+        {
+            image.raycastTarget = true;
+            button.targetGraphic = image;
+        }
+
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(action);
+    }
+
     private Text CreateMonthlySummaryCard(Transform parent, string name, float x, float y, string label, Color valueColor)
     {
         GameObject card = CreateGeneratedImage(parent, name, MonthlySummaryCardSprite, x, y, 196f, 164f, false, true);
-        CreateText(card.transform, "Label", label, 25, theme.MutedInk, TextAnchor.MiddleCenter, 0f, 38f, 150f, 34f, true);
-        return CreateText(card.transform, "Value", "0G", 29, valueColor, TextAnchor.MiddleCenter, 0f, -24f, 156f, 48f, true);
+        Text labelText = CreateText(card.transform, "Label", label, 28, theme.MutedInk, TextAnchor.MiddleCenter, 0f, 38f, 150f, 34f, true);
+        labelText.resizeTextForBestFit = true;
+        labelText.resizeTextMinSize = 24;
+        labelText.resizeTextMaxSize = 28;
+
+        Text valueText = CreateText(card.transform, "Value", "0G", 33, valueColor, TextAnchor.MiddleCenter, 0f, -24f, 156f, 48f, true);
+        valueText.resizeTextForBestFit = true;
+        valueText.resizeTextMinSize = 25;
+        valueText.resizeTextMaxSize = 33;
+        return valueText;
     }
 
     private Text CreateMonthlyBreakdownRow(Transform parent, string name, float x, float y, string label, Color valueColor, string iconPath)
     {
         if (!string.IsNullOrWhiteSpace(iconPath))
         {
-            CreateGeneratedImage(parent, $"{name}_Icon", iconPath, x - 116f, y, 34f, 34f, true, true);
+            float iconX = x < 0f ? x - 121f : x - 129f;
+            CreateGeneratedImage(parent, $"{name}_Icon", iconPath, iconX, y, 34f, 34f, true, true);
         }
         else
         {
             CreateSolid(parent, $"{name}_Dot", valueColor, x - 116f, y + 1f, 12f, 12f, true);
         }
 
-        CreateText(parent, $"{name}_Label", label, 23, theme.Ink, TextAnchor.MiddleLeft, x - 82f, y, 150f, 36f, true);
-        Text value = CreateText(parent, $"{name}_Value", "0G", 22, valueColor, TextAnchor.MiddleRight, x + 86f, y, 136f, 36f, true);
+        float labelX = x < 0f ? x - 26f : x - 34f;
+        Text labelText = CreateText(parent, $"{name}_Label", label, 26, theme.Ink, TextAnchor.MiddleLeft, labelX, y, 150f, 36f, true);
+        labelText.resizeTextForBestFit = true;
+        labelText.resizeTextMinSize = 21;
+        labelText.resizeTextMaxSize = 26;
+
+        Text value = CreateText(parent, $"{name}_Value", "0G", 25, valueColor, TextAnchor.MiddleRight, x + 86f, y, 136f, 36f, true);
         value.resizeTextForBestFit = true;
-        value.resizeTextMinSize = 17;
-        value.resizeTextMaxSize = 22;
+        value.resizeTextMinSize = 20;
+        value.resizeTextMaxSize = 25;
         return value;
     }
 

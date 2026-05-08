@@ -262,6 +262,7 @@ public partial class RuntimeGameUIController
             BindStaticButtons();
             ShowOperatePanel();
             RefreshAllData();
+            InitializeInstallTutorial();
             return;
         }
 
@@ -291,6 +292,7 @@ public partial class RuntimeGameUIController
 
         ShowOperatePanel();
         RefreshAllData();
+        InitializeInstallTutorial();
     }
 
     public void MaterializeForEditMode()
@@ -386,6 +388,7 @@ public partial class RuntimeGameUIController
 
     private void OnDestroy()
     {
+        UnbindInstallTutorialEvents();
         UnbindMonthlySettlementPopupEvents();
 
         if (boundStaffManager == null)
@@ -1835,6 +1838,7 @@ public partial class RuntimeGameUIController
         comingSoonPanelRoot.gameObject.SetActive(false);
         RefreshBottomTabs();
         RefreshInstallPanel();
+        NotifyInstallTutorialInstallTabOpened();
     }
 
     private void ShowComingSoonPanel(PanelMode mode, string title)
@@ -1957,6 +1961,7 @@ public partial class RuntimeGameUIController
         RefreshPlacementActionOverlay();
         HideLegacyRuntimeFloorMockup();
         HideToast();
+        NotifyInstallTutorialEquipmentSelected(selectedDefinition);
     }
 
     private void BeginPlacementForDefinition(EquipmentDefinition definition)

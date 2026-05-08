@@ -31,6 +31,34 @@ public sealed class GameRuntimeUIController : RuntimeGameUIController
         MarkSceneDirty();
     }
 
+    [ContextMenu("Preview Monthly Settlement Popup")]
+    private void ContextPreviewMonthlySettlementPopup()
+    {
+        PreviewMonthlySettlementPopupForEditMode();
+        MarkSceneDirty();
+    }
+
+    [ContextMenu("Close Popup Previews")]
+    private void ContextClosePopupPreviews()
+    {
+        CloseAllRuntimePopupPreviewsForEditMode();
+        MarkSceneDirty();
+    }
+
+    [ContextMenu("Start Install Tutorial Debug")]
+    private void ContextStartInstallTutorialDebug()
+    {
+        StartInstallTutorialForDebug();
+        MarkSceneDirty();
+    }
+
+    [ContextMenu("Reset Install Tutorial Flag")]
+    private void ContextResetInstallTutorialFlag()
+    {
+        ResetInstallTutorial();
+        MarkSceneDirty();
+    }
+
     private void MarkSceneDirty()
     {
         UnityEditor.EditorUtility.SetDirty(this);

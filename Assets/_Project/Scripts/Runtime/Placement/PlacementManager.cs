@@ -101,6 +101,7 @@ public class PlacementManager : MonoBehaviour
     }
 
     public event Action PlayerPlacedObject;
+    public event Action<EquipmentDefinition> ObjectPlaced;
 
     public int PlacedObjectCount => placedObjectDataList.Count;
     public EquipmentDefinition CurrentDefinition => currentDefinition;
@@ -781,11 +782,13 @@ public class PlacementManager : MonoBehaviour
             return false;
         }
 
-        int placedIndex = PlaceObjectAt(currentAnchorX, currentAnchorY, buildWidth, buildHeight, currentDefinition, null, true);
+        EquipmentDefinition placedDefinition = currentDefinition;
+        int placedIndex = PlaceObjectAt(currentAnchorX, currentAnchorY, buildWidth, buildHeight, placedDefinition, null, true);
         selectedPlacedObjectIndex = placedIndex;
         isPlacementPreviewActive = false;
         HidePreviewCompletely();
         RefreshAllPlacedVisualStates();
+        ObjectPlaced?.Invoke(placedDefinition);
         PlayerPlacedObject?.Invoke();
         return true;
     }

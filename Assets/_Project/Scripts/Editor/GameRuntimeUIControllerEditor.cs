@@ -81,6 +81,41 @@ public sealed class GameRuntimeUIControllerEditor : Editor
 
         using (new EditorGUILayout.HorizontalScope())
         {
+            if (GUILayout.Button("Preview Monthly Settlement Popup"))
+            {
+                Undo.RegisterFullObjectHierarchyUndo(controller.gameObject, "Preview Monthly Settlement Popup");
+                controller.PreviewMonthlySettlementPopupForEditMode();
+                EditorUtility.SetDirty(controller.gameObject);
+                EditorSceneManager.MarkSceneDirty(controller.gameObject.scene);
+            }
+
+            if (GUILayout.Button("Close Popup Previews"))
+            {
+                Undo.RegisterFullObjectHierarchyUndo(controller.gameObject, "Close Popup Previews");
+                controller.CloseAllRuntimePopupPreviewsForEditMode();
+                EditorUtility.SetDirty(controller.gameObject);
+                EditorSceneManager.MarkSceneDirty(controller.gameObject.scene);
+            }
+        }
+
+        EditorGUILayout.Space(6f);
+        EditorGUILayout.LabelField("Install Tutorial Debug", EditorStyles.boldLabel);
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("Start Install Tutorial"))
+            {
+                controller.StartInstallTutorialForDebug();
+            }
+
+            if (GUILayout.Button("Reset Install Tutorial Flag"))
+            {
+                controller.ResetInstallTutorial();
+            }
+        }
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
             if (GUILayout.Button("Apply Preview Edits"))
             {
                 Undo.RegisterFullObjectHierarchyUndo(controller.gameObject, "Apply Menu Popup Preview Edits");
