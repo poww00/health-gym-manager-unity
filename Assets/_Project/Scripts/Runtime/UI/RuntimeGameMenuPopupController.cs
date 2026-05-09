@@ -58,6 +58,7 @@ public partial class RuntimeGameUIController
         HideRuntimeMenuPopup(settingsPopupRoot);
         ShowRuntimeMenuPopup(menuPopupRoot);
         inGameMenuManager?.SetMenuOpen(true);
+        NotifyInstallTutorialMenuOpened();
     }
 
     private void OpenRelocationPopup()

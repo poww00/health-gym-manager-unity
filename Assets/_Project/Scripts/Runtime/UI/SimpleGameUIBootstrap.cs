@@ -1035,6 +1035,7 @@ public partial class RuntimeGameUIController
         staffPopupRoot.SetAsLastSibling();
         HideToast();
         RefreshStaffPopup();
+        NotifyInstallTutorialStaffPopupOpened();
     }
 
     private void CloseStaffPopup()
@@ -1163,10 +1164,16 @@ public partial class RuntimeGameUIController
             StaffData applicant = staff;
             actionButton.onClick.AddListener(() =>
             {
+                int hiredCountBefore = staffManager != null ? staffManager.HiredStaff.Count : 0;
                 staffManager.HireApplicant(applicant);
                 RefreshStaffPopup();
                 RefreshHud();
                 RefreshOperatePanel();
+                int hiredCountAfter = staffManager != null ? staffManager.HiredStaff.Count : hiredCountBefore;
+                if (hiredCountAfter > hiredCountBefore)
+                {
+                    NotifyInstallTutorialStaffHired();
+                }
             });
         }
         else
@@ -1817,6 +1824,7 @@ public partial class RuntimeGameUIController
         comingSoonPanelRoot.gameObject.SetActive(false);
         RefreshBottomTabs();
         RefreshOperatePanel();
+        NotifyInstallTutorialPanelOpened(PanelMode.Operate);
     }
 
     private void ShowInstallPanel()
@@ -1887,6 +1895,7 @@ public partial class RuntimeGameUIController
         }
 
         RefreshBottomTabs();
+        NotifyInstallTutorialPanelOpened(PanelMode.Economy);
     }
 
     private void ShowReviewPanel()
@@ -1919,6 +1928,7 @@ public partial class RuntimeGameUIController
         }
 
         RefreshBottomTabs();
+        NotifyInstallTutorialPanelOpened(PanelMode.Review);
     }
 
     private void SetOptionalPanelActive(string panelName, bool active)
