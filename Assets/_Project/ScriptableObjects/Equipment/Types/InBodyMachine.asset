@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb1562e7c2c46c89ce9d7996c4355db, type: 3}
+  m_Name: InBodyMachine
+  m_EditorClassIdentifier: Assembly-CSharp::EquipmentTypeDefinition
+  id: "inbody_machine"
+  displayName: "???"
+  category: 10
+  unlockStage: 2
+  sizeX: 1
+  sizeY: 1
+  basePrice: 2200
+  baseMonthlyMaintenanceCost: 120
+  baseIncomePerUse: 70
+  baseUseDurationSeconds: 8
+  baseSatisfaction: 6
+  baseCleanlinessCost: 1
+  baseDurability: 95
+  baseBreakdownRate: 0.7
+  requiredGymLevel: 3
+  spriteKey: "inbody_machine"
+  animationKey: "inbody_machine"
+  description: ""

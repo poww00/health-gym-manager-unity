@@ -1,0 +1,56 @@
+Created At: 2026-06-07T08:59:14Z
+Completed At: 2026-06-07T08:59:14Z
+
+				The command completed successfully.
+				Output:
+				commit b52ef4a13a58c23ede6023c859aba54781d14482
+Author: Gukil Kim <kki0287@naver.com>
+Date:   Sun May 3 23:58:45 2026 +0900
+
+    Initial Unity project snapshot
+
+diff --git a/Assets/_Project/Scripts/Runtime/Visual/GymPlacedObjectVisual.cs b/Assets/_Project/Scripts/Runtime/Visual/GymPlacedObjectVisual.cs
+new file mode 100644
+index 0000000..5890a5f
+--- /dev/null
++++ b/Assets/_Project/Scripts/Runtime/Visual/GymPlacedObjectVisual.cs
+@@ -0,0 +1,269 @@
++using UnityEngine;
++
++[DisallowMultipleComponent]
++public sealed class GymPlacedObjectVisual : MonoBehaviour
++{
++    private static Sprite cachedWhiteSprite;
++    private static Font cachedFont;
++
++    private SpriteRenderer shadowRenderer;
++    private SpriteRenderer baseRenderer;
++    private SpriteRenderer plateRenderer;
++    private SpriteRenderer accentRenderer;
++    private SpriteRenderer frameRenderer;
++    private TextMesh tokenText;
++    private TextMesh tierText;
++    private MeshRenderer tokenRenderer;
++    private MeshRenderer tierRenderer;
++
++    private Vector2 footprintSize = Vector2.one;
++    private Color accentColor = new Color(0.91f, 0.63f, 0.22f, 1f);
++    private string token = "??;
++    private string tier = "B";
++
++    public void Initialize(PlacedObjectSaveData data, EquipmentDefinition definition, Vector2 size)
++    {
++        footprintSize = size;
++        accentColor = ResolveAccentColor(definition, data);
++        token = ResolveToken(definition, data);
++        tier = definition != null ? definition.BrandTierLabel : "B";
++
++        EnsureAssets();
++        EnsureChildren();
++        ApplyLayout();
++        ApplyState(data, false, false);
++    }
++
++    public void ApplyState(PlacedObjectSaveData data, bool selected, bool ghost)
++    {
+

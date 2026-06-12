@@ -3,14 +3,25 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public sealed class GymPlacedObjectVisual : MonoBehaviour
 {
+    private const int MachineDepthSortRange = 19;
+    private const int MachineDepthSortStep = 64;
+
+    public const int CustomerBodyLayerOffset = 30;
+    public const int CustomerHeadLayerOffset = 31;
+
     private static Sprite cachedWhiteSprite;
     private static Font cachedFont;
+    private static Material outlineMaterial;
 
     private SpriteRenderer shadowRenderer;
     private SpriteRenderer baseRenderer;
     private SpriteRenderer plateRenderer;
     private SpriteRenderer accentRenderer;
     private SpriteRenderer frameRenderer;
+    private SpriteRenderer beltRenderer;
+    private SpriteRenderer rearForegroundRenderer;
+    private SpriteRenderer foregroundRenderer;
+    private SpriteRenderer[] outlineRenderers;
     private TextMesh tokenText;
     private TextMesh tierText;
     private MeshRenderer tokenRenderer;
@@ -18,11 +29,21 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 
     private Vector2 footprintSize = Vector2.one;
     private Color accentColor = new Color(0.91f, 0.63f, 0.22f, 1f);
-    private string token = "헬";
+    private string token = "유";
     private string tier = "B";
+    private bool hasCustomSprite = false;
+
+    private Sprite[] baseAnimationFrames;
+    private Sprite[] beltAnimationFrames;
+    private float animationTimer;
+    private int currentFrameIndex;
+    private EquipmentDefinition currentDefinition;
+    private int sortingDepthOffset;
 
     public void Initialize(PlacedObjectSaveData data, EquipmentDefinition definition, Vector2 size)
     {
+        currentDefinition = definition;
+        sortingDepthOffset = GetSortingDepthOffset(data);
         footprintSize = size;
         accentColor = ResolveAccentColor(definition, data);
         token = ResolveToken(definition, data);
@@ -32,6 +53,39 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
         EnsureChildren();
         ApplyLayout();
         ApplyState(data, false, false);
+    }
+
+    private bool isMachineInUse = false;
+
+    private void Update()
+    {
+        Sprite[] activeFrames = beltAnimationFrames != null && beltAnimationFrames.Length > 0
+            ? beltAnimationFrames
+            : baseAnimationFrames;
+        SpriteRenderer activeRenderer = beltAnimationFrames != null && beltAnimationFrames.Length > 0
+            ? beltRenderer
+            : baseRenderer;
+
+        if (isMachineInUse && activeFrames != null && activeFrames.Length > 0 && activeRenderer != null)
+        {
+            animationTimer += Time.deltaTime;
+            if (animationTimer >= 0.1f) // 10 FPS
+            {
+                animationTimer = 0f;
+                currentFrameIndex = (currentFrameIndex + 1) % activeFrames.Length;
+                activeRenderer.sprite = activeFrames[currentFrameIndex];
+
+                // Keep outlines synchronized only when the base sprite itself is animating.
+                if ((beltAnimationFrames == null || beltAnimationFrames.Length == 0)
+                    && outlineRenderers != null && outlineRenderers.Length == 4)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (outlineRenderers[i] != null) outlineRenderers[i].sprite = activeFrames[currentFrameIndex];
+                    }
+                }
+            }
+        }
     }
 
     public void ApplyState(PlacedObjectSaveData data, bool selected, bool ghost)
@@ -64,12 +118,30 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
                 ? new Color(0.72f, 0.77f, 0.82f, 0.36f)
                 : new Color(0.62f, 1.00f, 0.25f, 0.40f);
             shadowRenderer.color = new Color(0f, 0f, 0f, 0.10f);
-            baseRenderer.color = new Color(shellColor.r, shellColor.g, shellColor.b, 0.20f);
+
+            if (hasCustomSprite)
+            {
+                baseRenderer.color = new Color(1f, 1f, 1f, 0.40f);
+                if (beltRenderer != null) beltRenderer.color = new Color(1f, 1f, 1f, 0.40f);
+                if (rearForegroundRenderer != null) rearForegroundRenderer.color = new Color(1f, 1f, 1f, 0.40f);
+                if (foregroundRenderer != null) foregroundRenderer.color = new Color(1f, 1f, 1f, 0.40f);
+            }
+            else
+            {
+                baseRenderer.color = new Color(shellColor.r, shellColor.g, shellColor.b, 0.20f);
+            }
+
             plateRenderer.color = new Color(plateColor.r, plateColor.g, plateColor.b, 0.14f);
             accentRenderer.color = new Color(activeAccent.r, activeAccent.g, activeAccent.b, 0.22f);
             frameRenderer.color = ghostFrame;
-            tokenText.color = new Color(0.97f, 0.97f, 0.95f, 0.45f);
-            tierText.color = new Color(0.97f, 0.97f, 0.95f, 0.45f);
+            if (tokenText != null) tokenText.color = new Color(0.97f, 0.97f, 0.95f, 0.45f);
+            if (tierText != null) tierText.color = new Color(0.97f, 0.97f, 0.95f, 0.45f);
+
+            if (outlineRenderers != null) {
+                for (int i = 0; i < 4; i++) {
+                    if (outlineRenderers[i] != null) outlineRenderers[i].color = new Color(0,0,0,0);
+                }
+            }
             return;
         }
 
@@ -83,17 +155,41 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
         }
 
         shadowRenderer.color = new Color(0f, 0f, 0f, selected ? 0.34f : 0.24f);
-        baseRenderer.color = shellColor;
+
+        if (hasCustomSprite)
+        {
+            baseRenderer.color = Color.white;
+            if (beltRenderer != null) beltRenderer.color = Color.white;
+            if (rearForegroundRenderer != null) rearForegroundRenderer.color = Color.white;
+            if (foregroundRenderer != null) foregroundRenderer.color = Color.white;
+        }
+        else
+        {
+            baseRenderer.color = shellColor;
+        }
+
         plateRenderer.color = plateColor;
         accentRenderer.color = activeAccent;
         frameRenderer.color = frameColor;
-        tokenText.color = isUnderConstruction
-            ? new Color(0.90f, 0.92f, 0.96f, 1f)
-            : new Color(0.98f, 0.98f, 0.94f, 1f);
-        tierText.color = new Color(0.98f, 0.98f, 0.94f, 0.92f);
 
-        tokenText.text = isUnderConstruction ? "BUILD" : token;
-        tierText.text = isBroken ? "FIX" : tier;
+        if (tokenText != null) {
+            tokenText.color = isUnderConstruction
+                ? new Color(0.90f, 0.92f, 0.96f, 1f)
+                : new Color(0.98f, 0.98f, 0.94f, 1f);
+            tokenText.text = isUnderConstruction ? "BUILD" : token;
+        }
+        if (tierText != null) {
+            tierText.color = new Color(0.98f, 0.98f, 0.94f, 0.92f);
+            tierText.text = isBroken ? "FIX" : tier;
+        }
+
+        if (outlineRenderers != null) {
+            for (int i = 0; i < 4; i++) {
+                if (outlineRenderers[i] != null) {
+                    outlineRenderers[i].color = selected ? selectedFrame : new Color(0,0,0,0);
+                }
+            }
+        }
     }
 
     private void EnsureAssets()
@@ -114,16 +210,39 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
         {
             cachedFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         }
+
+        if (outlineMaterial == null)
+        {
+            Shader shader = Shader.Find("GUI/Text Shader");
+            if (shader != null) outlineMaterial = new Material(shader);
+        }
     }
 
     private void EnsureChildren()
     {
+        UnityEngine.Rendering.SortingGroup sortingGroup = GetComponent<UnityEngine.Rendering.SortingGroup>();
+        if (sortingGroup != null)
+        {
+            sortingGroup.enabled = false;
+        }
+
         shadowRenderer = EnsureSpriteRenderer("Shadow", 6);
         frameRenderer = EnsureSpriteRenderer("Frame", 7);
-        frameRenderer.sprite = RuntimeHighlightSpriteFactory.GetSoftRoundedOutlineSprite();
+        // Fallback or missing sprite for frameRenderer is fine
         baseRenderer = EnsureSpriteRenderer("Base", 8);
+        beltRenderer = EnsureSpriteRenderer("Belt", 9);
+        rearForegroundRenderer = EnsureSpriteRenderer("RearForeground", 10);
         plateRenderer = EnsureSpriteRenderer("Plate", 9);
         accentRenderer = EnsureSpriteRenderer("Accent", 10);
+        foregroundRenderer = EnsureSpriteRenderer("Foreground", 35);
+
+        if (outlineRenderers == null || outlineRenderers.Length != 4) {
+            outlineRenderers = new SpriteRenderer[4];
+            for (int i = 0; i < 4; i++) {
+                outlineRenderers[i] = EnsureSpriteRenderer($"Outline_{i}", 7);
+                if (outlineMaterial != null) outlineRenderers[i].material = outlineMaterial;
+            }
+        }
 
         tokenText = EnsureText("TokenText", out tokenRenderer, 12);
         tierText = EnsureText("TierText", out tierRenderer, 13);
@@ -131,28 +250,227 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 
     private void ApplyLayout()
     {
-        float width = Mathf.Max(0.55f, footprintSize.x);
-        float height = Mathf.Max(0.55f, footprintSize.y);
+        float targetWidth = Mathf.Max(0.55f, footprintSize.x);
 
-        ConfigureRenderer(shadowRenderer, new Vector3(0f, -0.06f, 0f), new Vector2(width * 1.02f, height * 0.98f));
-        ConfigureRenderer(frameRenderer, Vector3.zero, new Vector2(width * 1.24f, height * 1.20f));
-        ConfigureRenderer(baseRenderer, Vector3.zero, new Vector2(width * 0.96f, height * 0.92f));
-        ConfigureRenderer(plateRenderer, new Vector3(0f, -0.02f, 0f), new Vector2(width * 0.72f, height * 0.52f));
-        ConfigureRenderer(accentRenderer, new Vector3(0f, height * 0.28f, 0f), new Vector2(width * 0.96f, Mathf.Max(0.18f, height * 0.24f)));
+        string spriteName = currentDefinition != null ? currentDefinition.EquipmentId : "";
+        Sprite[] loadedSprites = null;
 
-        float tokenSize = Mathf.Clamp(Mathf.Min(width, height) * 0.08f, 0.05f, 0.11f);
-        tokenText.transform.localPosition = new Vector3(0f, -0.02f, 0f);
-        tokenText.characterSize = tokenSize;
-        tokenText.fontSize = 72;
-        tokenText.text = token;
+        if (!string.IsNullOrEmpty(spriteName))
+        {
+            if (spriteName.EndsWith("_a") || spriteName.EndsWith("_b") || spriteName.EndsWith("_s") || spriteName.EndsWith("_ss"))
+            {
+                int lastIndex = spriteName.LastIndexOf('_');
+                if (lastIndex > 0)
+                {
+                    spriteName = spriteName.Substring(0, lastIndex);
+                }
+            }
+            loadedSprites = Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{spriteName}");
+        }
 
-        float tierSize = Mathf.Clamp(tokenSize * 0.72f, 0.04f, 0.08f);
-        tierText.transform.localPosition = new Vector3(width * 0.24f, height * 0.27f, 0f);
-        tierText.characterSize = tierSize;
-        tierText.fontSize = 52;
-        tierText.anchor = TextAnchor.MiddleCenter;
-        tierText.alignment = TextAlignment.Center;
-        tierText.text = tier;
+        hasCustomSprite = loadedSprites != null && loadedSprites.Length > 0;
+
+        if (hasCustomSprite)
+        {
+            baseAnimationFrames = loadedSprites;
+            beltAnimationFrames = null;
+            currentFrameIndex = 0;
+            baseRenderer.sprite = baseAnimationFrames[0];
+            baseRenderer.drawMode = SpriteDrawMode.Simple;
+
+            // BUG FIX: Prevent scale bouncing by ONLY using first frame width!
+            float currentWidth = baseAnimationFrames[0] != null ? baseAnimationFrames[0].bounds.size.x : 1f;
+            float scale = targetWidth / currentWidth;
+            scale = Mathf.Clamp(scale, 0.1f, 5f); // Prevent ridiculous scale
+
+            baseRenderer.transform.localPosition = new Vector3(0f, 0.42f, 0f);
+            baseRenderer.transform.localScale = new Vector3(scale, scale, 1f);
+
+            Sprite[] beltSprites = Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{spriteName}_belt");
+            if (beltSprites != null && beltSprites.Length > 0)
+            {
+                beltAnimationFrames = beltSprites;
+                beltRenderer.sprite = beltAnimationFrames[0];
+                beltRenderer.drawMode = SpriteDrawMode.Simple;
+                beltRenderer.transform.localPosition = baseRenderer.transform.localPosition;
+                beltRenderer.transform.localScale = baseRenderer.transform.localScale;
+                beltRenderer.gameObject.SetActive(false);
+            }
+            else if (beltRenderer != null)
+            {
+                beltRenderer.sprite = null;
+                beltRenderer.gameObject.SetActive(false);
+            }
+
+            // Hide fallback meshes
+            shadowRenderer.gameObject.SetActive(false);
+            plateRenderer.gameObject.SetActive(false);
+            accentRenderer.gameObject.SetActive(false);
+            if (tokenRenderer != null) tokenRenderer.gameObject.SetActive(false);
+            if (tierRenderer != null) tierRenderer.gameObject.SetActive(false);
+
+            if (currentDefinition != null && currentDefinition.UseForegroundSprite)
+            {
+                Sprite[] backSprites = Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{spriteName}_back");
+                if (backSprites != null && backSprites.Length > 0)
+                {
+                    rearForegroundRenderer.sprite = backSprites[0];
+                    rearForegroundRenderer.drawMode = SpriteDrawMode.Simple;
+                    rearForegroundRenderer.transform.localPosition = baseRenderer.transform.localPosition;
+                    rearForegroundRenderer.transform.localScale = baseRenderer.transform.localScale;
+                    rearForegroundRenderer.gameObject.SetActive(false);
+                }
+                else if (rearForegroundRenderer != null)
+                {
+                    rearForegroundRenderer.sprite = null;
+                    rearForegroundRenderer.gameObject.SetActive(false);
+                }
+
+                Sprite[] frontSprites = Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{spriteName}_front");
+                if (frontSprites != null && frontSprites.Length > 0)
+                {
+                    foregroundRenderer.sprite = frontSprites[0];
+                    foregroundRenderer.drawMode = SpriteDrawMode.Simple;
+
+                    Vector3 foregroundPos = baseRenderer.transform.localPosition;
+                    if (currentDefinition.ForegroundOffset != Vector2.zero)
+                    {
+                        // BUG FIX: Scale the offset visually so it perfectly overlaps the downscaled machine!
+                        foregroundPos += new Vector3(currentDefinition.ForegroundOffset.x * scale, currentDefinition.ForegroundOffset.y * scale, 0f);
+                    }
+
+                    foregroundRenderer.transform.localPosition = foregroundPos;
+                    foregroundRenderer.transform.localScale = baseRenderer.transform.localScale;
+
+                    // Controlled externally by SetForegroundActive
+                    foregroundRenderer.gameObject.SetActive(false);
+                }
+                else
+                {
+                    if (foregroundRenderer != null) foregroundRenderer.sprite = null;
+                    foregroundRenderer.gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                if (rearForegroundRenderer != null)
+                {
+                    rearForegroundRenderer.sprite = null;
+                    rearForegroundRenderer.gameObject.SetActive(false);
+                }
+                if (foregroundRenderer != null)
+                {
+                    foregroundRenderer.sprite = null;
+                    foregroundRenderer.gameObject.SetActive(false);
+                }
+            }
+
+            frameRenderer.gameObject.SetActive(false);
+
+            Vector3[] offsets = { Vector3.up, Vector3.down, Vector3.left, Vector3.right };
+            for (int i = 0; i < 4; i++) {
+                if (outlineRenderers[i] != null) {
+                    outlineRenderers[i].sprite = baseRenderer.sprite;
+                    outlineRenderers[i].drawMode = SpriteDrawMode.Simple;
+                    outlineRenderers[i].transform.localPosition = baseRenderer.transform.localPosition + offsets[i] * 0.05f;
+                    outlineRenderers[i].transform.localScale = baseRenderer.transform.localScale;
+                    outlineRenderers[i].gameObject.SetActive(true);
+                }
+            }
+
+            ConfigureRenderer(shadowRenderer, new Vector3(0f, -0.06f, 0f), new Vector2(targetWidth * 1.02f, targetWidth * 0.98f));
+        }
+        else
+        {
+            float width = targetWidth;
+            float height = Mathf.Max(0.55f, footprintSize.y);
+
+            shadowRenderer.gameObject.SetActive(true);
+            ConfigureRenderer(shadowRenderer, new Vector3(0f, -0.06f, 0f), new Vector2(width * 1.02f, height * 0.98f));
+            ConfigureRenderer(frameRenderer, Vector3.zero, new Vector2(width * 1.24f, height * 1.20f));
+            ConfigureRenderer(baseRenderer, Vector3.zero, new Vector2(width * 0.96f, height * 0.92f));
+            ConfigureRenderer(plateRenderer, new Vector3(0f, -0.02f, 0f), new Vector2(width * 0.72f, height * 0.52f));
+            ConfigureRenderer(accentRenderer, new Vector3(0f, height * 0.28f, 0f), new Vector2(width * 0.96f, Mathf.Max(0.18f, height * 0.24f)));
+
+            float tokenSize = Mathf.Clamp(Mathf.Min(width, height) * 0.08f, 0.05f, 0.11f);
+            if (tokenText != null) {
+                tokenText.transform.localPosition = new Vector3(0f, -0.02f, 0f);
+                tokenText.characterSize = tokenSize;
+                tokenText.fontSize = 72;
+                tokenText.text = token;
+            }
+
+            float tierSize = Mathf.Clamp(tokenSize * 0.72f, 0.04f, 0.08f);
+            if (tierText != null) {
+                tierText.transform.localPosition = new Vector3(width * 0.24f, height * 0.27f, 0f);
+                tierText.characterSize = tierSize;
+                tierText.fontSize = 52;
+                tierText.anchor = TextAnchor.MiddleCenter;
+                tierText.alignment = TextAlignment.Center;
+                tierText.text = tier;
+            }
+
+            if (foregroundRenderer != null) foregroundRenderer.gameObject.SetActive(false);
+            if (beltRenderer != null)
+            {
+                beltRenderer.sprite = null;
+                beltRenderer.gameObject.SetActive(false);
+            }
+            if (rearForegroundRenderer != null)
+            {
+                rearForegroundRenderer.sprite = null;
+                rearForegroundRenderer.gameObject.SetActive(false);
+            }
+            if (outlineRenderers != null) {
+                for (int i = 0; i < 4; i++) {
+                    if (outlineRenderers[i] != null) outlineRenderers[i].gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+
+    public void SetForegroundActive(bool isActive)
+    {
+        bool stateChanged = isMachineInUse != isActive;
+        isMachineInUse = isActive;
+
+        if (stateChanged)
+        {
+            currentFrameIndex = 0;
+            animationTimer = 0f;
+        }
+
+        if (beltRenderer != null && beltAnimationFrames != null && beltAnimationFrames.Length > 0)
+        {
+            if (stateChanged)
+            {
+                beltRenderer.sprite = beltAnimationFrames[0];
+            }
+            beltRenderer.gameObject.SetActive(isActive);
+        }
+
+        if (rearForegroundRenderer != null && rearForegroundRenderer.sprite != null)
+        {
+            rearForegroundRenderer.gameObject.SetActive(isActive);
+        }
+
+        if (foregroundRenderer != null && foregroundRenderer.sprite != null)
+        {
+            foregroundRenderer.gameObject.SetActive(isActive);
+        }
+
+        if (!isActive && baseAnimationFrames != null && baseAnimationFrames.Length > 0 && baseRenderer != null)
+        {
+            baseRenderer.sprite = baseAnimationFrames[0];
+
+            if (outlineRenderers != null && outlineRenderers.Length == 4)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (outlineRenderers[i] != null) outlineRenderers[i].sprite = baseAnimationFrames[0];
+                }
+            }
+        }
     }
 
     private SpriteRenderer EnsureSpriteRenderer(string childName, int sortingOrder)
@@ -169,8 +487,33 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 
         renderer.sprite = cachedWhiteSprite;
         renderer.drawMode = SpriteDrawMode.Sliced;
-        renderer.sortingOrder = sortingOrder;
+        renderer.sortingOrder = sortingOrder + sortingDepthOffset;
         return renderer;
+    }
+
+    private static int GetSortingDepthOffset(PlacedObjectSaveData data)
+    {
+        if (data == null)
+        {
+            return 0;
+        }
+
+        return GetSortingDepthOffsetForAnchorY(data.anchorY);
+    }
+
+    public static int GetSortingDepthOffsetForAnchorY(int anchorY)
+    {
+        return Mathf.Clamp(MachineDepthSortRange - anchorY, 0, MachineDepthSortRange) * MachineDepthSortStep;
+    }
+
+    public static int GetCustomerBodySortingOrder(PlacedObjectSaveData data)
+    {
+        return GetSortingDepthOffset(data) + CustomerBodyLayerOffset;
+    }
+
+    public static int GetCustomerHeadSortingOrder(PlacedObjectSaveData data)
+    {
+        return GetSortingDepthOffset(data) + CustomerHeadLayerOffset;
     }
 
     private TextMesh EnsureText(string childName, out MeshRenderer meshRenderer, int sortingOrder)

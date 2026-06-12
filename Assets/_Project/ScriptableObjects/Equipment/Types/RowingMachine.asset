@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb1562e7c2c46c89ce9d7996c4355db, type: 3}
+  m_Name: RowingMachine
+  m_EditorClassIdentifier: Assembly-CSharp::EquipmentTypeDefinition
+  id: "rowing_machine"
+  displayName: "????"
+  category: 0
+  unlockStage: 1
+  sizeX: 2
+  sizeY: 1
+  basePrice: 2200
+  baseMonthlyMaintenanceCost: 200
+  baseIncomePerUse: 130
+  baseUseDurationSeconds: 15
+  baseSatisfaction: 4
+  baseCleanlinessCost: 2
+  baseDurability: 100
+  baseBreakdownRate: 0.9
+  requiredGymLevel: 2
+  spriteKey: "rowing_machine"
+  animationKey: "rowing_machine"
+  description: ""

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,10 +36,13 @@ public class PlacementManager : MonoBehaviour
     [SerializeField] private float landscapeActionPanelBottomOffset = 24f;
 
     private static Sprite cachedWhiteSprite;
+    private static Material outlineMaterial;
 
     private GameObject previewObject;
     private SpriteRenderer previewRenderer;
     private SpriteRenderer previewGlowRenderer;
+    private SpriteRenderer customPreviewRenderer;
+    private SpriteRenderer[] customPreviewOutlineRenderers;
 
     private int currentAnchorX = -1;
     private int currentAnchorY = -1;
@@ -111,6 +114,55 @@ public class PlacementManager : MonoBehaviour
     public bool IsPlacementPreviewActive => BuildPlayModeManager.IsBuildMode && isPlacementPreviewActive && currentDefinition != null && !HasSelectedPlacedObject;
     public bool HasCurrentPlacementAnchor => currentAnchorX >= 0 && currentAnchorY >= 0;
     public bool CanConfirmCurrentPlacement => canPlaceCurrent;
+
+    public bool TryGetCurrentPlacementArea(
+        out int anchorX,
+        out int anchorY,
+        out int width,
+        out int height,
+        bool suggestFirstAvailable = false)
+    {
+        anchorX = -1;
+        anchorY = -1;
+        width = Mathf.Max(1, buildWidth);
+        height = Mathf.Max(1, buildHeight);
+
+        if (!BuildPlayModeManager.IsBuildMode ||
+            (!isPlacementPreviewActive && !isRelocatingSelectedObject) ||
+            (HasSelectedPlacedObject && !isRelocatingSelectedObject))
+        {
+            return false;
+        }
+
+        if (currentAnchorX >= 0 && currentAnchorY >= 0)
+        {
+            anchorX = currentAnchorX;
+            anchorY = currentAnchorY;
+            return true;
+        }
+
+        if (!suggestFirstAvailable || gridManager == null)
+        {
+            return false;
+        }
+
+        for (int y = 0; y <= gridManager.Height - height; y++)
+        {
+            for (int x = 0; x <= gridManager.Width - width; x++)
+            {
+                if (!gridManager.IsAreaAvailable(x, y, width, height))
+                {
+                    continue;
+                }
+
+                anchorX = x;
+                anchorY = y;
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public bool TryGetPlacementHudState(out SelectedObjectHudState state)
     {
@@ -636,15 +688,19 @@ public class PlacementManager : MonoBehaviour
 
     private void HandleHoveredCellChanged(GridCell cell)
     {
-        if (!BuildPlayModeManager.IsBuildMode)
+        string cellText = cell != null ? $"({cell.X},{cell.Y})" : "null";
+        Debug.Log($"[InstallTutorialTrace] PlacementManager.HandleHoveredCellChanged cell={cellText} buildMode={BuildPlayModeManager.IsBuildMode} previewActive={isPlacementPreviewActive} relocating={isRelocatingSelectedObject} selected={HasSelectedPlacedObject} anchorBefore=({currentAnchorX},{currentAnchorY}) definition=\"{(currentDefinition != null ? currentDefinition.DisplayName : "null")}\"");
+        if (!IsPlacementVisualModeActive())
         {
-            HidePreviewCompletely();
-            return;
-        }
+            if (!BuildPlayModeManager.IsBuildMode)
+            {
+                HidePreviewCompletely();
+            }
+            else
+            {
+                HidePreviewVisualOnly();
+            }
 
-        if (!isPlacementPreviewActive && !isRelocatingSelectedObject)
-        {
-            HidePreviewVisualOnly();
             return;
         }
 
@@ -657,6 +713,7 @@ public class PlacementManager : MonoBehaviour
 
         currentAnchorX = cell.X;
         currentAnchorY = cell.Y;
+        Debug.Log($"[InstallTutorialTrace] PlacementManager.HandleHoveredCellChanged anchorAfter=({currentAnchorX},{currentAnchorY}) cell={cellText}");
 
         RefreshPlacementState();
         UpdatePreview();
@@ -732,7 +789,13 @@ public class PlacementManager : MonoBehaviour
     private void UpdatePreview()
     {
         if (previewObject == null) CreatePreviewObject();
-        if (currentAnchorX < 0 ||
+        if (!isRelocatingSelectedObject && currentDefinition == null && EquipmentSelectionState.CurrentDefinition != null)
+        {
+            ApplyBuildDefinition(EquipmentSelectionState.CurrentDefinition);
+        }
+
+        if (!IsPlacementVisualModeActive() ||
+            currentAnchorX < 0 ||
             currentAnchorY < 0 ||
             (!isPlacementPreviewActive && !isRelocatingSelectedObject) ||
             (HasSelectedPlacedObject && !isRelocatingSelectedObject))
@@ -742,11 +805,141 @@ public class PlacementManager : MonoBehaviour
         }
 
         previewObject.SetActive(true);
-        previewObject.transform.position = gridManager.GetAreaCenterWorldPosition(currentAnchorX, currentAnchorY, buildWidth, buildHeight);
+        Vector3 targetPos = gridManager.GetAreaCenterWorldPosition(currentAnchorX, currentAnchorY, buildWidth, buildHeight);
+        targetPos.z = targetPos.y * 0.001f;
+        previewObject.transform.position = targetPos;
         Vector2 footprintSize = GetFootprintSize(buildWidth, buildHeight);
-        previewRenderer.size = footprintSize;
-        previewRenderer.color = canPlaceCurrent ? previewValidColor : previewInvalidColor;
-        UpdatePreviewGlow(footprintSize, canPlaceCurrent ? previewValidBorderColor : previewInvalidBorderColor);
+        int previewDepthOffset = GymPlacedObjectVisual.GetSortingDepthOffsetForAnchorY(currentAnchorY);
+        
+        if (customPreviewRenderer == null || customPreviewOutlineRenderers == null || customPreviewOutlineRenderers.Length < 4)
+        {
+            customPreviewRenderer = EnsureCustomPreviewRenderer("CustomPreview", 8);
+            customPreviewOutlineRenderers = new SpriteRenderer[4];
+            for (int i = 0; i < 4; i++) {
+                customPreviewOutlineRenderers[i] = EnsureCustomPreviewRenderer("CustomOutline" + i, 7);
+            }
+        }
+
+        bool hasCustomSprite = false;
+        string previewEquipmentId = currentDefinition != null ? currentDefinition.EquipmentId : currentEquipmentId;
+        if (!string.IsNullOrEmpty(previewEquipmentId))
+        {
+            string id = GetRuntimeObjectSpriteId(previewEquipmentId);
+            Sprite loadedSprite = LoadPreviewSprite(id);
+            if (loadedSprite != null)
+            {
+                float targetWidth = Mathf.Max(0.55f, footprintSize.x);
+                float currentWidth = loadedSprite != null ? loadedSprite.bounds.size.x : 1f;
+                float scale = targetWidth / currentWidth;
+                scale = Mathf.Clamp(scale, 0.2f, 2.5f);
+
+                customPreviewRenderer.sprite = loadedSprite;
+                customPreviewRenderer.drawMode = SpriteDrawMode.Simple;
+                customPreviewRenderer.sortingOrder = previewDepthOffset + 8;
+                customPreviewRenderer.transform.localPosition = new Vector3(0f, 0.42f, 0f);
+                customPreviewRenderer.transform.localScale = new Vector3(scale, scale, 1f);
+                customPreviewRenderer.color = canPlaceCurrent ? new Color(1f, 1f, 1f, 0.6f) : new Color(1f, 0.4f, 0.4f, 0.6f);
+                customPreviewRenderer.enabled = true;
+                
+                float offset = 0.035f;
+                Vector3[] offsets = { new Vector3(offset, 0, 0), new Vector3(-offset, 0, 0), new Vector3(0, offset, 0), new Vector3(0, -offset, 0) };
+                for (int i = 0; i < 4; i++) {
+                    customPreviewOutlineRenderers[i].sprite = loadedSprite;
+                    customPreviewOutlineRenderers[i].drawMode = SpriteDrawMode.Simple;
+                    customPreviewOutlineRenderers[i].sortingOrder = previewDepthOffset + 7;
+                    customPreviewOutlineRenderers[i].transform.localPosition = customPreviewRenderer.transform.localPosition + offsets[i];
+                    customPreviewOutlineRenderers[i].transform.localScale = customPreviewRenderer.transform.localScale;
+                    customPreviewOutlineRenderers[i].color = canPlaceCurrent ? previewValidBorderColor : previewInvalidBorderColor;
+                    customPreviewOutlineRenderers[i].enabled = true;
+                }
+                
+                hasCustomSprite = true;
+            }
+        }
+
+        if (hasCustomSprite)
+        {
+            SetBuildHoverSuppressed(true);
+            customPreviewRenderer.gameObject.SetActive(true);
+            for (int i = 0; i < 4; i++) customPreviewOutlineRenderers[i].gameObject.SetActive(true);
+            previewRenderer.enabled = false;
+            previewGlowRenderer.gameObject.SetActive(false);
+        }
+        else
+        {
+            SetBuildHoverSuppressed(false);
+            if (customPreviewRenderer != null) customPreviewRenderer.gameObject.SetActive(false);
+            if (customPreviewOutlineRenderers != null) {
+                for (int i = 0; i < 4; i++) if (customPreviewOutlineRenderers[i] != null) customPreviewOutlineRenderers[i].gameObject.SetActive(false);
+            }
+            previewRenderer.enabled = true;
+            previewRenderer.size = footprintSize;
+            previewRenderer.color = canPlaceCurrent ? previewValidColor : previewInvalidColor;
+            
+            previewGlowRenderer.gameObject.SetActive(true);
+            previewGlowRenderer.sprite = RuntimeHighlightSpriteFactory.GetSoftRoundedOutlineSprite();
+            previewGlowRenderer.drawMode = SpriteDrawMode.Sliced;
+            UpdatePreviewGlow(footprintSize, canPlaceCurrent ? previewValidBorderColor : previewInvalidBorderColor);
+        }
+    }
+
+    private bool IsPlacementVisualModeActive()
+    {
+        return BuildPlayModeManager.IsBuildMode &&
+               (isPlacementPreviewActive || isRelocatingSelectedObject) &&
+               (!HasSelectedPlacedObject || isRelocatingSelectedObject);
+    }
+
+    private static string GetRuntimeObjectSpriteId(string equipmentId)
+    {
+        string id = string.IsNullOrWhiteSpace(equipmentId)
+            ? string.Empty
+            : equipmentId.ToLowerInvariant().Trim();
+
+        if (id.EndsWith("_basic")) return id.Substring(0, id.Length - 6);
+        if (id.EndsWith("_ss")) return id.Substring(0, id.Length - 3);
+        if (id.EndsWith("_a") || id.EndsWith("_b") || id.EndsWith("_s")) return id.Substring(0, id.Length - 2);
+        return id;
+    }
+
+    private static Sprite LoadPreviewSprite(string spriteId)
+    {
+        if (string.IsNullOrWhiteSpace(spriteId))
+        {
+            return null;
+        }
+
+        Sprite[] sprites = Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{spriteId}");
+        if (sprites != null && sprites.Length > 0)
+        {
+            System.Array.Sort(sprites, CompareSpritesByName);
+            return sprites[0];
+        }
+
+        return Resources.Load<Sprite>($"GeneratedRuntimeUI/objects/{spriteId}");
+    }
+
+    private static int CompareSpritesByName(Sprite left, Sprite right)
+    {
+        string leftName = left != null ? left.name : string.Empty;
+        string rightName = right != null ? right.name : string.Empty;
+        return string.CompareOrdinal(leftName, rightName);
+    }
+
+    private void SetBuildHoverSuppressed(bool suppressed)
+    {
+        GridCell.SuppressBuildHoverVisual = suppressed;
+
+        if (gridManager == null || currentAnchorX < 0 || currentAnchorY < 0)
+        {
+            return;
+        }
+
+        GridCell currentCell = gridManager.GetCell(currentAnchorX, currentAnchorY);
+        if (currentCell != null)
+        {
+            currentCell.SetHovered(true);
+        }
     }
 
     public bool ConfirmCurrentPlacement()
@@ -1310,6 +1503,7 @@ public class PlacementManager : MonoBehaviour
 
     private void HidePreviewVisualOnly()
     {
+        SetBuildHoverSuppressed(false);
         if (previewObject != null) previewObject.SetActive(false);
     }
 
@@ -1348,6 +1542,11 @@ public class PlacementManager : MonoBehaviour
         previewRenderer.sortingOrder = 6;
 
         previewGlowRenderer = EnsurePreviewGlowRenderer("PreviewGlow");
+        customPreviewRenderer = EnsureCustomPreviewRenderer("CustomPreview", 8);
+        customPreviewOutlineRenderers = new SpriteRenderer[4];
+        for (int i = 0; i < 4; i++) {
+            customPreviewOutlineRenderers[i] = EnsureCustomPreviewRenderer("CustomOutline" + i, 7);
+        }
 
         previewObject.SetActive(false);
     }
@@ -1367,6 +1566,33 @@ public class PlacementManager : MonoBehaviour
         renderer.sprite = RuntimeHighlightSpriteFactory.GetSoftRoundedOutlineSprite();
         renderer.drawMode = SpriteDrawMode.Sliced;
         renderer.sortingOrder = 16;
+        return renderer;
+    }
+
+    private SpriteRenderer EnsureCustomPreviewRenderer(string childName, int sortingOrder)
+    {
+        Transform child = previewObject.transform.Find(childName);
+        GameObject node = child != null ? child.gameObject : new GameObject(childName);
+        node.transform.SetParent(previewObject.transform, false);
+
+        SpriteRenderer renderer = node.GetComponent<SpriteRenderer>();
+        if (renderer == null)
+        {
+            renderer = node.AddComponent<SpriteRenderer>();
+        }
+
+        if (outlineMaterial == null)
+        {
+            Shader shader = Shader.Find("GUI/Text Shader");
+            if (shader != null) outlineMaterial = new Material(shader);
+        }
+
+        if (childName.StartsWith("CustomOutline") && outlineMaterial != null)
+        {
+            renderer.material = outlineMaterial;
+        }
+
+        renderer.sortingOrder = sortingOrder;
         return renderer;
     }
 
@@ -1416,6 +1642,20 @@ public class PlacementManager : MonoBehaviour
     {
         if (definition != null) return definition.Width;
         return Mathf.Max(1, data != null ? data.width : 1);
+    }
+
+    public void UpdateMachineInUseVisuals(HashSet<string> inUseKeys)
+    {
+        for (int i = 0; i < placedObjectVisuals.Count && i < placedObjectDataList.Count; i++)
+        {
+            if (placedObjectVisuals[i] == null || placedObjectDataList[i] == null) continue;
+            var layeredVisual = placedObjectVisuals[i].GetComponent<GymPlacedObjectVisual>();
+            if (layeredVisual != null)
+            {
+                string key = CustomerFlowManager.BuildMachineKey(placedObjectDataList[i]);
+                layeredVisual.SetForegroundActive(inUseKeys != null && inUseKeys.Contains(key));
+            }
+        }
     }
 
     private int ResolveHeight(PlacedObjectSaveData data, EquipmentDefinition definition)

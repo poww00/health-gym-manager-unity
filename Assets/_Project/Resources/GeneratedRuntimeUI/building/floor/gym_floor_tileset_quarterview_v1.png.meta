@@ -1,0 +1,676 @@
+fileFormatVersion: 2
+guid: 3533ebc5227e8fb43804c311d3c5ad6c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4230013948135095929
+    second: gym_floor_tileset_quarterview_v1_0
+  - first:
+      213: -8490513060148874840
+    second: gym_floor_tileset_quarterview_v1_1
+  - first:
+      213: -6172204765391977272
+    second: gym_floor_tileset_quarterview_v1_2
+  - first:
+      213: -7243464261815723183
+    second: gym_floor_tileset_quarterview_v1_3
+  - first:
+      213: -6472994367978085254
+    second: gym_floor_tileset_quarterview_v1_4
+  - first:
+      213: -8862456848160583392
+    second: gym_floor_tileset_quarterview_v1_5
+  - first:
+      213: 8768274000486875776
+    second: gym_floor_tileset_quarterview_v1_6
+  - first:
+      213: -3418155743735458342
+    second: gym_floor_tileset_quarterview_v1_7
+  - first:
+      213: -8030594442002045573
+    second: gym_floor_tileset_quarterview_v1_8
+  - first:
+      213: 3878356276407493296
+    second: gym_floor_tileset_quarterview_v1_9
+  - first:
+      213: 3623154620279325253
+    second: gym_floor_tileset_quarterview_v1_10
+  - first:
+      213: 9140107381918416791
+    second: gym_floor_tileset_quarterview_v1_11
+  - first:
+      213: 555237670989337320
+    second: gym_floor_tileset_quarterview_v1_12
+  - first:
+      213: -1357043840151278826
+    second: gym_floor_tileset_quarterview_v1_13
+  - first:
+      213: -1712751249594460586
+    second: gym_floor_tileset_quarterview_v1_14
+  - first:
+      213: 3532380263057127366
+    second: gym_floor_tileset_quarterview_v1_15
+  - first:
+      213: 4306747832837287999
+    second: gym_floor_tileset_quarterview_v1_16
+  - first:
+      213: 693950429630414391
+    second: gym_floor_tileset_quarterview_v1_17
+  - first:
+      213: 9043314921306396725
+    second: gym_floor_tileset_quarterview_v1_18
+  - first:
+      213: 5297015795250266833
+    second: gym_floor_tileset_quarterview_v1_19
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 64
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 100
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: floor_beige_ceramic_a
+      rect:
+        serializedVersion: 2
+        x: 744
+        y: 838
+        width: 270
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 013c96974d7c44c4aac1fe32fdfbc257
+      internalID: -1308692263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_beige_stone_a
+      rect:
+        serializedVersion: 2
+        x: 1073
+        y: 838
+        width: 266
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a86a6c0b0371894da5e5a620cd180fb
+      internalID: -1362765401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_wood_plank_a
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 837
+        width: 264
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78ffe1d0cedac37419b5b8f81fe4d657
+      internalID: 889156707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_wood_herringbone_a
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 837
+        width: 269
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b5a801630f3a21441b6c0bc13aca5e0a
+      internalID: -1681666231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_rubber_plain_a
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 592
+        width: 273
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9a26274c97252043ad6dee056bfd1b8
+      internalID: 928071000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_rubber_panel_2x2
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 591
+        width: 275
+        height: 217
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 89fec300ee81b4f4297154071b7b520e
+      internalID: -1671669779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_rubber_dotted
+      rect:
+        serializedVersion: 2
+        x: 742
+        y: 591
+        width: 273
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 689aab68ab03169499c200c9d0ab6615
+      internalID: -920298796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_rubber_diamond
+      rect:
+        serializedVersion: 2
+        x: 1073
+        y: 591
+        width: 273
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bfda9ca15b1e068499edc6bb1b9e46fc
+      internalID: -970505490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_transition_beige_top_rubber_bottom
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 412
+        width: 275
+        height: 166
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a12970e514533ad46a9780a65ea7d4cf
+      internalID: -102118408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_transition_rubber_top_beige_bottom
+      rect:
+        serializedVersion: 2
+        x: 413
+        y: 411
+        width: 278
+        height: 166
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 397698ecf6141b94584a5758dd53ff36
+      internalID: 1547208004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_transition_beige_left_rubber_right
+      rect:
+        serializedVersion: 2
+        x: 741
+        y: 409
+        width: 275
+        height: 168
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ca65e3e5d7fddb4eb0662792029a1ec
+      internalID: 752513100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_transition_rubber_left_beige_right
+      rect:
+        serializedVersion: 2
+        x: 1074
+        y: 409
+        width: 275
+        height: 168
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96294b24f14871d4192a1f018db3c385
+      internalID: -392079889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_transition_corner_rubber_bottom_left
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 199
+        width: 276
+        height: 196
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be0768c58137e274993527c45d64f730
+      internalID: -196131521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_transition_corner_rubber_bottom_right
+      rect:
+        serializedVersion: 2
+        x: 409
+        y: 198
+        width: 281
+        height: 197
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1a513c90ceccb0499af9ba96f5742ee
+      internalID: -1430018758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_transition_corner_rubber_top_left
+      rect:
+        serializedVersion: 2
+        x: 740
+        y: 197
+        width: 279
+        height: 196
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9fb653a72d3afb4ebc6223e0624dea4
+      internalID: 448084914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_transition_corner_rubber_top_right
+      rect:
+        serializedVersion: 2
+        x: 1074
+        y: 197
+        width: 279
+        height: 194
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c16f8116088f0de46ac234a724d60f96
+      internalID: -1137568560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_border_strip_horizontal
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 17
+        width: 50
+        height: 169
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6beb8eb2668d464a857990d2754844b
+      internalID: 1509936228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_border_strip_vertical
+      rect:
+        serializedVersion: 2
+        x: 733
+        y: 27
+        width: 289
+        height: 152
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 470ec00896282eb458394c8a4adacf32
+      internalID: -675301992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_entry_mat_wood
+      rect:
+        serializedVersion: 2
+        x: 1074
+        y: 26
+        width: 282
+        height: 153
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e421b099e6434a42b3095f281a90fe5
+      internalID: -290061110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: floor_entry_mat_metal
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 81
+        width: 315
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a99d414f8bda7ac4dbc015c27e9301d0
+      internalID: -1691533772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 9620d1ed0bf283f4781fd3e643abba2f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      floor_beige_ceramic_a: -1308692263
+      floor_beige_stone_a: -1362765401
+      floor_border_strip_horizontal: 1509936228
+      floor_border_strip_vertical: -675301992
+      floor_entry_mat_metal: -1691533772
+      floor_entry_mat_wood: -290061110
+      floor_rubber_diamond: -970505490
+      floor_rubber_dotted: -920298796
+      floor_rubber_panel_2x2: -1671669779
+      floor_rubber_plain_a: 928071000
+      floor_transition_beige_left_rubber_right: 752513100
+      floor_transition_beige_top_rubber_bottom: -102118408
+      floor_transition_corner_rubber_bottom_left: -196131521
+      floor_transition_corner_rubber_bottom_right: -1430018758
+      floor_transition_corner_rubber_top_left: 448084914
+      floor_transition_corner_rubber_top_right: -1137568560
+      floor_transition_rubber_left_beige_right: -392079889
+      floor_transition_rubber_top_beige_bottom: 1547208004
+      floor_wood_herringbone_a: -1681666231
+      floor_wood_plank_a: 889156707
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

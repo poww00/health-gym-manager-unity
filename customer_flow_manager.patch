@@ -1,0 +1,3338 @@
+diff --git a/Assets/_Project/Scripts/Runtime/Core/CustomerFlowManager.cs b/Assets/_Project/Scripts/Runtime/Core/CustomerFlowManager.cs
+index 6770808..06c8f1a 100644
+--- a/Assets/_Project/Scripts/Runtime/Core/CustomerFlowManager.cs
++++ b/Assets/_Project/Scripts/Runtime/Core/CustomerFlowManager.cs
+@@ -1,6 +1,7 @@
+ using System.Linq;
+ using System.Collections.Generic;
+ using UnityEngine;
++using UnityEngine.Rendering;
+ 
+ /// <summary>
+ /// [?꾨줈?좏???MVP]
+@@ -82,10 +83,74 @@ public sealed class ActiveCustomer
+     {
+         public GameObject visual;
+         public SpriteRenderer renderer;
++        public SpriteRenderer bodyRenderer;
++        public SpriteRenderer headRenderer;
++        public SortingGroup sortingGroup;
++        public bool usesLayeredCustomerSprites;
++        public bool usesPrototypeBodySprite;
++        public float bodyIdleAnimationOffsetSeconds;
++        public bool waitsForLayeredEntranceReveal = false;
++        public bool waitsForLayeredExitHide = false;
++        public bool layeredExitHidden = false;
++        public bool layeredEntranceHiddenLogged = false;
++        public bool layeredEntranceVisibleLogged = false;
++        public bool layeredExitHiddenLogged = false;
++        public bool layeredExitFadeOutStartedLogged = false;
++        public bool layeredExitFadeOutCompletedLogged = false;
++        public bool layeredEntranceFadeInActive = false;
++        public bool layeredExitFadeOutActive = false;
++        public bool layeredIsExiting = false;
++        public bool layeredExitHidePending = false;
++        public bool layeredExitFadeOutStarted = false;
++        public bool layeredExitFadeOutCompleted = false;
++        public bool layeredExitRouteCompletionBlockedLogged = false;
++        public float layeredEntranceHiddenTime = -1f;
++        public float layeredEntranceVisibleTime = -1f;
++        public float layeredEntranceFadeInCompletedTime = -1f;
++        public float layeredExitHiddenTime = -1f;
++        public float layeredEntranceFadeInElapsed = 0f;
++        public float layeredExitFadeOutElapsed = 0f;
++        public string entranceDoorPassPointSourceName = "";
++        public Vector3 entranceOriginalWaypoint;
++        public Vector3 entranceDoorPassPoint;
++        public Vector3 entranceSafeRevealPoint;
++        public Vector3 exitSafeHidePoint;
++        public bool hasLayeredEntranceRevealPointForEntry = false;
++        public Vector3 entranceRevealPointUsedForEntry;
++        public bool exitHidePointOverwrittenToEntranceReveal = false;
++        public Vector3 receptionOrDeskPoint;
++        public Vector3 entranceVisibleTransitionPosition;
++        public Vector3 exitStartedPosition;
++        public Vector3 exitFadeOutStartedPosition;
++        public Vector3 exitHiddenTransitionPosition;
++        public bool hasReceptionOrDeskPoint = false;
++        public float revealToDeskDistance = -1f;
++        public float exitStartedToDeskDistance = -1f;
++        public float exitFadeOutStartToHideDistance = -1f;
++        public float exitHiddenToDeskDistance = -1f;
++        public bool manualEntranceMarkerFound = false;
++        public bool manualEntranceMarkerCreated = false;
++        public bool manualEntranceMarkerOverwritten = false;
++        public bool usedManualEntranceMarker = false;
++        public bool usedSerializedManualEntranceWorldPoint = false;
++        public Vector3 manualEntranceMarkerWorldPosition;
++        public bool revealPointXChangedFromMarkerBase = false;
++        public bool revealPointXForcedToMarkerBase = false;
++        public bool layeredExitStartLogged = false;
++        public bool hasExitStartedPosition = false;
++        public float entranceMarkerBaseX = 0f;
++        public float requestedEntranceRevealPointX = 0f;
++        public float entryRevealDistanceAtVisible = -1f;
++        public float exitHideDistanceAtHidden = -1f;
++        public float layeredExitStartedTime = -1f;
++        public string layeredLastVisibilityReason = "";
+ 
+         public string targetMachineKey;
+         public Vector3 targetMachineWorldPosition;
+         public Vector3 worldPosition;
++        public readonly List<Vector3> routeWaypoints = new List<Vector3>();
++        public int routeWaypointIndex = 0;
++        public bool hasPassedEntrance = false;
+ 
+         public float remainingUseSeconds;
+         public int remainingMachineStops;
+@@ -104,6 +169,12 @@ public sealed class ActiveCustomer
+         public MachinePreferenceGroup secondaryPreference = MachinePreferenceGroup.Other;
+ 
+         public readonly HashSet<string> visitedMachineKeys = new HashSet<string>();
++
++        // --- NEW FIELDS FOR WALK ANIMATION ---
++        public bool wasMoving = false;
++        public bool isWalkingVertical = false;
++        public int walkPhase = 0; // 0: Idle, 1: StartWalk, 2: Walking, 3: StopWalk
++        public float walkPhaseTimer = 0f;
+     }
+ 
+     private sealed class MachineRuntimeInfo
+@@ -111,6 +182,7 @@ private sealed class MachineRuntimeInfo
+         public string key;
+         public PlacedObjectSaveData data;
+         public Vector3 centerWorldPosition;
++        public Vector3 interactionWorldPosition;
+         public MachinePreferenceGroup preferenceGroup;
+     }
+ 
+@@ -121,6 +193,39 @@ private sealed class OperationFeedEntry
+         public float remainingSeconds;
+     }
+ 
++    private struct LayeredEntrancePointInfo
++    {
++        public string sourceName;
++        public Vector3 doorPassPoint;
++        public Vector3 revealPoint;
++        public Vector3 exitHidePoint;
++        public Vector3 receptionOrDeskPoint;
++        public bool hasReceptionOrDeskPoint;
++        public float revealToDeskDistance;
++        public bool usedRendererFallback;
++        public bool manualMarkerFound;
++        public bool manualMarkerCreated;
++        public bool usedManualMarker;
++        public bool usedSerializedManualWorldPoint;
++        public bool manualMarkerOverwritten;
++        public Vector3 manualMarkerWorldPosition;
++        public bool revealPointXChangedFromMarkerBase;
++        public bool revealPointXForcedToMarkerBase;
++        public float markerBaseX;
++        public float requestedRevealPointX;
++    }
++
++    private struct LayeredExitFadeDecision
++    {
++        public float distanceToExitHidePoint;
++        public bool insideExitFadeZone;
++        public bool withinFadeDistance;
++        public bool passedLeftEntranceThreshold;
++        public bool passedHardCutoff;
++        public bool shouldStartFadeOut;
++        public string reason;
++    }
++
+     [Header("References (鍮꾩썙?먮㈃ ?먮룞 ?먯깋)")]
+     [SerializeField] private PlacementManager placementManager;
+     [SerializeField] private GridManager gridManager;
+@@ -161,6 +266,9 @@ private sealed class OperationFeedEntry
+     [SerializeField] private float moveSpeed = 2.2f;
+     [SerializeField] private float entryExitOffsetX = 1.6f;
+     [SerializeField] private float entryExitHeightRatio = 0.18f;
++    private const float FallbackEntranceOutsideWaypointOffsetCells = -0.55f;
++    private const float FallbackEntranceWalkWaypointOffsetCells = 0.38f;
++    private const float FallbackEntranceInsideSafeWaypointOffsetCells = 0.92f;
+ 
+     [Header("Prototype Visual")]
+     [SerializeField] private Color movingCustomerColor = new Color(0.85f, 1f, 0.95f, 0.95f);
+@@ -174,6 +282,30 @@ private sealed class OperationFeedEntry
+     [SerializeField] private float waitingPulseAmplitude = 0.07f;
+     [SerializeField] private float waitingPulseSpeed = 5f;
+ 
++    [Header("Prototype Layered Customer Sprites")]
++    [SerializeField] private bool usePrototypeLayeredCustomerSprites = true;
++    [SerializeField] private bool applyPrototypeLayeredCustomerSpritesToAllCustomers = false;
++    [SerializeField] private Vector3 layeredCustomerHeadLocalOffset = new Vector3(0f, 0.58f, 0f);
++    [SerializeField] private float layeredCustomerHeadLocalScale = 1f;
++    [SerializeField] private float layeredCustomerBodyIdleFps = 5f;
++    [SerializeField] private float layeredCustomerVisualScale = 0.88f;
++    [SerializeField] private float layeredCustomerEntranceRevealInsetWorld = 0.42f;
++    [SerializeField] private float layeredCustomerEntranceFadeInSeconds = 0.18f;
++    [SerializeField] private float layeredCustomerExitFadeOutSeconds = 0.18f;
++    [SerializeField] private float layeredCustomerEntranceRevealRadius = 0.6f;
++    [SerializeField] private float layeredCustomerExitHideRadius = 0.25f;
++    [SerializeField] private float layeredCustomerExitFadeDistanceWorld = 0.45f;
++    [SerializeField] private float layeredCustomerExitFadeZoneHalfWidth = 0.55f;
++    [SerializeField] private float layeredCustomerExitFadeZoneHalfHeight = 0.65f;
++    [SerializeField] private float layeredCustomerExitFadeStartInsetWorld = 0.45f;
++    [SerializeField] private float layeredCustomerExitHardCutoffOffsetWorld = 0.20f;
++    [SerializeField] private bool layeredCustomerUseManualEntranceMarker = true;
++    [SerializeField] private string layeredCustomerEntranceMarkerName = "CustomerEntranceRevealMarker";
++    [SerializeField] private Vector3 layeredCustomerManualEntranceRevealOffset = new Vector3(0f, -0.25f, 0f);
++    [SerializeField] private bool layeredCustomerUseManualEntranceWorldPoint = false;
++    [SerializeField] private Vector3 layeredCustomerManualEntranceRevealWorldPoint = Vector3.zero;
++    [SerializeField] private bool showLayeredCustomerEntranceDebugMarkers = true;
++
+     [Header("Machine Overlay")]
+     [SerializeField] private bool showMachineStateOverlay = true;
+     [SerializeField] private Color reservedOverlayColor = new Color(0.45f, 0.75f, 1f, 0.30f);
+@@ -192,6 +324,45 @@ private sealed class OperationFeedEntry
+     [SerializeField] private Color operationFeedAlertColor = new Color(1f, 0.72f, 0.72f, 1f);
+ 
+     private static Sprite cachedWhiteSprite;
++    private const string LayeredCustomerRawBodyAssetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_idle_base_32x48_4x2.png";
++    private const string LayeredCustomerProcessedBodyAssetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_idle_base_32x48_4x2_processed_transparent.png";
++    private const string LayeredCustomerBodyIdleSheetResourcePath = "GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_idle_base_32x48_4x2_processed_transparent";
++    private const string LayeredCustomerBodyWalkSheetResourcePath = "GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_walk_front_32x48_4x2";
++    private const string LayeredCustomerBodyWalkVerticalSheetResourcePath = "GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_walk_up_32x48_4x1";
++    private const string LayeredCustomerRawHeadAssetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/head/female_01/head_female_01_3dir_sheet.png";
++    private const string LayeredCustomerProcessedHeadAssetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/head/female_01/head_female_01_3dir_sheet_processed_transparent.png";
++    private const string LayeredCustomerHeadSheetResourcePath = "GeneratedRuntimeUI/characters/customer/head/male_chubby/head_male_chubby_3dir_32x48_3x1";
++    private Sprite[] cachedLayeredCustomerBodyIdleFrames;
++    private Sprite[] cachedLayeredCustomerBodyWalkFrames;
++    private Sprite[] cachedLayeredCustomerHeadFrames;
++    private Sprite[] cachedLayeredCustomerBodyWalkVerticalFrames;
++    private bool layeredCustomerBodySheetLoadAttempted;
++    private bool layeredCustomerBodyWalkSheetLoadAttempted;
++    private bool layeredCustomerBodyWalkVerticalSheetLoadAttempted;
++    private bool layeredCustomerHeadSheetLoadAttempted;
++    private bool layeredCustomerSpriteStatusLogged;
++    private bool layeredCustomerSortingStatusLogged;
++    private bool layeredCustomerBodyFrameWarningLogged;
++    private bool layeredCustomerHeadFrameWarningLogged;
++    private bool layeredCustomerEntranceFallbackWarningLogged;
++    private bool layeredCustomerScaleStatusLogged;
++    private bool layeredCustomerScaleWarningLogged;
++    private bool layeredCustomerBodyHeadScaleWarningLogged;
++    private bool layeredCustomerPulseDisabledLogged;
++    private bool layeredCustomerFadeDurationWarningLogged;
++    private int layeredCustomerSpriteAppliedCount;
++    private bool hasLayeredEntranceDebugPoints;
++    private Vector3 debugEntranceDoorOrPassPoint;
++    private Vector3 debugEntranceRevealPoint;
++    private Vector3 debugExitHidePoint;
++    private Vector3 debugReceptionOrDeskPoint;
++    private bool hasDebugReceptionOrDeskPoint;
++    private const string PrototypeBodySpriteResourcePath = "GeneratedRuntimeUI/characters/prototype/body/body_base_idle_32x48";
++    private const string PrototypeBodyIdleSheetResourcePath = "GeneratedRuntimeUI/characters/prototype/body/body_base_idle_32x48_sheet";
++    private Sprite cachedPrototypeBodySprite;
++    private Sprite[] cachedPrototypeBodyIdleFrames;
++    private bool prototypeBodySpriteLoadAttempted;
++    private bool prototypeBodySheetLoadAttempted;
+ 
+     public readonly List<ActiveCustomer> activeCustomers = new List<ActiveCustomer>();
+     private readonly HashSet<string> reservedMachineKeys = new HashSet<string>();
+@@ -517,7 +688,7 @@ private void TrySpawnCustomer(float simulationDeltaTime, List<MachineRuntimeInfo
+             return;
+         }
+ 
+-        ActiveCustomer customer = CreateCustomer(GetEntryWorldPosition());
++        ActiveCustomer customer = CreateCustomer(GetCustomerSpawnWorldPosition());
+         AssignPreferencesFromMachines(customer, machines);
+         customer.remainingMachineStops = GetPlannedMachineStops(machines.Count);
+ 
+@@ -590,23 +761,72 @@ private ActiveCustomer CreateCustomer(Vector3 spawnWorldPosition)
+         visual.transform.SetParent(EnsureRuntimeRoot(), false);
+         visual.transform.position = spawnWorldPosition;
+ 
+-        SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
+-        renderer.sprite = GetWhiteSprite();
+-        renderer.drawMode = SpriteDrawMode.Sliced;
+-        renderer.size = customerVisualSize;
+-        renderer.color = movingCustomerColor;
+-        renderer.sortingOrder = customerSortingOrder;
++        SpriteRenderer renderer;
++        SpriteRenderer headRenderer = null;
++        Sprite[] layeredBodyFrames;
++        Sprite layeredHeadSprite;
++        bool usesLayeredCustomerSprites = TryGetLayeredCustomerSpritesForNewCustomer(out layeredBodyFrames, out layeredHeadSprite);
++        bool usesPrototypeBodySprite = false;
++
++        if (usesLayeredCustomerSprites)
++        {
++            visual.name = "Customer_LayeredPrototypePreview";
++            visual.transform.localScale = GetLayeredCustomerRootScale();
++            renderer = CreateLayeredCustomerBodyRenderer(visual.transform, layeredBodyFrames[0]);
++            headRenderer = CreateLayeredCustomerHeadRenderer(visual.transform, layeredHeadSprite);
++            SortingGroup sortingGroup = ConfigureLayeredCustomerSorting(visual, renderer, headRenderer);
++            layeredCustomerSpriteAppliedCount += 1;
++            LogLayeredCustomerSortingStatusOnce(renderer, headRenderer, sortingGroup);
++        }
++        else
++        {
++            renderer = visual.AddComponent<SpriteRenderer>();
++            Sprite prototypeBodySprite = HasActiveLayeredCustomer() || HasActivePrototypeBodyCustomer()
++                ? null
++                : GetPrototypeBodyPreviewSprite();
++            usesPrototypeBodySprite = prototypeBodySprite != null;
++            if (usesPrototypeBodySprite)
++            {
++                visual.name = "Customer_BodyPrototypePreview_32x48";
++                renderer.sprite = prototypeBodySprite;
++                renderer.drawMode = SpriteDrawMode.Simple;
++                renderer.color = Color.white;
++            }
++            else
++            {
++                renderer.sprite = GetWhiteSprite();
++                renderer.drawMode = SpriteDrawMode.Sliced;
++                renderer.size = customerVisualSize;
++                renderer.color = movingCustomerColor;
++            }
++
++            renderer.sortingOrder = customerSortingOrder;
++        }
+ 
+         ActiveCustomer customer = new ActiveCustomer
+         {
+             visual = visual,
+             renderer = renderer,
++            bodyRenderer = renderer,
++            headRenderer = headRenderer,
++            sortingGroup = usesLayeredCustomerSprites ? visual.GetComponent<SortingGroup>() : null,
++            usesLayeredCustomerSprites = usesLayeredCustomerSprites,
++            usesPrototypeBodySprite = usesPrototypeBodySprite,
++            bodyIdleAnimationOffsetSeconds = GetRandomLayeredCustomerIdleOffsetSeconds(),
+             state = CustomerState.MovingToMachine,
+             worldPosition = spawnWorldPosition,
+             leaveReason = CustomerLeaveReason.None,
+             waitSlotIndex = -1,
+         };
+ 
++        if (usesLayeredCustomerSprites)
++        {
++            SetLayeredCustomerVisible(customer, false, "initial spawn hidden before entrance reveal");
++            ApplyLayeredCustomerVisualScale(customer);
++            LogLayeredCustomerVisualPresentationStatusOnce(customer);
++        }
++
++        LogLayeredCustomerSpriteStatusOnce();
+         return customer;
+     }
+ 
+@@ -618,7 +838,6 @@ private void UpdateCustomers(float simulationDeltaTime, List<MachineRuntimeInfo>
+         }
+ 
+         float moveStep = Mathf.Max(0.01f, moveSpeed) * simulationDeltaTime;
+-        Vector3 exitPos = GetExitWorldPosition();
+ 
+         for (int i = activeCustomers.Count - 1; i >= 0; i--)
+         {
+@@ -629,28 +848,21 @@ private void UpdateCustomers(float simulationDeltaTime, List<MachineRuntimeInfo>
+                 continue;
+             }
+ 
++            UpdateLayeredCustomerBodyFrame(customer);
++            UpdateLayeredCustomerEntranceFade(customer, simulationDeltaTime);
++            UpdateLayeredCustomerExitFade(customer, simulationDeltaTime);
++            UpdatePrototypeBodyIdleFrame(customer);
++
+             switch (customer.state)
+             {
+                 case CustomerState.MovingToMachine:
+                 {
+-                    Vector3 target = customer.targetMachineWorldPosition;
+-                    float dist = Vector3.Distance(customer.worldPosition, target);
+-
+-                    if (dist <= moveStep)
++                    if (MoveCustomerAlongRoute(customer, moveStep))
+                     {
+-                        customer.worldPosition = target;
++                        customer.hasPassedEntrance = true;
+                         customer.state = CustomerState.UsingMachine;
+                         ApplyCustomerVisualForState(customer);
+                     }
+-                    else
+-                    {
+-                        customer.worldPosition = Vector3.MoveTowards(customer.worldPosition, target, moveStep);
+-                    }
+-
+-                    if (customer.visual != null)
+-                    {
+-                        customer.visual.transform.position = customer.worldPosition;
+-                    }
+ 
+                     break;
+                 }
+@@ -707,6 +919,7 @@ private void UpdateCustomers(float simulationDeltaTime, List<MachineRuntimeInfo>
+                     if (customer.waitSlotIndex >= 0)
+                     {
+                         Vector3 slotPos = GetWaitingWorldPosition(customer.waitSlotIndex);
++                        UpdateCustomerFacingDirection(customer, slotPos);
+                         customer.worldPosition = Vector3.MoveTowards(customer.worldPosition, slotPos, moveStep);
+                         if (customer.visual != null)
+                         {
+@@ -734,10 +947,32 @@ private void UpdateCustomers(float simulationDeltaTime, List<MachineRuntimeInfo>
+ 
+                 case CustomerState.Leaving:
+                 {
+-                    float dist = Vector3.Distance(customer.worldPosition, exitPos);
+-
+-                    if (dist <= moveStep)
++                    if (MoveCustomerAlongRoute(customer, moveStep))
+                     {
++                        if (customer.usesLayeredCustomerSprites && !customer.layeredExitFadeOutCompleted)
++                        {
++                            if (!customer.layeredExitFadeOutActive)
++                            {
++                                TryStartLayeredCustomerExitFadeOut(customer, "exit route completed before fade-out completed");
++                            }
++
++                            if (!customer.layeredExitFadeOutCompleted)
++                            {
++                                if (!customer.layeredExitRouteCompletionBlockedLogged)
++                                {
++                                    customer.layeredExitRouteCompletionBlockedLogged = true;
++                                    Debug.LogWarning(
++                                        "[CustomerFlowManager] Blocked layered customer despawn until exit fade-out completes.\n" +
++                                        $"Customer position: {FormatVector3(customer.worldPosition)}\n" +
++                                        $"Exit hide point: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++                                        $"Distance to exit hide point: {GetDistanceLabel(GetPlanarDistance(customer.worldPosition, customer.exitSafeHidePoint))}\n" +
++                                        $"Last visibility reason: {customer.layeredLastVisibilityReason}");
++                                }
++
++                                break;
++                            }
++                        }
++
+                         FinalizeCustomerDeparture(customer);
+ 
+                         if (customer.visual != null)
+@@ -747,16 +982,6 @@ private void UpdateCustomers(float simulationDeltaTime, List<MachineRuntimeInfo>
+ 
+                         activeCustomers.RemoveAt(i);
+                     }
+-                    else
+-                    {
+-                        customer.worldPosition = Vector3.MoveTowards(customer.worldPosition, exitPos, moveStep);
+-
+-                        if (customer.visual != null)
+-                        {
+-                            customer.visual.transform.position = customer.worldPosition;
+-                        }
+-                    }
+-
+                     break;
+                 }
+             }
+@@ -778,13 +1003,22 @@ private bool TryAssignNextMachine(ActiveCustomer customer, List<MachineRuntimeIn
+         bool wasWaiting = customer.state == CustomerState.WaitingForMachine;
+ 
+         customer.targetMachineKey = targetMachine.key;
+-        customer.targetMachineWorldPosition = targetMachine.centerWorldPosition;
++        customer.targetMachineWorldPosition = targetMachine.interactionWorldPosition;
+         customer.remainingUseSeconds = Random.Range(machineUseDurationMinSeconds, machineUseDurationMaxSeconds);
+         customer.state = CustomerState.MovingToMachine;
+         customer.leaveReason = CustomerLeaveReason.None;
+         customer.waitSlotIndex = -1;
+         customer.remainingWaitSeconds = 0f;
+         customer.retrySearchCountdown = 0f;
++        bool enterThroughEntrance = !customer.hasPassedEntrance;
++        PrepareLayeredCustomerEntranceReveal(customer, enterThroughEntrance);
++        SetCustomerRoute(
++            customer,
++            BuildCustomerRoute(
++                customer.worldPosition,
++                customer.targetMachineWorldPosition,
++                enterThroughEntrance,
++                customer.usesLayeredCustomerSprites));
+ 
+         if (wasWaiting)
+         {
+@@ -996,6 +1230,8 @@ private void BeginLeaving(ActiveCustomer customer, CustomerLeaveReason reason)
+         customer.remainingWaitSeconds = 0f;
+         customer.retrySearchCountdown = 0f;
+         customer.leaveReason = reason;
++        PrepareLayeredCustomerExitHide(customer);
++        SetCustomerRoute(customer, BuildExitRoute(customer));
+         ApplyCustomerVisualForState(customer);
+     }
+ 
+@@ -1034,6 +1270,36 @@ private void ApplyCustomerVisualForState(ActiveCustomer customer)
+             return;
+         }
+ 
++        if (customer.usesLayeredCustomerSprites)
++        {
++            if (!customer.waitsForLayeredEntranceReveal &&
++                !customer.layeredExitHidden &&
++                !customer.layeredExitFadeOutActive)
++            {
++                SetLayeredCustomerVisible(customer, true, "apply layered customer visual state");
++            }
++
++            ApplyLayeredCustomerVisualScale(customer);
++
++            if (customer.bodyRenderer != null)
++            {
++                SetRendererColorPreservingAlpha(customer.bodyRenderer, Color.white);
++            }
++
++            if (customer.headRenderer != null)
++            {
++                SetRendererColorPreservingAlpha(customer.headRenderer, Color.white);
++            }
++
++            return;
++        }
++
++        if (customer.usesPrototypeBodySprite)
++        {
++            customer.renderer.color = Color.white;
++            return;
++        }
++
+         switch (customer.state)
+         {
+             case CustomerState.UsingMachine:
+@@ -1061,6 +1327,13 @@ private void UpdateCustomerVisualAnimation(ActiveCustomer customer)
+             return;
+         }
+ 
++        if (customer.usesLayeredCustomerSprites)
++        {
++            ApplyLayeredCustomerVisualScale(customer);
++            LogLayeredCustomerPulseDisabledOnce(customer);
++            return;
++        }
++
+         float scale = 1f;
+ 
+         switch (customer.state)
+@@ -1077,56 +1350,2768 @@ private void UpdateCustomerVisualAnimation(ActiveCustomer customer)
+         customer.visual.transform.localScale = new Vector3(scale, scale, 1f);
+     }
+ 
+-    private Transform EnsureRuntimeRoot()
++    private Vector3 GetLayeredCustomerRootScale()
+     {
+-        if (runtimeRoot != null)
++        float safeScale = Mathf.Clamp(layeredCustomerVisualScale, 0.5f, 1.2f);
++        return new Vector3(safeScale, safeScale, 1f);
++    }
++
++    private void ApplyLayeredCustomerVisualScale(ActiveCustomer customer)
++    {
++        if (customer == null || customer.visual == null || !customer.usesLayeredCustomerSprites)
+         {
+-            return runtimeRoot;
++            return;
+         }
+ 
+-        GameObject rootObject = new GameObject("PrototypeCustomersRoot");
+-        Transform parent = transform.parent != null ? transform.parent : transform;
+-        rootObject.transform.SetParent(parent, false);
+-        runtimeRoot = rootObject.transform;
+-        return runtimeRoot;
++        Vector3 expectedScale = GetLayeredCustomerRootScale();
++        if ((customer.visual.transform.localScale - expectedScale).sqrMagnitude > 0.0001f)
++        {
++            if (!layeredCustomerScaleWarningLogged)
++            {
++                layeredCustomerScaleWarningLogged = true;
++                Debug.LogWarning(
++                    "[CustomerFlowManager] Layered customer visual root scale was changed outside the fixed prototype scale. Restoring it.\n" +
++                    $"Expected visual root scale: {FormatVector3(expectedScale)}\n" +
++                    $"Current visual root scale: {FormatVector3(customer.visual.transform.localScale)}");
++            }
++
++            customer.visual.transform.localScale = expectedScale;
++        }
++
++        WarnIfLayeredCustomerBodyHeadScaleMismatch(customer);
+     }
+ 
+-    private Transform EnsureOverlayRoot()
++    private void WarnIfLayeredCustomerBodyHeadScaleMismatch(ActiveCustomer customer)
+     {
+-        if (overlayRoot != null)
++        if (customer == null ||
++            !customer.usesLayeredCustomerSprites ||
++            customer.bodyRenderer == null ||
++            customer.headRenderer == null ||
++            layeredCustomerBodyHeadScaleWarningLogged)
+         {
+-            return overlayRoot;
++            return;
+         }
+ 
+-        GameObject rootObject = new GameObject("PrototypeMachineOverlayRoot");
+-        Transform parent = transform.parent != null ? transform.parent : transform;
+-        rootObject.transform.SetParent(parent, false);
+-        overlayRoot = rootObject.transform;
+-        return overlayRoot;
++        Vector3 bodyScale = customer.bodyRenderer.transform.localScale;
++        Vector3 expectedHeadScale = new Vector3(
++            Mathf.Max(0.01f, layeredCustomerHeadLocalScale),
++            Mathf.Max(0.01f, layeredCustomerHeadLocalScale),
++            1f);
++        Vector3 headScale = customer.headRenderer.transform.localScale;
++
++        if ((bodyScale - Vector3.one).sqrMagnitude > 0.0001f ||
++            (headScale - expectedHeadScale).sqrMagnitude > 0.0001f ||
++            (bodyScale - headScale).sqrMagnitude > 0.0001f)
++        {
++            layeredCustomerBodyHeadScaleWarningLogged = true;
++            Debug.LogWarning(
++                "[CustomerFlowManager] Layered customer Body/Head local scales are not at their expected values.\n" +
++                $"Body local scale: {FormatVector3(bodyScale)}\n" +
++                $"Head local scale: {FormatVector3(headScale)}\n" +
++                $"Expected head local scale: {FormatVector3(expectedHeadScale)}");
++        }
+     }
+ 
+-    private Vector3 GetEntryWorldPosition()
++    private void LogLayeredCustomerPulseDisabledOnce(ActiveCustomer customer)
+     {
+-        float halfWidth = gridManager.Width * gridManager.CellSize * 0.5f;
+-        float halfHeight = gridManager.Height * gridManager.CellSize * 0.5f;
++        if (layeredCustomerPulseDisabledLogged || customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
+ 
+-        return new Vector3(
+-            -halfWidth - Mathf.Max(0.8f, entryExitOffsetX),
+-            -halfHeight + (gridManager.Height * gridManager.CellSize * Mathf.Clamp01(entryExitHeightRatio)),
+-            0f
+-        );
++        layeredCustomerPulseDisabledLogged = true;
++        Debug.Log(
++            "[CustomerFlowManager] Layered customer exercise scale pulse disabled\n" +
++            $"Layered customer visual scale: {layeredCustomerVisualScale:0.###}\n" +
++            $"Current visual root scale: {FormatVector3(customer.visual != null ? customer.visual.transform.localScale : Vector3.zero)}\n" +
++            $"HeadLocalOffset: {FormatVector3(layeredCustomerHeadLocalOffset)}");
+     }
+ 
+-    private Vector3 GetExitWorldPosition()
++    private void LogLayeredCustomerVisualPresentationStatusOnce(ActiveCustomer customer)
+     {
+-        float halfWidth = gridManager.Width * gridManager.CellSize * 0.5f;
+-        float halfHeight = gridManager.Height * gridManager.CellSize * 0.5f;
++        if (layeredCustomerScaleStatusLogged || customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
+ 
+-        return new Vector3(
+-            halfWidth + Mathf.Max(0.8f, entryExitOffsetX),
+-            -halfHeight + (gridManager.Height * gridManager.CellSize * Mathf.Clamp01(entryExitHeightRatio)),
+-            0f
+-        );
++        layeredCustomerScaleStatusLogged = true;
++        Debug.Log(
++            "[CustomerFlowManager] Layered customer visual presentation\n" +
++            $"Layered customer visual scale: {layeredCustomerVisualScale:0.###}\n" +
++            $"Layered customer exit fade-out seconds: {GetLayeredCustomerExitFadeOutSeconds():0.###}\n" +
++            $"Exercise scale pulse disabled for layered customer: True\n" +
++            $"Current visual root scale: {FormatVector3(customer.visual != null ? customer.visual.transform.localScale : Vector3.zero)}\n" +
++            $"HeadLocalOffset: {FormatVector3(layeredCustomerHeadLocalOffset)}");
++    }
++
++    private bool TryGetLayeredCustomerSpritesForNewCustomer(out Sprite[] bodyFrames, out Sprite headSprite)
++    {
++        bodyFrames = null;
++        headSprite = null;
++
++        if (!usePrototypeLayeredCustomerSprites)
++        {
++            return false;
++        }
++
++        if (!applyPrototypeLayeredCustomerSpritesToAllCustomers && HasActiveLayeredCustomer())
++        {
++            return false;
++        }
++
++        bodyFrames = GetLayeredCustomerBodyIdleFrames();
++        if (bodyFrames == null || bodyFrames.Length != 8 || bodyFrames[0] == null)
++        {
++            if (!layeredCustomerBodyFrameWarningLogged)
++            {
++                layeredCustomerBodyFrameWarningLogged = true;
++                Debug.LogWarning(
++                    $"[CustomerFlowManager] Processed body sprites skipped. Expected 8 frames at {LayeredCustomerProcessedBodyAssetPath}, got {(bodyFrames != null ? bodyFrames.Length : 0)}.");
++            }
++
++            return false;
++        }
++
++        Sprite[] headFrames = GetLayeredCustomerHeadFrames();
++        if (headFrames == null || headFrames.Length != 3)
++        {
++            if (!layeredCustomerHeadFrameWarningLogged)
++            {
++                layeredCustomerHeadFrameWarningLogged = true;
++                Debug.LogWarning(
++                    $"[CustomerFlowManager] Processed head sprites skipped. Expected 3 frames at {LayeredCustomerProcessedHeadAssetPath}, got {(headFrames != null ? headFrames.Length : 0)}.");
++            }
++
++            return false;
++        }
++
++        headSprite = GetLayeredCustomerHeadFrontSprite(headFrames);
++        return headSprite != null;
++    }
++
++    private SpriteRenderer CreateLayeredCustomerBodyRenderer(Transform customerRoot, Sprite bodySprite)
++    {
++        GameObject bodyObject = new GameObject("Body");
++        bodyObject.transform.SetParent(customerRoot, false);
++        bodyObject.transform.localPosition = Vector3.zero;
++
++        SpriteRenderer bodyRenderer = bodyObject.AddComponent<SpriteRenderer>();
++        bodyRenderer.sprite = bodySprite;
++        bodyRenderer.drawMode = SpriteDrawMode.Simple;
++        bodyRenderer.color = Color.white;
++        bodyRenderer.sortingOrder = customerSortingOrder;
++        return bodyRenderer;
++    }
++
++    private SpriteRenderer CreateLayeredCustomerHeadRenderer(Transform customerRoot, Sprite headSprite)
++    {
++        GameObject headObject = new GameObject("Head");
++        headObject.transform.SetParent(customerRoot, false);
++        headObject.transform.localPosition = layeredCustomerHeadLocalOffset;
++        float safeHeadScale = Mathf.Max(0.01f, layeredCustomerHeadLocalScale);
++        headObject.transform.localScale = new Vector3(safeHeadScale, safeHeadScale, 1f);
++
++        SpriteRenderer headRenderer = headObject.AddComponent<SpriteRenderer>();
++        headRenderer.sprite = headSprite;
++        headRenderer.drawMode = SpriteDrawMode.Simple;
++        headRenderer.color = Color.white;
++        headRenderer.sortingOrder = customerSortingOrder + 1;
++        return headRenderer;
++    }
++
++    private SortingGroup ConfigureLayeredCustomerSorting(GameObject customerRoot, SpriteRenderer bodyRenderer, SpriteRenderer headRenderer)
++    {
++        if (customerRoot == null || bodyRenderer == null || headRenderer == null)
++        {
++            return null;
++        }
++
++        SortingGroup sortingGroup = customerRoot.GetComponent<SortingGroup>();
++        if (sortingGroup == null)
++        {
++            sortingGroup = customerRoot.AddComponent<SortingGroup>();
++        }
++
++        int existingCustomerSortingLayerId = bodyRenderer.sortingLayerID;
++        sortingGroup.sortingLayerID = existingCustomerSortingLayerId;
++        sortingGroup.sortingOrder = customerSortingOrder;
++
++        bodyRenderer.sortingLayerID = existingCustomerSortingLayerId;
++        headRenderer.sortingLayerID = existingCustomerSortingLayerId;
++        bodyRenderer.sortingOrder = 0;
++        headRenderer.sortingOrder = 1;
++        return sortingGroup;
++    }
++
++    private void LogLayeredCustomerSortingStatusOnce(
++        SpriteRenderer bodyRenderer,
++        SpriteRenderer headRenderer,
++        SortingGroup sortingGroup)
++    {
++        if (layeredCustomerSortingStatusLogged)
++        {
++            return;
++        }
++
++        layeredCustomerSortingStatusLogged = true;
++        SpriteRenderer entranceFrontRenderer = FindEntranceFrontOccluderRenderer();
++        string entranceFrontLabel = entranceFrontRenderer != null
++            ? GetRendererSortingLabel(entranceFrontRenderer)
++            : "not found";
++
++        Debug.Log(
++            "[CustomerFlowManager] Layered customer sorting status\n" +
++            $"Existing temp customer sorting: layer={GetSortingLayerName(bodyRenderer != null ? bodyRenderer.sortingLayerID : 0)}, order={customerSortingOrder}\n" +
++            $"Layered sorting group: {(sortingGroup != null ? GetSortingGroupSortingLabel(sortingGroup) : "missing")}\n" +
++            $"Layered body sorting: {GetRendererSortingLabel(bodyRenderer)}\n" +
++            $"Layered head sorting: {GetRendererSortingLabel(headRenderer)}\n" +
++            $"Entrance/front occluder sorting: {entranceFrontLabel}\n" +
++            $"Applied customer count: {layeredCustomerSpriteAppliedCount}");
++    }
++
++    private static SpriteRenderer FindEntranceFrontOccluderRenderer()
++    {
++        SpriteRenderer[] renderers = UnityEngine.Object.FindObjectsByType<SpriteRenderer>(
++            FindObjectsInactive.Include,
++            FindObjectsSortMode.None);
++        for (int i = 0; i < renderers.Length; i++)
++        {
++            SpriteRenderer renderer = renderers[i];
++            if (renderer != null && renderer.name.Contains("GymEntranceFrontOccluder"))
++            {
++                return renderer;
++            }
++        }
++
++        return null;
++    }
++
++    private static SpriteRenderer FindEntranceRendererForRevealPoint()
++    {
++        SpriteRenderer front = FindRendererByNameContains("GymEntranceFrontOccluder");
++        if (front != null)
++        {
++            return front;
++        }
++
++        return FindRendererByNameContains("GymEntranceBack");
++    }
++
++    private static SpriteRenderer FindReceptionOrDeskRenderer()
++    {
++        SpriteRenderer receptionDesk = FindRendererByNameContains("GymReceptionDesk");
++        if (receptionDesk != null)
++        {
++            return receptionDesk;
++        }
++
++        return FindRendererByNameContains("ReceptionDesk");
++    }
++
++    private static SpriteRenderer FindRendererByNameContains(string namePart)
++    {
++        SpriteRenderer[] renderers = UnityEngine.Object.FindObjectsByType<SpriteRenderer>(
++            FindObjectsInactive.Include,
++            FindObjectsSortMode.None);
++        for (int i = 0; i < renderers.Length; i++)
++        {
++            SpriteRenderer renderer = renderers[i];
++            if (renderer != null && renderer.name.Contains(namePart))
++            {
++                return renderer;
++            }
++        }
++
++        return null;
++    }
++
++    private static string GetRendererSortingLabel(SpriteRenderer renderer)
++    {
++        return renderer != null
++            ? $"layer={GetSortingLayerName(renderer.sortingLayerID)}, order={renderer.sortingOrder}"
++            : "missing";
++    }
++
++    private static string GetSortingGroupSortingLabel(SortingGroup sortingGroup)
++    {
++        return $"layer={GetSortingLayerName(sortingGroup.sortingLayerID)}, order={sortingGroup.sortingOrder}";
++    }
++
++    private static string GetSortingLayerName(int sortingLayerId)
++    {
++        string name = SortingLayer.IDToName(sortingLayerId);
++        return string.IsNullOrEmpty(name) ? sortingLayerId.ToString() : name;
++    }
++
++    private static string GetRendererEnabledLabel(SpriteRenderer renderer)
++    {
++        return renderer != null ? renderer.enabled.ToString() : "missing";
++    }
++
++    private static string FormatVector3(Vector3 value)
++    {
++        return $"({value.x:0.###}, {value.y:0.###}, {value.z:0.###})";
++    }
++
++    private static string GetTimeLabel(float time)
++    {
++        return time >= 0f ? $"{time:0.00}s" : "pending";
++    }
++
++    private static string GetTransitionPositionLabel(float time, Vector3 position)
++    {
++        return time >= 0f ? FormatVector3(position) : "pending";
++    }
++
++    private static string GetDistanceLabel(float distance)
++    {
++        return distance >= 0f ? $"{distance:0.###}" : "not found";
++    }
++
++    private static float GetPlanarDistance(Vector3 a, Vector3 b)
++    {
++        return Vector2.Distance(new Vector2(a.x, a.y), new Vector2(b.x, b.y));
++    }
++
++    private static string GetManualRevealBasePositionLabel(ActiveCustomer customer)
++    {
++        if (customer == null)
++        {
++            return "not used";
++        }
++
++        if (customer.usedManualEntranceMarker)
++        {
++            return FormatVector3(customer.manualEntranceMarkerWorldPosition);
++        }
++
++        return customer.usedSerializedManualEntranceWorldPoint
++            ? FormatVector3(customer.entranceDoorPassPoint)
++            : "not used";
++    }
++
++    private bool HasActiveLayeredCustomer()
++    {
++        for (int i = 0; i < activeCustomers.Count; i++)
++        {
++            ActiveCustomer customer = activeCustomers[i];
++            if (customer != null && customer.usesLayeredCustomerSprites && customer.visual != null)
++            {
++                return true;
++            }
++        }
++
++        return false;
++    }
++
++    private Sprite[] GetLayeredCustomerBodyIdleFrames()
++    {
++        if (!layeredCustomerBodySheetLoadAttempted)
++        {
++            layeredCustomerBodySheetLoadAttempted = true;
++            Sprite[] loadedFrames = Resources.LoadAll<Sprite>(LayeredCustomerBodyIdleSheetResourcePath);
++            cachedLayeredCustomerBodyIdleFrames = loadedFrames != null
++                ? loadedFrames.Where(sprite => sprite != null).OrderBy(sprite => sprite.name).ToArray()
++                : new Sprite[0];
++        }
++
++        return cachedLayeredCustomerBodyIdleFrames;
++    }
++
++    private Sprite[] GetLayeredCustomerHeadFrames()
++    {
++        if (!layeredCustomerHeadSheetLoadAttempted)
++        {
++            layeredCustomerHeadSheetLoadAttempted = true;
++            Sprite[] loadedFrames = Resources.LoadAll<Sprite>(LayeredCustomerHeadSheetResourcePath);
++            cachedLayeredCustomerHeadFrames = loadedFrames != null
++                ? loadedFrames.Where(sprite => sprite != null).OrderBy(sprite => sprite.rect.x).ToArray()
++                : new Sprite[0];
++        }
++
++        return cachedLayeredCustomerHeadFrames;
++    }
++
++    private Sprite GetLayeredCustomerHeadFrontSprite(Sprite[] headFrames)
++    {
++        if (headFrames == null || headFrames.Length <= 0)
++        {
++            return null;
++        }
++
++        for (int i = 0; i < headFrames.Length; i++)
++        {
++            if (headFrames[i] != null && headFrames[i].name == "head_customer_01_front")
++            {
++                return headFrames[i];
++            }
++        }
++
++        return headFrames[0];
++    }
++
++    private float GetRandomLayeredCustomerIdleOffsetSeconds()
++    {
++        float fps = Mathf.Max(0.1f, layeredCustomerBodyIdleFps);
++        return Random.Range(0f, 8f / fps);
++    }
++
++    private Sprite[] GetLayeredCustomerBodyWalkFrames()
++    {
++        if (!layeredCustomerBodyWalkSheetLoadAttempted)
++        {
++            layeredCustomerBodyWalkSheetLoadAttempted = true;
++            Sprite[] loadedFrames = Resources.LoadAll<Sprite>(LayeredCustomerBodyWalkSheetResourcePath);
++            cachedLayeredCustomerBodyWalkFrames = loadedFrames != null
++                ? loadedFrames.Where(sprite => sprite != null).OrderBy(sprite => sprite.name).ToArray()
++                : new Sprite[0];
++        }
++
++        return cachedLayeredCustomerBodyWalkFrames;
++    }
++
++    private Sprite[] GetLayeredCustomerBodyWalkVerticalFrames()
++    {
++        if (!layeredCustomerBodyWalkVerticalSheetLoadAttempted)
++        {
++            layeredCustomerBodyWalkVerticalSheetLoadAttempted = true;
++            Sprite[] loadedFrames = Resources.LoadAll<Sprite>(LayeredCustomerBodyWalkVerticalSheetResourcePath);
++            cachedLayeredCustomerBodyWalkVerticalFrames = loadedFrames != null
++                ? loadedFrames.Where(sprite => sprite != null).OrderBy(sprite => sprite.name).ToArray()
++                : new Sprite[0];
++        }
++
++        return cachedLayeredCustomerBodyWalkVerticalFrames;
++    }
++
++    private void UpdateLayeredCustomerBodyFrame(ActiveCustomer customer)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites || customer.bodyRenderer == null)
++        {
++            return;
++        }
++
++        ApplyLayeredCustomerVisualScale(customer);
++        
++        bool isMoving = customer.state == CustomerState.MovingToMachine || customer.state == CustomerState.Leaving || (customer.state == CustomerState.WaitingForMachine && customer.waitSlotIndex >= 0 && (customer.visual.transform.position - GetWaitingWorldPosition(customer.waitSlotIndex)).sqrMagnitude > 0.001f);
++        
++        Sprite[] walkFrames = customer.isWalkingVertical ? GetLayeredCustomerBodyWalkVerticalFrames() : GetLayeredCustomerBodyWalkFrames();
++        Sprite[] idleFrames = GetLayeredCustomerBodyIdleFrames();
++        
++        float fps = Mathf.Clamp(layeredCustomerBodyIdleFps, 1f, 12f);
++        float walkFps = fps * 1.5f;
++
++        if (isMoving && !customer.wasMoving)
++        {
++            customer.walkPhase = 1; // Start
++            customer.walkPhaseTimer = 0f;
++        }
++        else if (!isMoving && customer.wasMoving)
++        {
++            customer.walkPhase = 3; // Stop
++            customer.walkPhaseTimer = 0f;
++        }
++        
++        customer.wasMoving = isMoving;
++
++        Sprite currentSprite = null;
++
++        if (walkFrames != null && walkFrames.Length == 4)
++        {
++            if (isMoving)
++            {
++                customer.walkPhaseTimer += Time.deltaTime;
++                int frameIndex = Mathf.FloorToInt(customer.walkPhaseTimer * walkFps) % 4;
++                currentSprite = walkFrames[frameIndex];
++            }
++            else
++            {
++                customer.walkPhaseTimer = 0f;
++                customer.walkPhase = 0;
++            }
++        }
++        else
++        {
++            if (customer.walkPhase == 0) // Idle
++            {
++                int frameCount = idleFrames != null ? idleFrames.Length : 0;
++                if (frameCount > 0)
++                {
++                    int frameIndex = Mathf.FloorToInt((Time.time + customer.bodyIdleAnimationOffsetSeconds) * fps) % frameCount;
++                    currentSprite = idleFrames[frameIndex];
++                }
++            }
++            else if (customer.walkPhase == 1) // Start (Frames 0, 1)
++            {
++                customer.walkPhaseTimer += Time.deltaTime;
++                int frameCount = 2; // 0 and 1
++                int frameIndex = Mathf.FloorToInt(customer.walkPhaseTimer * walkFps);
++                if (frameIndex >= frameCount)
++                {
++                    customer.walkPhase = 2; // Transition to walk
++                    customer.walkPhaseTimer = 0f; // Reset for walk
++                }
++                if (walkFrames != null && walkFrames.Length >= 2 && customer.walkPhase == 1)
++                {
++                    currentSprite = walkFrames[frameIndex];
++                }
++            }
++            
++            if (customer.walkPhase == 2) // Walking (Frames 2, 3, 4, 5)
++            {
++                customer.walkPhaseTimer += Time.deltaTime;
++                int frameCount = 4;
++                int frameIndex = Mathf.FloorToInt(customer.walkPhaseTimer * walkFps) % frameCount;
++                if (walkFrames != null && walkFrames.Length >= 6)
++                {
++                    currentSprite = walkFrames[2 + frameIndex];
++                }
++            }
++            else if (customer.walkPhase == 3) // Stopping (Frames 6, 7)
++            {
++                customer.walkPhaseTimer += Time.deltaTime;
++                int frameCount = 2; // 6 and 7
++                int frameIndex = Mathf.FloorToInt(customer.walkPhaseTimer * walkFps);
++                if (frameIndex >= frameCount)
++                {
++                    customer.walkPhase = 0; // Transition to idle
++                    customer.walkPhaseTimer = 0f;
++                }
++                if (walkFrames != null && walkFrames.Length >= 8 && customer.walkPhase == 3)
++                {
++                    currentSprite = walkFrames[6 + frameIndex];
++                }
++            }
++        }
++        
++        // Fallback if missing
++        if (currentSprite == null && customer.walkPhase == 0 && idleFrames != null && idleFrames.Length > 0)
++        {
++            currentSprite = idleFrames[0];
++        }
++
++        if (currentSprite != null)
++        {
++            customer.bodyRenderer.sprite = currentSprite;
++        }
++    }
++
++    private void LogLayeredCustomerSpriteStatusOnce()
++    {
++        if (layeredCustomerSpriteStatusLogged || !usePrototypeLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        Sprite[] bodyFrames = GetLayeredCustomerBodyIdleFrames();
++        Sprite[] headFrames = GetLayeredCustomerHeadFrames();
++        bool bodyLoaded = bodyFrames != null && bodyFrames.Length > 0;
++        bool headLoaded = headFrames != null && headFrames.Length > 0;
++        Texture2D bodyTexture = bodyLoaded && bodyFrames[0] != null ? bodyFrames[0].texture : null;
++        Texture2D headTexture = headLoaded && headFrames[0] != null ? headFrames[0].texture : null;
++        layeredCustomerSpriteStatusLogged = true;
++
++        Debug.Log(
++            "[CustomerFlowManager] Layered customer sprite prototype status\n" +
++            $"Raw body path: {LayeredCustomerRawBodyAssetPath}\n" +
++            $"Processed body path: {LayeredCustomerProcessedBodyAssetPath}\n" +
++            $"Processed body size: {GetTextureSizeLabel(bodyTexture)}\n" +
++            $"Body frame count: {(bodyFrames != null ? bodyFrames.Length : 0)}\n" +
++            $"Raw head path: {LayeredCustomerRawHeadAssetPath}\n" +
++            $"Processed head path: {LayeredCustomerProcessedHeadAssetPath}\n" +
++            $"Processed head size: {GetTextureSizeLabel(headTexture)}\n" +
++            $"Head frame count: {(headFrames != null ? headFrames.Length : 0)}\n" +
++            $"Applied customer count: {layeredCustomerSpriteAppliedCount}\n" +
++            $"Layered customer visual scale: {layeredCustomerVisualScale:0.###}\n" +
++            $"Layered customer exit fade-out seconds: {GetLayeredCustomerExitFadeOutSeconds():0.###}\n" +
++            $"Exercise scale pulse disabled for layered customer: True\n" +
++            $"HeadLocalOffset: {layeredCustomerHeadLocalOffset}\n" +
++            $"Head scale: {layeredCustomerHeadLocalScale}");
++    }
++
++    private static string GetTextureSizeLabel(Texture2D texture)
++    {
++        return texture != null ? $"{texture.width}x{texture.height}" : "missing";
++    }
++
++    private bool HasActivePrototypeBodyCustomer()
++    {
++        for (int i = 0; i < activeCustomers.Count; i++)
++        {
++            ActiveCustomer customer = activeCustomers[i];
++            if (customer != null && customer.usesPrototypeBodySprite && customer.visual != null)
++            {
++                return true;
++            }
++        }
++
++        return false;
++    }
++
++    private Sprite GetPrototypeBodyPreviewSprite()
++    {
++        Sprite[] idleFrames = GetPrototypeBodyIdleFrames();
++        if (idleFrames != null && idleFrames.Length > 0 && idleFrames[0] != null)
++        {
++            return idleFrames[0];
++        }
++
++        if (!prototypeBodySpriteLoadAttempted)
++        {
++            prototypeBodySpriteLoadAttempted = true;
++            cachedPrototypeBodySprite = Resources.Load<Sprite>(PrototypeBodySpriteResourcePath);
++        }
++
++        return cachedPrototypeBodySprite;
++    }
++
++    private Sprite[] GetPrototypeBodyIdleFrames()
++    {
++        if (!prototypeBodySheetLoadAttempted)
++        {
++            prototypeBodySheetLoadAttempted = true;
++            Sprite[] loadedFrames = Resources.LoadAll<Sprite>(PrototypeBodyIdleSheetResourcePath);
++            cachedPrototypeBodyIdleFrames = loadedFrames != null
++                ? loadedFrames.OrderBy(sprite => sprite.rect.x).ToArray()
++                : new Sprite[0];
++        }
++
++        return cachedPrototypeBodyIdleFrames;
++    }
++
++    private void UpdatePrototypeBodyIdleFrame(ActiveCustomer customer)
++    {
++        if (customer == null || !customer.usesPrototypeBodySprite || customer.renderer == null)
++        {
++            return;
++        }
++
++        Sprite[] idleFrames = GetPrototypeBodyIdleFrames();
++        int frameCount = idleFrames != null ? Mathf.Min(4, idleFrames.Length) : 0;
++        if (frameCount <= 0)
++        {
++            return;
++        }
++
++        int frameIndex = Mathf.FloorToInt(Time.time * 4f) % frameCount;
++        customer.renderer.sprite = idleFrames[frameIndex];
++    }
++
++    private Transform EnsureRuntimeRoot()
++    {
++        if (runtimeRoot != null)
++        {
++            return runtimeRoot;
++        }
++
++        GameObject rootObject = new GameObject("PrototypeCustomersRoot");
++        Transform parent = transform.parent != null ? transform.parent : transform;
++        rootObject.transform.SetParent(parent, false);
++        runtimeRoot = rootObject.transform;
++        return runtimeRoot;
++    }
++
++    private Transform EnsureOverlayRoot()
++    {
++        if (overlayRoot != null)
++        {
++            return overlayRoot;
++        }
++
++        GameObject rootObject = new GameObject("PrototypeMachineOverlayRoot");
++        Transform parent = transform.parent != null ? transform.parent : transform;
++        rootObject.transform.SetParent(parent, false);
++        overlayRoot = rootObject.transform;
++        return overlayRoot;
++    }
++
++    private void UpdateCustomerFacingDirection(ActiveCustomer customer, Vector3 targetPosition)
++    {
++        if (customer == null) return;
++        
++        float deltaX = targetPosition.x - customer.worldPosition.x;
++        float deltaY = targetPosition.y - customer.worldPosition.y;
++        
++        // Determine primary movement direction for animation selection
++        // ONLY purely vertical movement (no significant X movement) uses vertical sprite
++        if (Mathf.Abs(deltaX) < 0.05f && Mathf.Abs(deltaY) >= 0.05f)
++        {
++            customer.isWalkingVertical = true;
++        }
++        else if (Mathf.Abs(deltaX) >= 0.05f)
++        {
++            customer.isWalkingVertical = false;
++        }
++
++        // Swap head sprite based on direction (expects 3 frames: Front, Side, Back)
++        Sprite[] headFrames = GetLayeredCustomerHeadFrames();
++        if (headFrames != null && headFrames.Length >= 3 && customer.headRenderer != null)
++        {
++            if (customer.isWalkingVertical)
++            {
++                if (deltaY > 0f) customer.headRenderer.sprite = headFrames[2]; // Back
++                else customer.headRenderer.sprite = headFrames[0]; // Front
++            }
++            else
++            {
++                customer.headRenderer.sprite = headFrames[1]; // Side
++            }
++        }
++
++        // Increase threshold to prevent rapid alternating/jittering on mostly vertical paths
++        if (Mathf.Abs(deltaX) > 0.05f)
++        {
++            // The original horizontal sprite faces RIGHT, so flip if moving LEFT (deltaX < 0)
++            bool flip = deltaX < 0f;
++            if (customer.bodyRenderer != null) customer.bodyRenderer.flipX = flip;
++            if (customer.headRenderer != null) customer.headRenderer.flipX = flip;
++        }
++    }
++
++    private bool MoveCustomerAlongRoute(ActiveCustomer customer, float moveStep)
++    {
++        if (customer == null)
++        {
++            return true;
++        }
++
++        if (customer.routeWaypoints.Count <= 0 || customer.routeWaypointIndex >= customer.routeWaypoints.Count)
++        {
++            return true;
++        }
++
++        Vector3 target = customer.routeWaypoints[customer.routeWaypointIndex];
++        UpdateCustomerFacingDirection(customer, target);
++        float dist = Vector3.Distance(customer.worldPosition, target);
++        if (dist <= moveStep)
++        {
++            customer.worldPosition = target;
++            customer.routeWaypointIndex += 1;
++        }
++        else
++        {
++            customer.worldPosition = Vector3.MoveTowards(customer.worldPosition, target, moveStep);
++        }
++
++        if (customer.visual != null)
++        {
++            customer.visual.transform.position = customer.worldPosition;
++        }
++
++        UpdateLayeredCustomerEntranceReveal(customer);
++        UpdateLayeredCustomerExitHide(customer);
++        return customer.routeWaypointIndex >= customer.routeWaypoints.Count;
++    }
++
++    private void SetCustomerRoute(ActiveCustomer customer, List<Vector3> waypoints)
++    {
++        if (customer == null)
++        {
++            return;
++        }
++
++        customer.routeWaypoints.Clear();
++        customer.routeWaypointIndex = 0;
++
++        if (waypoints == null)
++        {
++            return;
++        }
++
++        for (int i = 0; i < waypoints.Count; i++)
++        {
++            AddWaypointIfDistinct(customer.routeWaypoints, waypoints[i]);
++        }
++    }
++
++    private List<Vector3> BuildCustomerRoute(
++        Vector3 startWorld,
++        Vector3 destinationWorld,
++        bool enterThroughEntrance,
++        bool useLayeredSafeRevealPoint = false)
++    {
++        List<Vector3> route = new List<Vector3>();
++        Vector3 routeStart = startWorld;
++
++        // Temporary route gate: customers use explicit entrance waypoints until full navigation is shared.
++        if (enterThroughEntrance)
++        {
++            if (useLayeredSafeRevealPoint)
++            {
++                GetLayeredCustomerEntrancePointInfo();
++            }
++
++            AddWaypointIfDistinct(route, GetEntryWorldPosition());
++            AddWaypointIfDistinct(route, GetEntrancePassWorldPosition());
++            Vector3 entranceInsideWorld = GetEntranceInsideWorldPosition();
++            routeStart = entranceInsideWorld;
++            AddWaypointIfDistinct(route, routeStart);
++        }
++
++        if (!AppendGridPathWaypoints(route, routeStart, destinationWorld))
++        {
++            AddWaypointIfDistinct(route, destinationWorld);
++        }
++
++        return route;
++    }
++
++    private void PrepareLayeredCustomerEntranceReveal(ActiveCustomer customer, bool enterThroughEntrance)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        if (!enterThroughEntrance)
++        {
++            customer.waitsForLayeredEntranceReveal = false;
++            customer.layeredExitHidden = false;
++            customer.layeredExitFadeOutActive = false;
++            customer.layeredIsExiting = false;
++            customer.layeredExitHidePending = false;
++            customer.layeredExitFadeOutStarted = false;
++            customer.layeredExitFadeOutCompleted = false;
++            ApplyLayeredCustomerVisualScale(customer);
++            SetLayeredCustomerVisible(customer, true, "entrance bypassed, layered customer visible");
++            SetLayeredCustomerRenderersAlpha(customer, 1f);
++            return;
++        }
++
++        LayeredEntrancePointInfo entranceInfo = GetLayeredCustomerEntrancePointInfo();
++        ApplyLayeredEntrancePointInfo(customer, entranceInfo);
++        SaveLayeredCustomerEntranceRevealPointForEntry(customer, "entrance prepared");
++        customer.waitsForLayeredEntranceReveal = true;
++        customer.waitsForLayeredExitHide = false;
++        customer.layeredExitHidden = false;
++        customer.layeredEntranceFadeInActive = false;
++        customer.layeredExitFadeOutActive = false;
++        customer.layeredIsExiting = false;
++        customer.layeredExitHidePending = false;
++        customer.layeredExitFadeOutStarted = false;
++        customer.layeredExitFadeOutCompleted = false;
++        customer.layeredExitFadeOutElapsed = 0f;
++        ApplyLayeredCustomerVisualScale(customer);
++        SetLayeredCustomerVisible(customer, false, "entrance hidden before reveal point");
++        SetLayeredCustomerRenderersAlpha(customer, 1f);
++        LogLayeredCustomerEntranceRevealStatus(customer, false);
++    }
++
++    private void UpdateLayeredCustomerEntranceReveal(ActiveCustomer customer)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites || !customer.waitsForLayeredEntranceReveal)
++        {
++            return;
++        }
++
++        Vector3 safeRevealPoint = customer.entranceSafeRevealPoint;
++        float revealRadius = GetLayeredCustomerEntranceRevealRadius();
++        float revealDistance = Vector3.Distance(customer.worldPosition, safeRevealPoint);
++        bool reachedRevealPoint = revealDistance <= revealRadius;
++
++        if (!reachedRevealPoint)
++        {
++            SetLayeredCustomerVisible(customer, false, "waiting for entrance reveal point");
++            return;
++        }
++
++        customer.waitsForLayeredEntranceReveal = false;
++        customer.hasPassedEntrance = true;
++        customer.entranceVisibleTransitionPosition = customer.worldPosition;
++        customer.entryRevealDistanceAtVisible = revealDistance;
++        WarnIfLayeredCustomerRevealTransitionLooksWrong(customer, revealDistance);
++        StartLayeredCustomerEntranceFadeIn(customer);
++        LogLayeredCustomerEntranceRevealStatus(customer, true);
++    }
++
++    private void PrepareLayeredCustomerExitHide(ActiveCustomer customer)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        EnsureLayeredCustomerHasEntranceRevealPoint(customer, "exit prepare fallback");
++        ForceLayeredCustomerExitHidePointToEntranceReveal(customer, "exit prepare");
++        customer.waitsForLayeredEntranceReveal = false;
++        customer.waitsForLayeredExitHide = true;
++        customer.layeredExitHidden = false;
++        customer.layeredEntranceFadeInActive = false;
++        customer.layeredExitFadeOutActive = false;
++        customer.layeredIsExiting = true;
++        customer.layeredExitHidePending = true;
++        customer.layeredExitFadeOutStarted = false;
++        customer.layeredExitFadeOutCompleted = false;
++        customer.layeredExitRouteCompletionBlockedLogged = false;
++        customer.layeredExitFadeOutElapsed = 0f;
++        customer.exitStartedPosition = customer.worldPosition;
++        customer.hasExitStartedPosition = true;
++        customer.layeredExitStartedTime = Time.time;
++        customer.exitStartedToDeskDistance = customer.hasReceptionOrDeskPoint
++            ? GetPlanarDistance(customer.exitStartedPosition, customer.receptionOrDeskPoint)
++            : -1f;
++        customer.exitFadeOutStartedPosition = Vector3.zero;
++        customer.exitFadeOutStartToHideDistance = -1f;
++        customer.exitHiddenToDeskDistance = -1f;
++        customer.exitHideDistanceAtHidden = -1f;
++        ApplyLayeredCustomerVisualScale(customer);
++        SetLayeredCustomerVisible(customer, true, "exit started, keep layered customer visible");
++        SetLayeredCustomerRenderersAlpha(customer, 1f);
++        LogLayeredCustomerExitStartStatus(customer);
++    }
++
++    private void ApplyLayeredEntrancePointInfo(ActiveCustomer customer, LayeredEntrancePointInfo entranceInfo)
++    {
++        if (customer == null)
++        {
++            return;
++        }
++
++        customer.entranceDoorPassPointSourceName = entranceInfo.sourceName;
++        customer.entranceOriginalWaypoint = entranceInfo.doorPassPoint;
++        customer.entranceDoorPassPoint = entranceInfo.doorPassPoint;
++        customer.entranceSafeRevealPoint = entranceInfo.revealPoint;
++        customer.exitSafeHidePoint = entranceInfo.revealPoint;
++        customer.receptionOrDeskPoint = entranceInfo.receptionOrDeskPoint;
++        customer.hasReceptionOrDeskPoint = entranceInfo.hasReceptionOrDeskPoint;
++        customer.revealToDeskDistance = entranceInfo.revealToDeskDistance;
++        customer.manualEntranceMarkerFound = entranceInfo.manualMarkerFound;
++        customer.manualEntranceMarkerCreated = entranceInfo.manualMarkerCreated;
++        customer.manualEntranceMarkerOverwritten = entranceInfo.manualMarkerOverwritten;
++        customer.usedManualEntranceMarker = entranceInfo.usedManualMarker;
++        customer.usedSerializedManualEntranceWorldPoint = entranceInfo.usedSerializedManualWorldPoint;
++        customer.manualEntranceMarkerWorldPosition = entranceInfo.manualMarkerWorldPosition;
++        customer.revealPointXChangedFromMarkerBase = entranceInfo.revealPointXChangedFromMarkerBase;
++        customer.revealPointXForcedToMarkerBase = entranceInfo.revealPointXForcedToMarkerBase;
++        customer.entranceMarkerBaseX = entranceInfo.markerBaseX;
++        customer.requestedEntranceRevealPointX = entranceInfo.requestedRevealPointX;
++
++        bool usesManualRevealBasis = customer.usedManualEntranceMarker || customer.usedSerializedManualEntranceWorldPoint;
++        if (usesManualRevealBasis &&
++            Mathf.Abs(customer.entranceSafeRevealPoint.x - customer.entranceMarkerBaseX) > 0.0001f)
++        {
++            float finalRevealX = customer.entranceSafeRevealPoint.x;
++            Debug.LogWarning(
++                "[CustomerFlowManager] Final manual entrance reveal point X differed from the marker base X; forcing X back to the marker base.\n" +
++                $"Marker base X: {customer.entranceMarkerBaseX:0.###}\n" +
++                $"Final reveal X before lock: {finalRevealX:0.###}");
++            customer.entranceSafeRevealPoint.x = customer.entranceMarkerBaseX;
++            customer.exitSafeHidePoint.x = customer.entranceMarkerBaseX;
++            customer.revealPointXChangedFromMarkerBase = true;
++            customer.revealPointXForcedToMarkerBase = true;
++            customer.requestedEntranceRevealPointX = finalRevealX;
++        }
++
++        customer.exitSafeHidePoint = customer.entranceSafeRevealPoint;
++    }
++
++    private void SaveLayeredCustomerEntranceRevealPointForEntry(ActiveCustomer customer, string reason)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        customer.entranceRevealPointUsedForEntry = customer.entranceSafeRevealPoint;
++        customer.hasLayeredEntranceRevealPointForEntry = true;
++        customer.exitSafeHidePoint = customer.entranceRevealPointUsedForEntry;
++        customer.exitHidePointOverwrittenToEntranceReveal = false;
++
++        Debug.Log(
++            "[CustomerFlowManager] Layered customer entrance reveal point saved for exit reuse\n" +
++            $"Reason: {reason}\n" +
++            $"Entrance reveal point used for entry: {FormatVector3(customer.entranceSafeRevealPoint)}\n" +
++            $"Saved state.EntranceRevealPoint: {FormatVector3(customer.entranceRevealPointUsedForEntry)}\n" +
++            $"Exit hide point initialized from entry reveal point: {FormatVector3(customer.exitSafeHidePoint)}");
++    }
++
++    private void EnsureLayeredCustomerHasEntranceRevealPoint(ActiveCustomer customer, string reason)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites || customer.hasLayeredEntranceRevealPointForEntry)
++        {
++            return;
++        }
++
++        LayeredEntrancePointInfo entranceInfo = GetLayeredCustomerEntrancePointInfo();
++        ApplyLayeredEntrancePointInfo(customer, entranceInfo);
++        SaveLayeredCustomerEntranceRevealPointForEntry(customer, reason);
++        Debug.LogWarning(
++            "[CustomerFlowManager] Layered customer exit had no saved entrance reveal point; using the current entrance reveal point fallback.\n" +
++            $"Reason: {reason}\n" +
++            $"Entrance point source: {entranceInfo.sourceName}\n" +
++            $"Fallback entrance reveal point: {FormatVector3(customer.entranceRevealPointUsedForEntry)}");
++    }
++
++    private Vector3 GetLayeredCustomerEntranceRevealPoint(ActiveCustomer customer)
++    {
++        if (customer != null && customer.hasLayeredEntranceRevealPointForEntry)
++        {
++            return customer.entranceRevealPointUsedForEntry;
++        }
++
++        return GetLayeredCustomerEntrancePointInfo().revealPoint;
++    }
++
++    private void ForceLayeredCustomerExitHidePointToEntranceReveal(ActiveCustomer customer, string reason)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        Vector3 entranceRevealPoint = GetLayeredCustomerEntranceRevealPoint(customer);
++        Vector3 previousExitHidePoint = customer.exitSafeHidePoint;
++        bool overwritten = GetPlanarDistance(previousExitHidePoint, entranceRevealPoint) > 0.01f;
++        if (overwritten)
++        {
++            Debug.LogWarning(
++                "[CustomerFlowManager] Layered customer exit hide point differed from the saved entrance reveal point; forcing exit to reuse entry point.\n" +
++                $"Reason: {reason}\n" +
++                $"Previous exit hide point: {FormatVector3(previousExitHidePoint)}\n" +
++                $"Saved entrance reveal point: {FormatVector3(entranceRevealPoint)}");
++        }
++
++        customer.entranceSafeRevealPoint = entranceRevealPoint;
++        customer.entranceRevealPointUsedForEntry = entranceRevealPoint;
++        customer.hasLayeredEntranceRevealPointForEntry = true;
++        customer.exitSafeHidePoint = entranceRevealPoint;
++        customer.exitHidePointOverwrittenToEntranceReveal = overwritten;
++
++        ValidateLayeredCustomerExitUsesEntranceRevealPoint(customer, reason);
++    }
++
++    private void ValidateLayeredCustomerExitUsesEntranceRevealPoint(ActiveCustomer customer, string reason)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        float exitToEntryDistance = GetPlanarDistance(customer.exitSafeHidePoint, customer.entranceRevealPointUsedForEntry);
++        if (exitToEntryDistance > 0.01f)
++        {
++            Debug.LogError(
++                "[CustomerFlowManager] Layered customer exit hide point is not equal to the entrance reveal point.\n" +
++                $"Reason: {reason}\n" +
++                $"Entrance reveal point: {FormatVector3(customer.entranceRevealPointUsedForEntry)}\n" +
++                $"Exit hide point: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++                $"Distance: {exitToEntryDistance:0.###}");
++        }
++    }
++
++    private void UpdateLayeredCustomerExitHide(ActiveCustomer customer)
++    {
++        if (customer == null ||
++            !customer.usesLayeredCustomerSprites ||
++            !customer.waitsForLayeredExitHide ||
++            customer.layeredExitHidden)
++        {
++            return;
++        }
++
++        ForceLayeredCustomerExitHidePointToEntranceReveal(customer, "exit hide update");
++        LayeredExitFadeDecision decision = GetLayeredCustomerExitFadeDecision(customer);
++        if (decision.passedHardCutoff)
++        {
++            HardCutoffLayeredCustomerExitHide(customer, decision);
++            return;
++        }
++
++        if (!decision.shouldStartFadeOut)
++        {
++            SetLayeredCustomerVisible(customer, true, "exiting before exit hide point");
++            return;
++        }
++
++        TryStartLayeredCustomerExitFadeOut(customer, decision.reason, decision);
++    }
++
++    private float GetLayeredCustomerEntranceRevealRadius()
++    {
++        return Mathf.Max(0.05f, layeredCustomerEntranceRevealRadius);
++    }
++
++    private float GetLayeredCustomerExitHideRadius()
++    {
++        return Mathf.Clamp(layeredCustomerExitHideRadius, 0.05f, 0.3f);
++    }
++
++    private float GetLayeredCustomerExitFadeDistanceWorld()
++    {
++        return Mathf.Max(GetLayeredCustomerExitHideRadius(), layeredCustomerExitFadeDistanceWorld);
++    }
++
++    private float GetLayeredCustomerExitFadeZoneHalfWidth()
++    {
++        return Mathf.Max(0.05f, layeredCustomerExitFadeZoneHalfWidth);
++    }
++
++    private float GetLayeredCustomerExitFadeZoneHalfHeight()
++    {
++        return Mathf.Max(0.05f, layeredCustomerExitFadeZoneHalfHeight);
++    }
++
++    private float GetLayeredCustomerExitFadeStartInsetWorld()
++    {
++        return Mathf.Max(0.05f, layeredCustomerExitFadeStartInsetWorld);
++    }
++
++    private float GetLayeredCustomerExitHardCutoffOffsetWorld()
++    {
++        return Mathf.Max(0.01f, layeredCustomerExitHardCutoffOffsetWorld);
++    }
++
++    private float GetLayeredCustomerExitFadeOutSeconds()
++    {
++        return Mathf.Clamp(layeredCustomerExitFadeOutSeconds, 0.15f, 0.25f);
++    }
++
++    private float GetLayeredCustomerFadeSeconds()
++    {
++        return GetLayeredCustomerExitFadeOutSeconds();
++    }
++
++    private float GetLayeredCustomerEntranceFadeInSeconds()
++    {
++        float sharedFadeSeconds = GetLayeredCustomerFadeSeconds();
++        if (!layeredCustomerFadeDurationWarningLogged &&
++            Mathf.Abs(layeredCustomerEntranceFadeInSeconds - sharedFadeSeconds) > 0.001f)
++        {
++            layeredCustomerFadeDurationWarningLogged = true;
++            Debug.LogWarning(
++                "[CustomerFlowManager] Layered customer entry fade duration differed from exit fade duration; entry fade-in now uses the exit fade-out duration.\n" +
++                $"Serialized entry fade seconds: {layeredCustomerEntranceFadeInSeconds:0.###}\n" +
++                $"Exit fade-out seconds: {sharedFadeSeconds:0.###}\n" +
++                $"Effective entry fade-in seconds: {sharedFadeSeconds:0.###}");
++        }
++
++        return sharedFadeSeconds;
++    }
++
++    private static float EvaluateLayeredCustomerFade01(float elapsedSeconds, float durationSeconds)
++    {
++        return Mathf.Clamp01(Mathf.Max(0f, elapsedSeconds) / Mathf.Max(0.01f, durationSeconds));
++    }
++
++    private LayeredExitFadeDecision GetLayeredCustomerExitFadeDecision(ActiveCustomer customer)
++    {
++        return customer != null
++            ? GetLayeredCustomerExitFadeDecision(customer.worldPosition, customer.exitSafeHidePoint)
++            : default;
++    }
++
++    private LayeredExitFadeDecision GetLayeredCustomerExitFadeDecision(Vector3 customerPosition, Vector3 exitHidePoint)
++    {
++        float halfWidth = GetLayeredCustomerExitFadeZoneHalfWidth();
++        float halfHeight = GetLayeredCustomerExitFadeZoneHalfHeight();
++        float distance = GetPlanarDistance(customerPosition, exitHidePoint);
++        bool insideZone =
++            Mathf.Abs(customerPosition.x - exitHidePoint.x) <= halfWidth &&
++            Mathf.Abs(customerPosition.y - exitHidePoint.y) <= halfHeight;
++        bool withinFadeDistance = distance <= GetLayeredCustomerExitFadeDistanceWorld();
++        bool leftThreshold = customerPosition.x <= exitHidePoint.x + GetLayeredCustomerExitFadeStartInsetWorld();
++        bool hardCutoff = customerPosition.x < exitHidePoint.x - GetLayeredCustomerExitHardCutoffOffsetWorld();
++
++        string reason = "none";
++        if (hardCutoff)
++        {
++            reason = "hard-cutoff";
++        }
++        else if (insideZone)
++        {
++            reason = "zone";
++        }
++        else if (withinFadeDistance)
++        {
++            reason = "distance";
++        }
++        else if (leftThreshold)
++        {
++            reason = "left-threshold";
++        }
++
++        return new LayeredExitFadeDecision
++        {
++            distanceToExitHidePoint = distance,
++            insideExitFadeZone = insideZone,
++            withinFadeDistance = withinFadeDistance,
++            passedLeftEntranceThreshold = leftThreshold,
++            passedHardCutoff = hardCutoff,
++            shouldStartFadeOut = insideZone || withinFadeDistance || leftThreshold,
++            reason = reason
++        };
++    }
++
++    private void WarnIfLayeredCustomerRevealTransitionLooksWrong(ActiveCustomer customer, float revealDistance)
++    {
++        if (customer == null)
++        {
++            return;
++        }
++
++        float revealRadius = GetLayeredCustomerEntranceRevealRadius();
++        if (revealDistance > revealRadius + 0.05f)
++        {
++            Debug.LogWarning(
++                "[CustomerFlowManager] Layered customer became visible too far from the entrance reveal marker.\n" +
++                $"Customer root position: {FormatVector3(customer.worldPosition)}\n" +
++                $"Final reveal point: {FormatVector3(customer.entranceSafeRevealPoint)}\n" +
++                $"Root-to-marker distance: {revealDistance:0.###}\n" +
++                $"Reveal radius: {revealRadius:0.###}");
++        }
++
++        if (customer.hasReceptionOrDeskPoint &&
++            Vector3.Distance(customer.worldPosition, customer.receptionOrDeskPoint) <= 0.5f)
++        {
++            Debug.LogWarning(
++                "[CustomerFlowManager] Layered customer became visible near the reception/desk point; reveal should happen at the entrance marker.\n" +
++                $"Customer root position: {FormatVector3(customer.worldPosition)}\n" +
++                $"Reception/desk point: {FormatVector3(customer.receptionOrDeskPoint)}");
++        }
++    }
++
++    private void WarnIfLayeredCustomerExitTransitionLooksWrong(ActiveCustomer customer, float hideDistance)
++    {
++        if (customer == null)
++        {
++            return;
++        }
++
++        float hideRadius = GetLayeredCustomerExitHideRadius();
++        LayeredExitFadeDecision disabledDecision = GetLayeredCustomerExitFadeDecision(
++            customer.exitHiddenTransitionPosition,
++            customer.exitSafeHidePoint);
++        if (hideDistance >= 0.3f &&
++            !disabledDecision.insideExitFadeZone &&
++            !disabledDecision.passedHardCutoff)
++        {
++            Debug.LogWarning(
++                "[CustomerFlowManager] Layered customer was hidden too far from the entrance hide marker.\n" +
++                $"Customer root position: {FormatVector3(customer.worldPosition)}\n" +
++                $"Final hide point: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++                $"Root-to-marker distance: {hideDistance:0.###}\n" +
++                $"Hide radius: {hideRadius:0.###}\n" +
++                $"Inside exit fade zone: {disabledDecision.insideExitFadeZone}\n" +
++                $"Hard cutoff: {disabledDecision.passedHardCutoff}");
++        }
++
++        if (customer.hasReceptionOrDeskPoint)
++        {
++            float deskDistance = customer.exitHiddenToDeskDistance >= 0f
++                ? customer.exitHiddenToDeskDistance
++                : GetPlanarDistance(customer.worldPosition, customer.receptionOrDeskPoint);
++            if (deskDistance < hideDistance)
++            {
++                Debug.LogWarning(
++                    "[CustomerFlowManager] Layered customer was hidden closer to the reception/desk point than the exit hide point.\n" +
++                    $"Disabled customer position: {FormatVector3(customer.worldPosition)}\n" +
++                    $"Final exit hide point: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++                    $"Reception/desk point: {FormatVector3(customer.receptionOrDeskPoint)}\n" +
++                    $"Disabled-to-hide distance: {hideDistance:0.###}\n" +
++                    $"Disabled-to-desk distance: {deskDistance:0.###}");
++            }
++        }
++
++        bool hiddenImmediatelyByTime = customer.layeredExitStartedTime >= 0f &&
++            Time.time - customer.layeredExitStartedTime <= 0.15f;
++        bool hiddenImmediatelyByDistance = customer.hasExitStartedPosition &&
++            GetPlanarDistance(customer.exitStartedPosition, customer.exitHiddenTransitionPosition) <= 0.05f;
++        if (hiddenImmediatelyByTime || hiddenImmediatelyByDistance)
++        {
++            Debug.LogWarning(
++                "[CustomerFlowManager] Layered customer was hidden immediately after exit started. Hide should wait until the entrance marker is reached.\n" +
++                $"Exit started position: {FormatVector3(customer.exitStartedPosition)}\n" +
++                $"Disabled customer position: {FormatVector3(customer.exitHiddenTransitionPosition)}\n" +
++                $"Elapsed since exit start: {(customer.layeredExitStartedTime >= 0f ? Time.time - customer.layeredExitStartedTime : -1f):0.###}s");
++        }
++    }
++
++    private void StartLayeredCustomerEntranceFadeIn(ActiveCustomer customer)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        ApplyLayeredCustomerVisualScale(customer);
++        SetLayeredCustomerVisible(customer, true, "entrance fade-in started");
++        float fadeSeconds = GetLayeredCustomerEntranceFadeInSeconds();
++        if (fadeSeconds <= 0.01f)
++        {
++            customer.layeredEntranceFadeInActive = false;
++            customer.layeredEntranceFadeInElapsed = 0f;
++            SetLayeredCustomerRenderersAlpha(customer, 1f);
++            LogLayeredCustomerEntranceFadeInCompleted(customer);
++            return;
++        }
++
++        customer.layeredEntranceFadeInActive = true;
++        customer.layeredEntranceFadeInElapsed = 0f;
++        SetLayeredCustomerRenderersAlpha(customer, 0f);
++        WarnIfLayeredCustomerBodyHeadAlphaMismatch(customer, "entry fade-in started");
++        Debug.Log(
++            "[CustomerFlowManager] Layered customer entrance fade-in started\n" +
++            $"Layered customer fade seconds: {GetLayeredCustomerFadeSeconds():0.###}\n" +
++            $"Fade-in seconds: {fadeSeconds:0.###}\n" +
++            $"Exit fade-out seconds: {GetLayeredCustomerExitFadeOutSeconds():0.###}\n" +
++            $"Entry fade-in start alpha: 0\n" +
++            $"Entry fade-in end alpha: 1\n" +
++            $"Body/Head alpha same: {AreLayeredCustomerBodyHeadAlphasEqual(customer)}\n" +
++            $"Current visual root scale: {FormatVector3(customer.visual != null ? customer.visual.transform.localScale : Vector3.zero)}\n" +
++            $"HeadLocalOffset: {FormatVector3(layeredCustomerHeadLocalOffset)}");
++    }
++
++    private void UpdateLayeredCustomerEntranceFade(ActiveCustomer customer, float deltaTime)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites || !customer.layeredEntranceFadeInActive)
++        {
++            return;
++        }
++
++        float fadeSeconds = GetLayeredCustomerEntranceFadeInSeconds();
++        customer.layeredEntranceFadeInElapsed += Mathf.Max(0f, deltaTime);
++        float alpha = EvaluateLayeredCustomerFade01(customer.layeredEntranceFadeInElapsed, fadeSeconds);
++        SetLayeredCustomerRenderersAlpha(customer, alpha);
++        WarnIfLayeredCustomerBodyHeadAlphaMismatch(customer, "entry fade-in update");
++
++        if (alpha >= 1f)
++        {
++            customer.layeredEntranceFadeInActive = false;
++            customer.layeredEntranceFadeInCompletedTime = Time.time;
++            SetLayeredCustomerRenderersAlpha(customer, 1f);
++            WarnIfLayeredCustomerBodyHeadAlphaMismatch(customer, "entry fade-in completed");
++            LogLayeredCustomerEntranceFadeInCompleted(customer);
++        }
++    }
++
++    private void LogLayeredCustomerEntranceFadeInCompleted(ActiveCustomer customer)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        Debug.Log(
++            "[CustomerFlowManager] Layered customer entrance fade-in completed\n" +
++            $"Layered customer fade seconds: {GetLayeredCustomerFadeSeconds():0.###}\n" +
++            $"Entry fade-in duration: {GetLayeredCustomerEntranceFadeInSeconds():0.###}\n" +
++            $"Exit fade-out duration: {GetLayeredCustomerExitFadeOutSeconds():0.###}\n" +
++            $"Entry fade-in start alpha: 0\n" +
++            $"Entry fade-in end alpha: 1\n" +
++            $"Body alpha: {GetRendererAlphaLabel(customer.bodyRenderer)}\n" +
++            $"Head alpha: {GetRendererAlphaLabel(customer.headRenderer)}\n" +
++            $"Body/Head alpha same: {AreLayeredCustomerBodyHeadAlphasEqual(customer)}\n" +
++            $"Body renderer enabled: {GetRendererEnabledLabel(customer.bodyRenderer)}\n" +
++            $"Head renderer enabled: {GetRendererEnabledLabel(customer.headRenderer)}\n" +
++            $"Current visual root scale: {FormatVector3(customer.visual != null ? customer.visual.transform.localScale : Vector3.zero)}\n" +
++            $"HeadLocalOffset: {FormatVector3(layeredCustomerHeadLocalOffset)}");
++    }
++
++    private bool TryStartLayeredCustomerExitFadeOut(ActiveCustomer customer, string reason)
++    {
++        return TryStartLayeredCustomerExitFadeOut(customer, reason, GetLayeredCustomerExitFadeDecision(customer));
++    }
++
++    private bool TryStartLayeredCustomerExitFadeOut(
++        ActiveCustomer customer,
++        string reason,
++        LayeredExitFadeDecision decision)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return false;
++        }
++
++        if (decision.passedHardCutoff)
++        {
++            HardCutoffLayeredCustomerExitHide(customer, decision);
++            return true;
++        }
++
++        if (!decision.shouldStartFadeOut)
++        {
++            LogLayeredCustomerHideRequest(customer, false, reason + " / blocked fade-out start", decision.distanceToExitHidePoint, true);
++            return false;
++        }
++
++        if (ShouldBlockLayeredExitFadeNearDesk(customer, decision, reason))
++        {
++            return false;
++        }
++
++        if ((customer.bodyRenderer != null && !customer.bodyRenderer.enabled) ||
++            (customer.headRenderer != null && !customer.headRenderer.enabled))
++        {
++            Debug.LogWarning(
++                "[CustomerFlowManager] Layered customer exit fade-out was requested after a renderer was already disabled.\n" +
++                $"Body renderer enabled: {GetRendererEnabledLabel(customer.bodyRenderer)}\n" +
++                $"Head renderer enabled: {GetRendererEnabledLabel(customer.headRenderer)}");
++        }
++
++        ApplyLayeredCustomerVisualScale(customer);
++        customer.waitsForLayeredExitHide = false;
++        customer.layeredExitHidePending = false;
++        customer.layeredExitHidden = false;
++        customer.exitFadeOutStartedPosition = customer.worldPosition;
++        customer.exitFadeOutStartToHideDistance = decision.distanceToExitHidePoint;
++        customer.layeredEntranceFadeInActive = false;
++        customer.layeredExitFadeOutActive = true;
++        customer.layeredExitFadeOutStarted = true;
++        customer.layeredExitFadeOutCompleted = false;
++        customer.layeredExitFadeOutElapsed = 0f;
++        customer.layeredExitFadeOutStartedLogged = true;
++        SetLayeredCustomerVisible(customer, true, reason + " / fade-out started");
++        SetLayeredCustomerRenderersAlpha(customer, 1f);
++        WarnIfLayeredCustomerBodyHeadAlphaMismatch(customer, "exit fade-out started");
++
++        Debug.Log(
++            "[CustomerFlowManager] Layered customer exit fade-out started\n" +
++            $"Reason: {reason}\n" +
++            $"Fade-out started reason: {decision.reason}\n" +
++            $"Layered customer fade seconds: {GetLayeredCustomerFadeSeconds():0.###}\n" +
++            $"Entry fade-in seconds: {GetLayeredCustomerEntranceFadeInSeconds():0.###}\n" +
++            $"Fade-out seconds: {GetLayeredCustomerExitFadeOutSeconds():0.###}\n" +
++            $"Exit fade-out start alpha: 1\n" +
++            $"Exit fade-out end alpha: 0\n" +
++            $"Body/Head alpha same: {AreLayeredCustomerBodyHeadAlphasEqual(customer)}\n" +
++            $"Entrance reveal point used for entry: {FormatVector3(customer.entranceSafeRevealPoint)}\n" +
++            $"Saved state.EntranceRevealPoint: {FormatVector3(customer.entranceRevealPointUsedForEntry)}\n" +
++            $"Exit hide point used for leaving: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++            $"Exit hide point equals entrance reveal point: {GetPlanarDistance(customer.exitSafeHidePoint, GetLayeredCustomerEntranceRevealPoint(customer)) <= 0.01f}\n" +
++            $"ExitFadeZone center: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++            $"Fade-out started position: {FormatVector3(customer.exitFadeOutStartedPosition)}\n" +
++            $"Fade-out start to hide point distance: {GetDistanceLabel(customer.exitFadeOutStartToHideDistance)}\n" +
++            $"Fade-out started distance to EntranceRevealPoint: {GetDistanceLabel(GetPlanarDistance(customer.exitFadeOutStartedPosition, GetLayeredCustomerEntranceRevealPoint(customer)))}\n" +
++            $"Fade-out started distance to desk/reception point: {GetDistanceLabel(customer.hasReceptionOrDeskPoint ? GetPlanarDistance(customer.exitFadeOutStartedPosition, customer.receptionOrDeskPoint) : -1f)}\n" +
++            $"Inside exit fade zone: {decision.insideExitFadeZone}\n" +
++            $"Distance condition: {decision.withinFadeDistance}\n" +
++            $"Left threshold condition: {decision.passedLeftEntranceThreshold}\n" +
++            $"Hard cutoff: {decision.passedHardCutoff}\n" +
++            $"Exit fade zone half size: ({GetLayeredCustomerExitFadeZoneHalfWidth():0.###}, {GetLayeredCustomerExitFadeZoneHalfHeight():0.###})\n" +
++            $"Body renderer enabled: {GetRendererEnabledLabel(customer.bodyRenderer)}\n" +
++            $"Head renderer enabled: {GetRendererEnabledLabel(customer.headRenderer)}\n" +
++            $"Current visual root scale: {FormatVector3(customer.visual != null ? customer.visual.transform.localScale : Vector3.zero)}");
++        return true;
++    }
++
++    private bool ShouldBlockLayeredExitFadeNearDesk(ActiveCustomer customer, LayeredExitFadeDecision decision, string reason)
++    {
++        if (customer == null ||
++            !customer.usesLayeredCustomerSprites ||
++            !customer.hasReceptionOrDeskPoint ||
++            decision.passedHardCutoff)
++        {
++            return false;
++        }
++
++        float distanceToEntranceRevealPoint = GetPlanarDistance(customer.worldPosition, GetLayeredCustomerEntranceRevealPoint(customer));
++        float distanceToDeskPoint = GetPlanarDistance(customer.worldPosition, customer.receptionOrDeskPoint);
++        if (distanceToDeskPoint >= distanceToEntranceRevealPoint)
++        {
++            return false;
++        }
++
++        Debug.LogWarning(
++            "[CustomerFlowManager] Blocked layered customer exit fade-out because the customer is closer to the desk/reception point than the saved entrance reveal point.\n" +
++            $"Reason: {reason}\n" +
++            $"Customer position: {FormatVector3(customer.worldPosition)}\n" +
++            $"Saved state.EntranceRevealPoint: {FormatVector3(GetLayeredCustomerEntranceRevealPoint(customer))}\n" +
++            $"Exit hide point used for leaving: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++            $"Reception/desk point: {FormatVector3(customer.receptionOrDeskPoint)}\n" +
++            $"Distance to entrance reveal point: {GetDistanceLabel(distanceToEntranceRevealPoint)}\n" +
++            $"Distance to desk/reception point: {GetDistanceLabel(distanceToDeskPoint)}\n" +
++            $"ExitFadeZone center: {FormatVector3(customer.exitSafeHidePoint)}");
++        return true;
++    }
++
++    private void HardCutoffLayeredCustomerExitHide(ActiveCustomer customer, LayeredExitFadeDecision decision)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        customer.waitsForLayeredExitHide = false;
++        customer.layeredExitHidePending = false;
++        customer.layeredExitFadeOutActive = false;
++        customer.layeredExitFadeOutStarted = false;
++        customer.layeredExitFadeOutCompleted = true;
++        customer.layeredExitHidden = true;
++        customer.exitFadeOutStartedPosition = customer.worldPosition;
++        customer.exitFadeOutStartToHideDistance = decision.distanceToExitHidePoint;
++        customer.exitHiddenTransitionPosition = customer.worldPosition;
++        customer.exitHideDistanceAtHidden = decision.distanceToExitHidePoint;
++        customer.exitHiddenToDeskDistance = customer.hasReceptionOrDeskPoint
++            ? GetPlanarDistance(customer.exitHiddenTransitionPosition, customer.receptionOrDeskPoint)
++            : -1f;
++
++        Debug.LogWarning(
++            "[LayeredCustomer] Hard cutoff hide because customer passed exit boundary\n" +
++            $"Fade-out started reason: hard-cutoff\n" +
++            $"Customer position: {FormatVector3(customer.worldPosition)}\n" +
++            $"Saved state.EntranceRevealPoint: {FormatVector3(GetLayeredCustomerEntranceRevealPoint(customer))}\n" +
++            $"Exit hide point: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++            $"Exit hide point equals entrance reveal point: {GetPlanarDistance(customer.exitSafeHidePoint, GetLayeredCustomerEntranceRevealPoint(customer)) <= 0.01f}\n" +
++            $"ExitFadeZone center: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++            $"Distance to exit hide point: {GetDistanceLabel(decision.distanceToExitHidePoint)}\n" +
++            $"Inside exit fade zone: {decision.insideExitFadeZone}\n" +
++            $"Distance condition: {decision.withinFadeDistance}\n" +
++            $"Left threshold condition: {decision.passedLeftEntranceThreshold}\n" +
++            $"Hard cutoff: {decision.passedHardCutoff}\n" +
++            $"Renderer disabled position: {FormatVector3(customer.exitHiddenTransitionPosition)}\n" +
++            $"Renderer disabled distance to exit hide point: {GetDistanceLabel(customer.exitHideDistanceAtHidden)}");
++
++        SetLayeredCustomerRenderersAlpha(customer, 0f);
++        SetLayeredCustomerVisible(customer, false, "hard-cutoff");
++        SetLayeredCustomerRenderersAlpha(customer, 1f);
++        LogLayeredCustomerEntranceRevealStatus(customer, false);
++    }
++
++    private void UpdateLayeredCustomerExitFade(ActiveCustomer customer, float deltaTime)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites || !customer.layeredExitFadeOutActive)
++        {
++            return;
++        }
++
++        WarnIfLayeredExitFadeRenderersMismatch(customer);
++        ApplyLayeredCustomerVisualScale(customer);
++
++        float fadeSeconds = GetLayeredCustomerFadeSeconds();
++        customer.layeredExitFadeOutElapsed += Mathf.Max(0f, deltaTime);
++        float alpha = 1f - EvaluateLayeredCustomerFade01(customer.layeredExitFadeOutElapsed, fadeSeconds);
++        SetLayeredCustomerRenderersAlpha(customer, alpha);
++        WarnIfLayeredCustomerBodyHeadAlphaMismatch(customer, "exit fade-out update");
++
++        if (alpha <= 0f)
++        {
++            CompleteLayeredCustomerExitFadeOut(customer);
++        }
++    }
++
++    private void CompleteLayeredCustomerExitFadeOut(ActiveCustomer customer)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        customer.layeredExitFadeOutActive = false;
++        customer.exitHiddenTransitionPosition = customer.worldPosition;
++        customer.exitHideDistanceAtHidden = GetPlanarDistance(customer.exitHiddenTransitionPosition, customer.exitSafeHidePoint);
++        customer.exitHiddenToDeskDistance = customer.hasReceptionOrDeskPoint
++            ? GetPlanarDistance(customer.exitHiddenTransitionPosition, customer.receptionOrDeskPoint)
++            : -1f;
++        customer.layeredExitHidden = true;
++        customer.layeredExitFadeOutStarted = true;
++        customer.layeredExitFadeOutCompleted = true;
++        customer.layeredExitHidePending = false;
++        customer.layeredExitFadeOutCompletedLogged = true;
++        SetLayeredCustomerRenderersAlpha(customer, 0f);
++        WarnIfLayeredCustomerBodyHeadAlphaMismatch(customer, "exit fade-out completed before disable");
++        SetLayeredCustomerVisible(customer, false, "exit fade-out completed");
++        SetLayeredCustomerRenderersAlpha(customer, 1f);
++        WarnIfLayeredCustomerBodyHeadAlphaMismatch(customer, "exit fade-out reset for next entry");
++        WarnIfLayeredCustomerExitTransitionLooksWrong(customer, customer.exitHideDistanceAtHidden);
++        LogLayeredCustomerEntranceRevealStatus(customer, false);
++
++        Debug.Log(
++            "[CustomerFlowManager] Layered customer exit fade-out completed\n" +
++            $"Layered customer fade seconds: {GetLayeredCustomerFadeSeconds():0.###}\n" +
++            $"Entry fade-in duration: {GetLayeredCustomerEntranceFadeInSeconds():0.###}\n" +
++            $"Fade-out seconds: {GetLayeredCustomerExitFadeOutSeconds():0.###}\n" +
++            $"Exit fade-out start alpha: 1\n" +
++            $"Exit fade-out end alpha: 0\n" +
++            $"Renderer alpha reset for next entry: 1\n" +
++            $"Body alpha: {GetRendererAlphaLabel(customer.bodyRenderer)}\n" +
++            $"Head alpha: {GetRendererAlphaLabel(customer.headRenderer)}\n" +
++            $"Body/Head alpha same: {AreLayeredCustomerBodyHeadAlphasEqual(customer)}\n" +
++            $"Saved state.EntranceRevealPoint: {FormatVector3(GetLayeredCustomerEntranceRevealPoint(customer))}\n" +
++            $"Exit hide point used for leaving: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++            $"Exit hide point equals entrance reveal point: {GetPlanarDistance(customer.exitSafeHidePoint, GetLayeredCustomerEntranceRevealPoint(customer)) <= 0.01f}\n" +
++            $"ExitFadeZone center: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++            $"Renderer disabled position: {FormatVector3(customer.exitHiddenTransitionPosition)}\n" +
++            $"Renderer disabled distance to exit hide point: {GetDistanceLabel(customer.exitHideDistanceAtHidden)}\n" +
++            $"Renderer disabled distance to desk point: {GetDistanceLabel(customer.exitHiddenToDeskDistance)}\n" +
++            $"Body renderer enabled after fade-out: {GetRendererEnabledLabel(customer.bodyRenderer)}\n" +
++            $"Head renderer enabled after fade-out: {GetRendererEnabledLabel(customer.headRenderer)}\n" +
++            $"Current visual root scale: {FormatVector3(customer.visual != null ? customer.visual.transform.localScale : Vector3.zero)}\n" +
++            $"HeadLocalOffset: {FormatVector3(layeredCustomerHeadLocalOffset)}");
++    }
++
++    private void WarnIfLayeredExitFadeRenderersMismatch(ActiveCustomer customer)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        bool bodyEnabled = customer.bodyRenderer != null && customer.bodyRenderer.enabled;
++        bool headEnabled = customer.headRenderer != null && customer.headRenderer.enabled;
++        if (bodyEnabled != headEnabled)
++        {
++            Debug.LogWarning(
++                "[CustomerFlowManager] Layered customer exit fade-out has mismatched Body/Head renderer states before completion.\n" +
++                $"Body renderer enabled: {GetRendererEnabledLabel(customer.bodyRenderer)}\n" +
++                $"Head renderer enabled: {GetRendererEnabledLabel(customer.headRenderer)}");
++        }
++
++        if (!bodyEnabled || !headEnabled)
++        {
++            Debug.LogWarning(
++                "[CustomerFlowManager] Layered customer renderer was disabled before exit fade-out completed.\n" +
++                $"Body renderer enabled: {GetRendererEnabledLabel(customer.bodyRenderer)}\n" +
++                $"Head renderer enabled: {GetRendererEnabledLabel(customer.headRenderer)}\n" +
++                $"Exit fade-out active: {customer.layeredExitFadeOutActive}\n" +
++                $"Exit fade-out completed: {customer.layeredExitFadeOutCompleted}");
++        }
++    }
++
++    private void WarnIfLayeredCustomerBodyHeadAlphaMismatch(ActiveCustomer customer, string context)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        if (AreLayeredCustomerBodyHeadAlphasEqual(customer))
++        {
++            return;
++        }
++
++        Debug.LogWarning(
++            "[CustomerFlowManager] Layered customer Body/Head alpha mismatch.\n" +
++            $"Context: {context}\n" +
++            $"Body alpha: {GetRendererAlphaLabel(customer.bodyRenderer)}\n" +
++            $"Head alpha: {GetRendererAlphaLabel(customer.headRenderer)}");
++    }
++
++    private static bool AreLayeredCustomerBodyHeadAlphasEqual(ActiveCustomer customer)
++    {
++        if (customer == null || customer.bodyRenderer == null || customer.headRenderer == null)
++        {
++            return true;
++        }
++
++        return Mathf.Abs(customer.bodyRenderer.color.a - customer.headRenderer.color.a) <= 0.001f;
++    }
++
++    private static string GetRendererAlphaLabel(SpriteRenderer renderer)
++    {
++        return renderer != null ? renderer.color.a.ToString("0.###") : "missing";
++    }
++
++    private void SetLayeredCustomerVisible(ActiveCustomer customer, bool visible, string reason)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        customer.layeredLastVisibilityReason = reason;
++        bool isExitRelatedHide = IsLayeredCustomerExitVisibilityContext(customer);
++        float distanceToExitHidePoint = GetPlanarDistance(customer.worldPosition, customer.exitSafeHidePoint);
++        if (!visible)
++        {
++            bool convertedToFadeOut = TryConvertLayeredCustomerExitHideToFadeOut(customer, reason);
++            if (convertedToFadeOut)
++            {
++                return;
++            }
++
++            bool blocked = ShouldBlockLayeredCustomerHide(customer, distanceToExitHidePoint);
++            if (isExitRelatedHide)
++            {
++                LogLayeredCustomerHideRequest(customer, true, reason, distanceToExitHidePoint, blocked);
++            }
++
++            if (blocked)
++            {
++                return;
++            }
++        }
++
++        SetLayeredCustomerRenderersEnabled(customer, visible);
++    }
++
++    private bool TryConvertLayeredCustomerExitHideToFadeOut(ActiveCustomer customer, string reason)
++    {
++        if (customer == null ||
++            !customer.usesLayeredCustomerSprites ||
++            !IsLayeredCustomerExitVisibilityContext(customer) ||
++            customer.layeredExitFadeOutCompleted)
++        {
++            return false;
++        }
++
++        LayeredExitFadeDecision decision = GetLayeredCustomerExitFadeDecision(customer);
++        if (decision.passedHardCutoff)
++        {
++            return false;
++        }
++
++        if (!decision.shouldStartFadeOut)
++        {
++            return false;
++        }
++
++        if (!customer.layeredExitFadeOutActive)
++        {
++            TryStartLayeredCustomerExitFadeOut(customer, reason + " / converted to exit fade-out", decision);
++        }
++
++        LogLayeredCustomerHideRequest(
++            customer,
++            true,
++            reason + " / kept visible until fade-out completes",
++            decision.distanceToExitHidePoint,
++            true);
++        return true;
++    }
++
++    private bool ShouldBlockLayeredCustomerHide(ActiveCustomer customer, float distanceToExitHidePoint)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return false;
++        }
++
++        if (!IsLayeredCustomerExitVisibilityContext(customer) || customer.layeredExitFadeOutCompleted)
++        {
++            return false;
++        }
++
++        return !GetLayeredCustomerExitFadeDecision(customer).passedHardCutoff;
++    }
++
++    private static bool IsLayeredCustomerExitVisibilityContext(ActiveCustomer customer)
++    {
++        return customer != null &&
++            customer.usesLayeredCustomerSprites &&
++            (customer.layeredIsExiting ||
++                customer.state == CustomerState.Leaving ||
++                customer.waitsForLayeredExitHide ||
++                customer.layeredExitHidePending ||
++                customer.layeredExitFadeOutActive ||
++                customer.layeredExitFadeOutStarted);
++    }
++
++    private void LogLayeredCustomerHideRequest(
++        ActiveCustomer customer,
++        bool isRendererDisableRequest,
++        string reason,
++        float distanceToExitHidePoint,
++        bool blocked)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        Debug.Log(
++            "[CustomerFlowManager] Layered customer visibility false requested\n" +
++            $"Reason: {reason}\n" +
++            $"Renderer disable request: {isRendererDisableRequest}\n" +
++            $"Blocked early hide: {blocked}\n" +
++            $"Customer position: {FormatVector3(customer.worldPosition)}\n" +
++            $"Exit hide point: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++            $"Distance to exit hide point: {GetDistanceLabel(distanceToExitHidePoint)}\n" +
++            $"Exit hide radius: {GetLayeredCustomerExitHideRadius():0.###}\n" +
++            $"Exit fade zone half width: {GetLayeredCustomerExitFadeZoneHalfWidth():0.###}\n" +
++            $"Exit fade zone half height: {GetLayeredCustomerExitFadeZoneHalfHeight():0.###}\n" +
++            $"Inside exit fade zone: {GetLayeredCustomerExitFadeDecision(customer).insideExitFadeZone}\n" +
++            $"Threshold condition: {GetLayeredCustomerExitFadeDecision(customer).passedLeftEntranceThreshold}\n" +
++            $"Hard cutoff: {GetLayeredCustomerExitFadeDecision(customer).passedHardCutoff}\n" +
++            $"Is exiting: {customer.layeredIsExiting || customer.state == CustomerState.Leaving}\n" +
++            $"Exit hide pending: {customer.layeredExitHidePending}\n" +
++            $"Exit fade-out started: {customer.layeredExitFadeOutStarted}\n" +
++            $"Exit fade-out completed: {customer.layeredExitFadeOutCompleted}\n" +
++            $"Body renderer enabled: {GetRendererEnabledLabel(customer.bodyRenderer)}\n" +
++            $"Head renderer enabled: {GetRendererEnabledLabel(customer.headRenderer)}");
++
++        if (blocked)
++        {
++            Debug.LogWarning(
++                "[CustomerFlowManager] Blocked early layered customer hide during exit.\n" +
++                $"Reason: {reason}\n" +
++                $"Customer position: {FormatVector3(customer.worldPosition)}\n" +
++                $"Exit hide point: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++                $"Distance to exit hide point: {GetDistanceLabel(distanceToExitHidePoint)}\n" +
++                $"Exit hide radius: {GetLayeredCustomerExitHideRadius():0.###}\n" +
++                $"Exit fade zone half width: {GetLayeredCustomerExitFadeZoneHalfWidth():0.###}\n" +
++                $"Exit fade zone half height: {GetLayeredCustomerExitFadeZoneHalfHeight():0.###}");
++        }
++    }
++
++    private void SetLayeredCustomerRenderersEnabled(ActiveCustomer customer, bool isEnabled)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        if (customer.bodyRenderer != null)
++        {
++            customer.bodyRenderer.enabled = isEnabled;
++        }
++
++        if (customer.headRenderer != null)
++        {
++            customer.headRenderer.enabled = isEnabled;
++        }
++
++        if (customer.renderer != null &&
++            customer.renderer != customer.bodyRenderer &&
++            customer.renderer != customer.headRenderer)
++        {
++            customer.renderer.enabled = isEnabled;
++        }
++    }
++
++    private void SetLayeredCustomerRenderersAlpha(ActiveCustomer customer, float alpha)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        float safeAlpha = Mathf.Clamp01(alpha);
++        SetRendererAlpha(customer.bodyRenderer, safeAlpha);
++        SetRendererAlpha(customer.headRenderer, safeAlpha);
++
++        if (customer.renderer != null &&
++            customer.renderer != customer.bodyRenderer &&
++            customer.renderer != customer.headRenderer)
++        {
++            SetRendererAlpha(customer.renderer, safeAlpha);
++        }
++    }
++
++    private static void SetRendererAlpha(SpriteRenderer renderer, float alpha)
++    {
++        if (renderer == null)
++        {
++            return;
++        }
++
++        Color color = renderer.color;
++        color.a = Mathf.Clamp01(alpha);
++        renderer.color = color;
++    }
++
++    private static void SetRendererColorPreservingAlpha(SpriteRenderer renderer, Color color)
++    {
++        if (renderer == null)
++        {
++            return;
++        }
++
++        color.a = renderer.color.a;
++        renderer.color = color;
++    }
++
++    private LayeredEntrancePointInfo GetLayeredCustomerEntrancePointInfo()
++    {
++        float safeInset = Mathf.Clamp(layeredCustomerEntranceRevealInsetWorld, 0.35f, 0.45f);
++
++        bool hasDeskPoint = TryGetReceptionOrDeskPoint(out Vector3 deskPoint, out string deskSourceName);
++        Transform manualMarker = null;
++        bool manualMarkerCreated = false;
++        bool hasManualMarker = layeredCustomerUseManualEntranceMarker &&
++            TryGetOrCreateCustomerEntranceRevealMarker(out manualMarker, out manualMarkerCreated);
++        if (hasManualMarker && manualMarker != null)
++        {
++            Vector3 markerWorldPosition = manualMarker.position;
++            Vector3 manualRevealPoint = GetYOnlyManualEntranceRevealPoint(
++                markerWorldPosition,
++                manualMarker.name,
++                out bool revealPointXChanged,
++                out bool revealPointXForced,
++                out float markerBaseX,
++                out float requestedRevealPointX);
++            float manualRevealToDeskDistance = hasDeskPoint ? Vector3.Distance(manualRevealPoint, deskPoint) : -1f;
++            LayeredEntrancePointInfo markerInfo = new LayeredEntrancePointInfo
++            {
++                sourceName = manualMarker.name + (manualMarkerCreated ? " (auto-created)" : " transform"),
++                doorPassPoint = markerWorldPosition,
++                revealPoint = manualRevealPoint,
++                exitHidePoint = manualRevealPoint,
++                receptionOrDeskPoint = deskPoint,
++                hasReceptionOrDeskPoint = hasDeskPoint,
++                revealToDeskDistance = manualRevealToDeskDistance,
++                usedRendererFallback = false,
++                manualMarkerFound = true,
++                manualMarkerCreated = manualMarkerCreated,
++                usedManualMarker = true,
++                usedSerializedManualWorldPoint = false,
++                manualMarkerOverwritten = false,
++                manualMarkerWorldPosition = markerWorldPosition,
++                revealPointXChangedFromMarkerBase = revealPointXChanged,
++                revealPointXForcedToMarkerBase = revealPointXForced,
++                markerBaseX = markerBaseX,
++                requestedRevealPointX = requestedRevealPointX
++            };
++
++            WarnIfManualRevealPointNearDesk(markerInfo);
++            UpdateLayeredCustomerEntranceDebugPoints(markerInfo);
++            return markerInfo;
++        }
++
++        if (layeredCustomerUseManualEntranceWorldPoint)
++        {
++            Vector3 manualWorldPoint = GetYOnlyManualEntranceRevealPoint(
++                layeredCustomerManualEntranceRevealWorldPoint,
++                "layeredCustomerManualEntranceRevealWorldPoint",
++                out bool revealPointXChanged,
++                out bool revealPointXForced,
++                out float markerBaseX,
++                out float requestedRevealPointX);
++            float manualWorldToDeskDistance = hasDeskPoint ? Vector3.Distance(manualWorldPoint, deskPoint) : -1f;
++            LayeredEntrancePointInfo manualWorldInfo = new LayeredEntrancePointInfo
++            {
++                sourceName = "layeredCustomerManualEntranceRevealWorldPoint",
++                doorPassPoint = layeredCustomerManualEntranceRevealWorldPoint,
++                revealPoint = manualWorldPoint,
++                exitHidePoint = manualWorldPoint,
++                receptionOrDeskPoint = deskPoint,
++                hasReceptionOrDeskPoint = hasDeskPoint,
++                revealToDeskDistance = manualWorldToDeskDistance,
++                usedRendererFallback = false,
++                manualMarkerFound = false,
++                manualMarkerCreated = false,
++                usedManualMarker = false,
++                usedSerializedManualWorldPoint = true,
++                manualMarkerOverwritten = false,
++                manualMarkerWorldPosition = Vector3.zero,
++                revealPointXChangedFromMarkerBase = revealPointXChanged,
++                revealPointXForcedToMarkerBase = revealPointXForced,
++                markerBaseX = markerBaseX,
++                requestedRevealPointX = requestedRevealPointX
++            };
++
++            UpdateLayeredCustomerEntranceDebugPoints(manualWorldInfo);
++            return manualWorldInfo;
++        }
++
++        bool hasWaypointPoint = TryGetEntranceDoorPassPointFromWaypoints(out Vector3 waypointPoint, out string waypointSourceName);
++        bool hasRendererPoint = TryGetEntranceDoorPassPointFromRenderer(out Vector3 rendererPoint, out string rendererSourceName);
++
++        Vector3 doorPassPoint = hasWaypointPoint
++            ? waypointPoint
++            : hasRendererPoint
++                ? rendererPoint
++                : GetEntranceBaseWorldPosition();
++        string sourceName = hasWaypointPoint
++            ? waypointSourceName
++            : hasRendererPoint
++                ? rendererSourceName
++                : "GetEntranceBaseWorldPosition fallback";
++        bool usedRendererFallback = false;
++
++        if (hasRendererPoint)
++        {
++            float waypointToRendererDistance = Vector3.Distance(doorPassPoint, rendererPoint);
++            if (!hasWaypointPoint ||
++                waypointToRendererDistance > 0.55f ||
++                Mathf.Abs(doorPassPoint.y - rendererPoint.y) > 0.35f)
++            {
++                doorPassPoint = rendererPoint;
++                sourceName = rendererSourceName + " fallback";
++                usedRendererFallback = true;
++            }
++        }
++
++        Vector3 revealPoint = GetLayeredCustomerEntranceSafeRevealPoint(doorPassPoint, safeInset);
++        Vector3 exitHidePoint = revealPoint;
++        float revealToDeskDistance = hasDeskPoint ? Vector3.Distance(revealPoint, deskPoint) : -1f;
++
++        if (hasDeskPoint && hasRendererPoint)
++        {
++            Vector3 rendererRevealPoint = GetLayeredCustomerEntranceSafeRevealPoint(rendererPoint, safeInset);
++            float rendererRevealToDeskDistance = Vector3.Distance(rendererRevealPoint, deskPoint);
++            if (rendererRevealToDeskDistance > revealToDeskDistance + 0.15f)
++            {
++                doorPassPoint = rendererPoint;
++                sourceName = rendererSourceName + " fallback: entrance renderer farther from " + deskSourceName;
++                revealPoint = rendererRevealPoint;
++                exitHidePoint = revealPoint;
++                revealToDeskDistance = rendererRevealToDeskDistance;
++                usedRendererFallback = true;
++            }
++        }
++
++        if (hasDeskPoint && revealToDeskDistance <= 0.5f && hasRendererPoint)
++        {
++            doorPassPoint = rendererPoint;
++            sourceName = rendererSourceName + " fallback: reveal too close to " + deskSourceName;
++            revealPoint = GetLayeredCustomerEntranceSafeRevealPoint(doorPassPoint, safeInset);
++            exitHidePoint = revealPoint;
++            revealToDeskDistance = Vector3.Distance(revealPoint, deskPoint);
++            usedRendererFallback = true;
++        }
++
++        if (usedRendererFallback && !layeredCustomerEntranceFallbackWarningLogged)
++        {
++            layeredCustomerEntranceFallbackWarningLogged = true;
++            Debug.LogWarning(
++                "[CustomerFlowManager] Layered entrance reveal point used entrance renderer bounds fallback.\n" +
++                $"Source: {sourceName}\n" +
++                $"Door/pass point: {FormatVector3(doorPassPoint)}\n" +
++                $"Reveal point: {FormatVector3(revealPoint)}\n" +
++                $"Reception/desk point: {(hasDeskPoint ? FormatVector3(deskPoint) : "not found")}\n" +
++                $"Reveal-to-desk distance: {GetDistanceLabel(revealToDeskDistance)}");
++        }
++
++        LayeredEntrancePointInfo info = new LayeredEntrancePointInfo
++        {
++            sourceName = sourceName,
++            doorPassPoint = doorPassPoint,
++            revealPoint = revealPoint,
++            exitHidePoint = exitHidePoint,
++            receptionOrDeskPoint = deskPoint,
++            hasReceptionOrDeskPoint = hasDeskPoint,
++            revealToDeskDistance = revealToDeskDistance,
++            usedRendererFallback = usedRendererFallback,
++            manualMarkerFound = false,
++            manualMarkerCreated = false,
++            usedManualMarker = false,
++            usedSerializedManualWorldPoint = false,
++            manualMarkerOverwritten = false,
++            manualMarkerWorldPosition = Vector3.zero,
++            revealPointXChangedFromMarkerBase = false,
++            revealPointXForcedToMarkerBase = false,
++            markerBaseX = revealPoint.x,
++            requestedRevealPointX = revealPoint.x
++        };
++
++        UpdateLayeredCustomerEntranceDebugPoints(info);
++        return info;
++    }
++
++    private Vector3 GetYOnlyManualEntranceRevealPoint(
++        Vector3 markerBasePosition,
++        string sourceName,
++        out bool xChanged,
++        out bool xForcedToBase,
++        out float markerBaseX,
++        out float requestedRevealPointX)
++    {
++        markerBaseX = markerBasePosition.x;
++        Vector3 requestedPoint = markerBasePosition + layeredCustomerManualEntranceRevealOffset;
++        requestedRevealPointX = requestedPoint.x;
++        xChanged = Mathf.Abs(requestedPoint.x - markerBasePosition.x) > 0.0001f;
++        xForcedToBase = xChanged;
++
++        if (xChanged)
++        {
++            Debug.LogWarning(
++                "[CustomerFlowManager] Manual entrance reveal offset attempted to change X; X is locked to the marker base position.\n" +
++                $"Source: {sourceName}\n" +
++                $"Marker base position: {FormatVector3(markerBasePosition)}\n" +
++                $"Requested final reveal point: {FormatVector3(requestedPoint)}\n" +
++                $"Forced final reveal point X: {markerBasePosition.x:0.###}");
++        }
++
++        return new Vector3(
++            markerBasePosition.x,
++            markerBasePosition.y + layeredCustomerManualEntranceRevealOffset.y,
++            markerBasePosition.z);
++    }
++
++    private Vector3 GetLayeredCustomerEntranceSafeRevealPoint(Vector3 doorPassPoint, float safeInset)
++    {
++        return doorPassPoint + new Vector3(safeInset, 0f, 0f);
++    }
++
++    private bool TryGetOrCreateCustomerEntranceRevealMarker(out Transform markerTransform, out bool created)
++    {
++        created = false;
++        markerTransform = null;
++
++        string markerName = string.IsNullOrWhiteSpace(layeredCustomerEntranceMarkerName)
++            ? "CustomerEntranceRevealMarker"
++            : layeredCustomerEntranceMarkerName.Trim();
++        GameObject markerObject = GameObject.Find(markerName);
++        if (markerObject != null)
++        {
++            markerTransform = markerObject.transform;
++            return true;
++        }
++
++        markerObject = new GameObject(markerName);
++        markerObject.hideFlags = HideFlags.None;
++        markerTransform = markerObject.transform;
++        Transform parent = transform != null ? transform : EnsureRuntimeRoot();
++        markerTransform.SetParent(parent, false);
++        markerTransform.position = GetDefaultManualEntranceMarkerWorldPosition();
++        created = true;
++        return true;
++    }
++
++    private Vector3 GetDefaultManualEntranceMarkerWorldPosition()
++    {
++        float safeInset = Mathf.Clamp(layeredCustomerEntranceRevealInsetWorld, 0.35f, 0.45f);
++
++        GameObject debugDoor = GameObject.Find("DEBUG_EntranceDoorOrPassPoint");
++        if (debugDoor != null)
++        {
++            return debugDoor.transform.position + new Vector3(safeInset, 0f, 0f);
++        }
++
++        bool hasRendererPoint = TryGetEntranceDoorPassPointFromRenderer(out Vector3 rendererPoint, out _);
++        bool hasDeskPoint = TryGetReceptionOrDeskPoint(out Vector3 deskPoint, out _);
++        SpriteRenderer deskRenderer = FindReceptionOrDeskRenderer();
++        if (hasRendererPoint)
++        {
++            return rendererPoint + new Vector3(safeInset, 0f, 0f);
++        }
++
++        if (deskRenderer != null)
++        {
++            Bounds deskBounds = deskRenderer.bounds;
++            return new Vector3(
++                deskBounds.min.x - 0.12f,
++                deskBounds.center.y,
++                0f);
++        }
++
++        if (hasDeskPoint)
++        {
++            return new Vector3(deskPoint.x - 0.55f, deskPoint.y, 0f);
++        }
++
++        if (TryGetEntranceDoorPassPointFromWaypoints(out Vector3 waypointPoint, out _))
++        {
++            return waypointPoint + new Vector3(safeInset, 0f, 0f);
++        }
++
++        return GetEntranceBaseWorldPosition() + new Vector3(safeInset, 0f, 0f);
++    }
++
++    private void WarnIfManualRevealPointNearDesk(LayeredEntrancePointInfo info)
++    {
++        if (!info.hasReceptionOrDeskPoint || info.revealToDeskDistance > 0.5f)
++        {
++            return;
++        }
++
++        Debug.LogWarning(
++            "[CustomerFlowManager] Manual entrance reveal marker is close to the reception/desk point. Marker remains authoritative and was not overwritten.\n" +
++            $"Marker found: {info.manualMarkerFound}\n" +
++            $"Marker world position: {FormatVector3(info.manualMarkerWorldPosition)}\n" +
++            $"Final entrance reveal point: {FormatVector3(info.revealPoint)}\n" +
++            $"Reception/desk point: {FormatVector3(info.receptionOrDeskPoint)}\n" +
++            $"Reveal-to-desk distance: {GetDistanceLabel(info.revealToDeskDistance)}");
++    }
++
++    private bool TryGetEntranceDoorPassPointFromWaypoints(out Vector3 point, out string sourceName)
++    {
++        if (gridManager != null && gridManager.TryGetEntranceWalkWorldPosition(0f, out Vector3 passPoint))
++        {
++            point = passPoint;
++            sourceName = "GridManager.TryGetEntranceWalkWorldPosition";
++            return true;
++        }
++
++        point = GetEntrancePassWorldPosition();
++        sourceName = "CustomerFlowManager.GetEntrancePassWorldPosition fallback";
++        return true;
++    }
++
++    private bool TryGetEntranceDoorPassPointFromRenderer(out Vector3 point, out string sourceName)
++    {
++        SpriteRenderer renderer = FindEntranceRendererForRevealPoint();
++        if (renderer != null)
++        {
++            Bounds bounds = renderer.bounds;
++            point = new Vector3(bounds.max.x, bounds.center.y, 0f);
++            sourceName = renderer.name + ".bounds.maxX/centerY";
++            return true;
++        }
++
++        point = Vector3.zero;
++        sourceName = "not found";
++        return false;
++    }
++
++    private bool TryGetReceptionOrDeskPoint(out Vector3 point, out string sourceName)
++    {
++        SpriteRenderer renderer = FindReceptionOrDeskRenderer();
++        if (renderer != null)
++        {
++            point = renderer.bounds.center;
++            point.z = 0f;
++            sourceName = renderer.name + ".bounds.center";
++            return true;
++        }
++
++        point = Vector3.zero;
++        sourceName = "not found";
++        return false;
++    }
++
++    private void UpdateLayeredCustomerEntranceDebugPoints(LayeredEntrancePointInfo info)
++    {
++        if (!showLayeredCustomerEntranceDebugMarkers)
++        {
++            return;
++        }
++
++        hasLayeredEntranceDebugPoints = true;
++        debugEntranceDoorOrPassPoint = info.doorPassPoint;
++        debugEntranceRevealPoint = info.revealPoint;
++        debugExitHidePoint = info.exitHidePoint;
++        debugReceptionOrDeskPoint = info.receptionOrDeskPoint;
++        hasDebugReceptionOrDeskPoint = info.hasReceptionOrDeskPoint;
++
++        UpsertLayeredCustomerDebugMarker("DEBUG_EntranceDoorOrPassPoint", info.doorPassPoint);
++        UpsertLayeredCustomerDebugMarker("DEBUG_EntranceRevealPoint", info.revealPoint);
++        UpsertLayeredCustomerDebugMarker("DEBUG_ExitHidePoint", info.exitHidePoint);
++        UpsertLayeredCustomerDebugMarker("DEBUG_ExitFadeZone", info.exitHidePoint);
++        if (info.hasReceptionOrDeskPoint)
++        {
++            UpsertLayeredCustomerDebugMarker("DEBUG_ReceptionOrDeskPoint", info.receptionOrDeskPoint);
++        }
++    }
++
++    private void UpsertLayeredCustomerDebugMarker(string objectName, Vector3 position)
++    {
++        GameObject marker = GameObject.Find(objectName);
++        if (marker == null)
++        {
++            marker = new GameObject(objectName);
++        }
++
++        marker.transform.SetParent(EnsureRuntimeRoot(), false);
++        marker.transform.position = position;
++    }
++
++    private void OnDrawGizmos()
++    {
++        if (!showLayeredCustomerEntranceDebugMarkers || !hasLayeredEntranceDebugPoints)
++        {
++            return;
++        }
++
++        DrawLayeredCustomerDebugGizmo(debugEntranceDoorOrPassPoint, Color.cyan, 0.08f);
++        DrawLayeredCustomerDebugGizmo(debugEntranceRevealPoint, Color.green, 0.1f);
++        DrawLayeredCustomerDebugGizmo(debugExitHidePoint, Color.yellow, 0.09f);
++        DrawLayeredCustomerDebugRect(
++            debugExitHidePoint,
++            new Color(1f, 0.72f, 0.15f, 1f),
++            GetLayeredCustomerExitFadeZoneHalfWidth(),
++            GetLayeredCustomerExitFadeZoneHalfHeight());
++        if (hasDebugReceptionOrDeskPoint)
++        {
++            DrawLayeredCustomerDebugGizmo(debugReceptionOrDeskPoint, Color.magenta, 0.08f);
++        }
++    }
++
++    private static void DrawLayeredCustomerDebugGizmo(Vector3 position, Color color, float radius)
++    {
++        Gizmos.color = color;
++        Gizmos.DrawWireSphere(position, Mathf.Max(0.01f, radius));
++    }
++
++    private static void DrawLayeredCustomerDebugRect(Vector3 center, Color color, float halfWidth, float halfHeight)
++    {
++        Gizmos.color = color;
++        Gizmos.DrawWireCube(
++            center,
++            new Vector3(
++                Mathf.Max(0.01f, halfWidth * 2f),
++                Mathf.Max(0.01f, halfHeight * 2f),
++                0.01f));
++    }
++
++    private void LogLayeredCustomerExitStartStatus(ActiveCustomer customer)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites || customer.layeredExitStartLogged)
++        {
++            return;
++        }
++
++        customer.layeredExitStartLogged = true;
++        LayeredExitFadeDecision decision = GetLayeredCustomerExitFadeDecision(customer);
++        float exitToEntryDistance = GetPlanarDistance(customer.exitSafeHidePoint, GetLayeredCustomerEntranceRevealPoint(customer));
++        Debug.Log(
++            "[CustomerFlowManager] Layered customer exit hide pending\n" +
++            $"Exit started position: {FormatVector3(customer.exitStartedPosition)}\n" +
++            $"Exit hide pending enabled: {customer.waitsForLayeredExitHide}\n" +
++            $"Entrance reveal point used for entry: {FormatVector3(customer.entranceSafeRevealPoint)}\n" +
++            $"Saved state.EntranceRevealPoint: {FormatVector3(customer.entranceRevealPointUsedForEntry)}\n" +
++            $"Final exit hide point: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++            $"Exit hide point equals entrance reveal point: {exitToEntryDistance <= 0.01f}\n" +
++            $"Exit hide point overwritten to entrance reveal point: {customer.exitHidePointOverwrittenToEntranceReveal}\n" +
++            $"ExitFadeZone center: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++            $"Exit hide radius: {GetLayeredCustomerExitHideRadius():0.###}\n" +
++            $"Exit fade zone half width: {GetLayeredCustomerExitFadeZoneHalfWidth():0.###}\n" +
++            $"Exit fade zone half height: {GetLayeredCustomerExitFadeZoneHalfHeight():0.###}\n" +
++            $"Distance to exit hide point: {GetDistanceLabel(decision.distanceToExitHidePoint)}\n" +
++            $"Inside exit fade zone: {decision.insideExitFadeZone}\n" +
++            $"Threshold condition: {decision.passedLeftEntranceThreshold}\n" +
++            $"Hard cutoff: {decision.passedHardCutoff}\n" +
++            $"Layered customer visual scale: {layeredCustomerVisualScale:0.###}\n" +
++            $"Layered customer exit fade-out seconds: {GetLayeredCustomerExitFadeOutSeconds():0.###}\n" +
++            $"Exit fade zone half width: {GetLayeredCustomerExitFadeZoneHalfWidth():0.###}\n" +
++            $"Exit fade zone half height: {GetLayeredCustomerExitFadeZoneHalfHeight():0.###}\n" +
++            $"Exit fade start inset: {GetLayeredCustomerExitFadeStartInsetWorld():0.###}\n" +
++            $"Exit hard cutoff offset: {GetLayeredCustomerExitHardCutoffOffsetWorld():0.###}\n" +
++            $"Current visual root scale: {FormatVector3(customer.visual != null ? customer.visual.transform.localScale : Vector3.zero)}\n" +
++            $"Reception/desk point: {(customer.hasReceptionOrDeskPoint ? FormatVector3(customer.receptionOrDeskPoint) : "not found")}\n" +
++            $"Exit started position to desk distance: {GetDistanceLabel(customer.exitStartedToDeskDistance)}\n" +
++            $"Body renderer enabled: {GetRendererEnabledLabel(customer.bodyRenderer)}\n" +
++            $"Head renderer enabled: {GetRendererEnabledLabel(customer.headRenderer)}");
++    }
++
++    private void LogLayeredCustomerEntranceRevealStatus(ActiveCustomer customer, bool isVisible)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        bool isExitHide = !isVisible && customer.layeredExitHidden;
++        bool shouldLogHidden = !isVisible && !isExitHide && !customer.layeredEntranceHiddenLogged;
++        bool shouldLogExitHidden = isExitHide && !customer.layeredExitHiddenLogged;
++        bool shouldLogVisible = isVisible && !customer.layeredEntranceVisibleLogged;
++        if (!shouldLogHidden && !shouldLogVisible && !shouldLogExitHidden)
++        {
++            return;
++        }
++
++        if (isVisible)
++        {
++            customer.layeredEntranceVisibleLogged = true;
++            customer.layeredEntranceVisibleTime = Time.time;
++        }
++        else if (isExitHide)
++        {
++            customer.layeredExitHiddenLogged = true;
++            customer.layeredExitHiddenTime = Time.time;
++        }
++        else
++        {
++            customer.layeredEntranceHiddenLogged = true;
++            customer.layeredEntranceHiddenTime = Time.time;
++        }
++
++        Debug.Log(
++            "[CustomerFlowManager] Layered customer entrance reveal status\n" +
++            $"Manual marker found: {customer.manualEntranceMarkerFound}\n" +
++            $"Manual marker created: {customer.manualEntranceMarkerCreated}\n" +
++            $"Used manual marker: {customer.usedManualEntranceMarker}\n" +
++            $"Marker world position: {(customer.manualEntranceMarkerFound ? FormatVector3(customer.manualEntranceMarkerWorldPosition) : "not used")}\n" +
++            $"Marker base position: {GetManualRevealBasePositionLabel(customer)}\n" +
++            $"Manual entrance reveal offset: {FormatVector3(layeredCustomerManualEntranceRevealOffset)}\n" +
++            $"Layered customer visual scale: {layeredCustomerVisualScale:0.###}\n" +
++            $"Layered customer exit fade-out seconds: {GetLayeredCustomerExitFadeOutSeconds():0.###}\n" +
++            $"Current visual root scale: {FormatVector3(customer.visual != null ? customer.visual.transform.localScale : Vector3.zero)}\n" +
++            $"Exercise scale pulse disabled for layered customer: True\n" +
++            $"Marker base X: {customer.entranceMarkerBaseX:0.###}\n" +
++            $"Requested final reveal X: {customer.requestedEntranceRevealPointX:0.###}\n" +
++            $"Requested reveal X changed from marker base: {customer.revealPointXChangedFromMarkerBase}\n" +
++            $"Reveal X forced back to marker base: {customer.revealPointXForcedToMarkerBase}\n" +
++            $"Marker overwritten by automatic fallback: {customer.manualEntranceMarkerOverwritten}\n" +
++            $"Marker used as movement waypoint: False\n" +
++            $"Used serialized manual world point: {customer.usedSerializedManualEntranceWorldPoint}\n" +
++            $"Entrance door/pass point source name: {customer.entranceDoorPassPointSourceName}\n" +
++            $"Entrance door/pass point world position: {FormatVector3(customer.entranceDoorPassPoint)}\n" +
++            $"Entrance original inside waypoint: {FormatVector3(customer.entranceOriginalWaypoint)}\n" +
++            $"Computed entrance reveal point world position: {FormatVector3(customer.entranceSafeRevealPoint)}\n" +
++            $"Saved state.EntranceRevealPoint: {FormatVector3(customer.entranceRevealPointUsedForEntry)}\n" +
++            $"Computed exit hide point world position: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++            $"Exit hide point equals entrance reveal point: {GetPlanarDistance(customer.exitSafeHidePoint, GetLayeredCustomerEntranceRevealPoint(customer)) <= 0.01f}\n" +
++            $"ExitFadeZone center: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++            $"Reception/desk approach point world position: {(customer.hasReceptionOrDeskPoint ? FormatVector3(customer.receptionOrDeskPoint) : "not found")}\n" +
++            $"Reveal point to desk point distance: {GetDistanceLabel(customer.revealToDeskDistance)}\n" +
++            $"Exit started position: {(customer.hasExitStartedPosition ? FormatVector3(customer.exitStartedPosition) : "pending")}\n" +
++            $"Exit hide pending enabled: {customer.waitsForLayeredExitHide}\n" +
++            $"Exit started position to desk distance: {GetDistanceLabel(customer.exitStartedToDeskDistance)}\n" +
++            $"Exit fade-out started position: {(customer.exitFadeOutStartToHideDistance >= 0f ? FormatVector3(customer.exitFadeOutStartedPosition) : "pending")}\n" +
++            $"Exit fade-out start to hide point distance: {GetDistanceLabel(customer.exitFadeOutStartToHideDistance)}\n" +
++            $"Hidden section entered at: {GetTimeLabel(customer.layeredEntranceHiddenTime)}\n" +
++            $"Visible transition at: {GetTimeLabel(customer.layeredEntranceVisibleTime)}\n" +
++            $"Exit hide transition at: {GetTimeLabel(customer.layeredExitHiddenTime)}\n" +
++            $"Entry hidden -> visible transition position: {GetTransitionPositionLabel(customer.layeredEntranceVisibleTime, customer.entranceVisibleTransitionPosition)}\n" +
++            $"Exit visible -> hidden transition position: {GetTransitionPositionLabel(customer.layeredExitHiddenTime, customer.exitHiddenTransitionPosition)}\n" +
++            $"Entry visible actual customer root position: {GetTransitionPositionLabel(customer.layeredEntranceVisibleTime, customer.entranceVisibleTransitionPosition)}\n" +
++            $"Exit hidden actual customer root position: {GetTransitionPositionLabel(customer.layeredExitHiddenTime, customer.exitHiddenTransitionPosition)}\n" +
++            $"Entry reveal marker to root distance: {GetDistanceLabel(customer.entryRevealDistanceAtVisible)}\n" +
++            $"Exit hide marker to root distance: {GetDistanceLabel(customer.exitHideDistanceAtHidden)}\n" +
++            $"Exit disabled position to desk distance: {GetDistanceLabel(customer.exitHiddenToDeskDistance)}\n" +
++            $"Body renderer enabled: {GetRendererEnabledLabel(customer.bodyRenderer)}\n" +
++            $"Head renderer enabled: {GetRendererEnabledLabel(customer.headRenderer)}\n" +
++            $"Applied layered customer count: {layeredCustomerSpriteAppliedCount}\n" +
++            $"HeadLocalOffset: {layeredCustomerHeadLocalOffset}");
++    }
++
++    private List<Vector3> BuildExitRoute(ActiveCustomer customer)
++    {
++        if (customer != null && customer.usesLayeredCustomerSprites)
++        {
++            return BuildLayeredCustomerExitRoute(customer);
++        }
++
++        return BuildDefaultExitRoute(customer != null ? customer.worldPosition : GetEntranceInsideWorldPosition());
++    }
++
++    private List<Vector3> BuildLayeredCustomerExitRoute(ActiveCustomer customer)
++    {
++        List<Vector3> route = new List<Vector3>();
++        if (customer == null)
++        {
++            return route;
++        }
++
++        ForceLayeredCustomerExitHidePointToEntranceReveal(customer, "exit route build");
++        Vector3 exitHidePoint = customer.exitSafeHidePoint;
++
++        if (!AppendGridPathWaypoints(route, customer.worldPosition, exitHidePoint, true))
++        {
++            AddWaypointIfDistinct(route, exitHidePoint);
++        }
++
++        AddWaypointIfDistinct(route, GetEntrancePassWorldPosition());
++        AddWaypointIfDistinct(route, GetEntryWorldPosition());
++        AddWaypointIfDistinct(route, GetExitWorldPosition());
++        ValidateLayeredCustomerExitRouteUsesEntranceRevealPoint(customer, route);
++        return route;
++    }
++
++    private List<Vector3> BuildDefaultExitRoute(Vector3 startWorld)
++    {
++        List<Vector3> route = new List<Vector3>();
++        Vector3 entranceInsideWorld = GetEntranceInsideWorldPosition();
++
++        if (!AppendGridPathWaypoints(route, startWorld, entranceInsideWorld))
++        {
++            AddWaypointIfDistinct(route, entranceInsideWorld);
++        }
++
++        AddWaypointIfDistinct(route, GetEntrancePassWorldPosition());
++        AddWaypointIfDistinct(route, GetEntryWorldPosition());
++        AddWaypointIfDistinct(route, GetExitWorldPosition());
++        return route;
++    }
++
++    private void ValidateLayeredCustomerExitRouteUsesEntranceRevealPoint(ActiveCustomer customer, List<Vector3> route)
++    {
++        if (customer == null || !customer.usesLayeredCustomerSprites)
++        {
++            return;
++        }
++
++        Vector3 entranceRevealPoint = GetLayeredCustomerEntranceRevealPoint(customer);
++        bool routeContainsEntranceRevealPoint = false;
++        if (route != null)
++        {
++            for (int i = 0; i < route.Count; i++)
++            {
++                if (GetPlanarDistance(route[i], entranceRevealPoint) <= 0.01f)
++                {
++                    routeContainsEntranceRevealPoint = true;
++                    break;
++                }
++            }
++        }
++
++        if (!routeContainsEntranceRevealPoint)
++        {
++            Debug.LogError(
++                "[CustomerFlowManager] Layered customer exit route does not include the saved entrance reveal point before leaving.\n" +
++                $"Saved state.EntranceRevealPoint: {FormatVector3(entranceRevealPoint)}\n" +
++                $"Exit hide point used for leaving: {FormatVector3(customer.exitSafeHidePoint)}\n" +
++                $"Route waypoint count: {(route != null ? route.Count : 0)}");
++        }
++    }
++
++    private bool AppendGridPathWaypoints(
++        List<Vector3> route,
++        Vector3 startWorld,
++        Vector3 destinationWorld,
++        bool includeExactDestination = false)
++    {
++        if (!TryBuildGridPath(startWorld, destinationWorld, out List<Vector2Int> pathCells))
++        {
++            return false;
++        }
++
++        int exclusiveEnd = includeExactDestination
++            ? Mathf.Max(1, pathCells.Count - 1)
++            : pathCells.Count;
++        for (int i = 1; i < exclusiveEnd; i++)
++        {
++            Vector2Int cell = pathCells[i];
++            AddWaypointIfDistinct(route, gridManager.GetAreaCenterWorldPosition(cell.x, cell.y, 1, 1));
++        }
++
++        if (includeExactDestination)
++        {
++            AddWaypointIfDistinct(route, destinationWorld);
++        }
++
++        return true;
++    }
++
++    private bool TryBuildGridPath(Vector3 startWorld, Vector3 destinationWorld, out List<Vector2Int> pathCells)
++    {
++        pathCells = new List<Vector2Int>();
++        if (gridManager == null ||
++            !TryFindNearestAvailableCell(startWorld, out Vector2Int startCell) ||
++            !TryFindNearestAvailableCell(destinationWorld, out Vector2Int destinationCell))
++        {
++            return false;
++        }
++
++        bool[,] visited = new bool[gridManager.Width, gridManager.Height];
++        Vector2Int[,] previous = new Vector2Int[gridManager.Width, gridManager.Height];
++        Queue<Vector2Int> queue = new Queue<Vector2Int>();
++        Vector2Int[] directions =
++        {
++            new Vector2Int(1, 0),
++            new Vector2Int(-1, 0),
++            new Vector2Int(0, 1),
++            new Vector2Int(0, -1),
++        };
++
++        visited[startCell.x, startCell.y] = true;
++        queue.Enqueue(startCell);
++
++        while (queue.Count > 0)
++        {
++            Vector2Int current = queue.Dequeue();
++            if (current == destinationCell)
++            {
++                break;
++            }
++
++            for (int i = 0; i < directions.Length; i++)
++            {
++                Vector2Int next = current + directions[i];
++                if (next.x < 0 ||
++                    next.x >= gridManager.Width ||
++                    next.y < 0 ||
++                    next.y >= gridManager.Height ||
++                    visited[next.x, next.y] ||
++                    !gridManager.IsAreaAvailable(next.x, next.y, 1, 1))
++                {
++                    continue;
++                }
++
++                visited[next.x, next.y] = true;
++                previous[next.x, next.y] = current;
++                queue.Enqueue(next);
++            }
++        }
++
++        if (!visited[destinationCell.x, destinationCell.y])
++        {
++            return false;
++        }
++
++        Vector2Int cursor = destinationCell;
++        pathCells.Add(cursor);
++        while (cursor != startCell)
++        {
++            cursor = previous[cursor.x, cursor.y];
++            pathCells.Add(cursor);
++        }
++
++        pathCells.Reverse();
++        return true;
++    }
++
++    private bool TryFindNearestAvailableCell(Vector3 worldPosition, out Vector2Int cell)
++    {
++        cell = default;
++        if (gridManager == null)
++        {
++            return false;
++        }
++
++        float bestDistance = float.PositiveInfinity;
++        bool found = false;
++
++        for (int y = 0; y < gridManager.Height; y++)
++        {
++            for (int x = 0; x < gridManager.Width; x++)
++            {
++                if (!gridManager.IsAreaAvailable(x, y, 1, 1))
++                {
++                    continue;
++                }
++
++                Vector3 cellWorld = gridManager.GetAreaCenterWorldPosition(x, y, 1, 1);
++                float distance = (cellWorld - worldPosition).sqrMagnitude;
++                if (distance >= bestDistance)
++                {
++                    continue;
++                }
++
++                bestDistance = distance;
++                cell = new Vector2Int(x, y);
++                found = true;
++            }
++        }
++
++        return found;
++    }
++
++    private Vector3 GetMachineInteractionWorldPosition(PlacedObjectSaveData data, Vector3 fallbackWorldPosition)
++    {
++        if (data == null || gridManager == null)
++        {
++            return fallbackWorldPosition;
++        }
++
++        Vector3 entranceWorld = GetEntrancePassWorldPosition();
++        Vector2Int bestCell = default;
++        float bestDistance = float.PositiveInfinity;
++        bool found = false;
++
++        for (int x = data.anchorX; x < data.anchorX + data.width; x++)
++        {
++            TryConsiderInteractionCell(x, data.anchorY - 1, entranceWorld, ref bestCell, ref bestDistance, ref found);
++            TryConsiderInteractionCell(x, data.anchorY + data.height, entranceWorld, ref bestCell, ref bestDistance, ref found);
++        }
++
++        for (int y = data.anchorY; y < data.anchorY + data.height; y++)
++        {
++            TryConsiderInteractionCell(data.anchorX - 1, y, entranceWorld, ref bestCell, ref bestDistance, ref found);
++            TryConsiderInteractionCell(data.anchorX + data.width, y, entranceWorld, ref bestCell, ref bestDistance, ref found);
++        }
++
++        return found
++            ? gridManager.GetAreaCenterWorldPosition(bestCell.x, bestCell.y, 1, 1)
++            : fallbackWorldPosition;
++    }
++
++    private void TryConsiderInteractionCell(
++        int x,
++        int y,
++        Vector3 referenceWorld,
++        ref Vector2Int bestCell,
++        ref float bestDistance,
++        ref bool found)
++    {
++        if (gridManager == null || !gridManager.IsAreaAvailable(x, y, 1, 1))
++        {
++            return;
++        }
++
++        Vector3 cellWorld = gridManager.GetAreaCenterWorldPosition(x, y, 1, 1);
++        float distance = (cellWorld - referenceWorld).sqrMagnitude;
++        if (distance >= bestDistance)
++        {
++            return;
++        }
++
++        bestDistance = distance;
++        bestCell = new Vector2Int(x, y);
++        found = true;
++    }
++
++    private static void AddWaypointIfDistinct(List<Vector3> route, Vector3 waypoint)
++    {
++        if (route == null)
++        {
++            return;
++        }
++
++        if (route.Count > 0 && Vector3.Distance(route[route.Count - 1], waypoint) <= 0.01f)
++        {
++            return;
++        }
++
++        route.Add(waypoint);
++    }
++
++    private Vector3 GetEntrancePassWorldPosition()
++    {
++        if (gridManager != null && gridManager.TryGetEntranceWalkWorldPosition(GetEntranceCustomerRadius(), out Vector3 entranceWalk))
++        {
++            return entranceWalk;
++        }
++
++        Vector3 entranceBase = GetEntranceBaseWorldPosition();
++        return new Vector3(
++            entranceBase.x + (GetSafeCellSize() * FallbackEntranceWalkWaypointOffsetCells),
++            entranceBase.y,
++            0f);
++    }
++
++    private Vector3 GetEntranceInsideWorldPosition()
++    {
++        if (gridManager != null && gridManager.TryGetEntranceInsideSafeWorldPosition(GetEntranceCustomerRadius(), out Vector3 entranceInside))
++        {
++            return entranceInside;
++        }
++
++        Vector3 entranceBase = GetEntranceBaseWorldPosition();
++        return new Vector3(
++            entranceBase.x + (GetSafeCellSize() * FallbackEntranceInsideSafeWaypointOffsetCells),
++            entranceBase.y,
++            0f);
++    }
++
++    private Vector3 GetEntryWorldPosition()
++    {
++        if (gridManager != null && gridManager.TryGetEntranceOutsideWorldPosition(GetEntranceCustomerRadius(), out Vector3 entranceOutside))
++        {
++            return entranceOutside;
++        }
++
++        Vector3 entranceBase = GetEntranceBaseWorldPosition();
++        return new Vector3(
++            entranceBase.x + (GetSafeCellSize() * FallbackEntranceOutsideWaypointOffsetCells),
++            entranceBase.y,
++            0f);
++    }
++
++    private Vector3 GetExitWorldPosition()
++    {
++        return GetCustomerSpawnWorldPosition();
++    }
++
++    private Vector3 GetCustomerSpawnWorldPosition()
++    {
++        Vector3 entranceOutside = GetEntryWorldPosition();
++        return new Vector3(
++            entranceOutside.x - Mathf.Max(0.8f, entryExitOffsetX),
++            entranceOutside.y,
++            0f);
++    }
++
++    private Vector3 GetEntranceBaseWorldPosition()
++    {
++        if (gridManager != null && gridManager.TryGetDefaultEntrancePassWorldPosition(out Vector3 entrancePass))
++        {
++            return entrancePass;
++        }
++
++        if (gridManager == null)
++        {
++            return Vector3.zero;
++        }
++
++        float halfWidth = gridManager.Width * gridManager.CellSize * 0.5f;
++        float halfHeight = gridManager.Height * gridManager.CellSize * 0.5f;
++        return new Vector3(
++            -halfWidth + (gridManager.CellSize * 0.5f),
++            -halfHeight + (gridManager.Height * gridManager.CellSize * Mathf.Clamp01(entryExitHeightRatio)),
++            0f);
++    }
++
++    private float GetSafeCellSize()
++    {
++        return gridManager != null ? Mathf.Max(0.01f, gridManager.CellSize) : 1f;
++    }
++
++    private float GetEntranceCustomerRadius()
++    {
++        float visualRadius = Mathf.Max(customerVisualSize.x, customerVisualSize.y) * 0.5f;
++        return Mathf.Max(visualRadius, GetSafeCellSize() * 0.20f);
+     }
+ 
+     private Vector3 GetWaitingWorldPosition(int slotIndex)
+@@ -1158,11 +4143,13 @@ private List<MachineRuntimeInfo> BuildMachineRuntimeInfos(IReadOnlyList<PlacedOb
+                 continue;
+             }
+ 
++            Vector3 centerWorldPosition = gridManager.GetAreaCenterWorldPosition(data.anchorX, data.anchorY, data.width, data.height);
+             results.Add(new MachineRuntimeInfo
+             {
+                 key = BuildMachineKey(data),
+                 data = data,
+-                centerWorldPosition = gridManager.GetAreaCenterWorldPosition(data.anchorX, data.anchorY, data.width, data.height),
++                centerWorldPosition = centerWorldPosition,
++                interactionWorldPosition = GetMachineInteractionWorldPosition(data, centerWorldPosition),
+                 preferenceGroup = GetPreferenceGroupForPlacedObject(data)
+             });
+         }
+@@ -1209,7 +4196,8 @@ private bool TryRefreshCustomerTargetPosition(
+             return false;
+         }
+ 
+-        customer.targetMachineWorldPosition = machine.centerWorldPosition;
++        customer.targetMachineWorldPosition = machine.interactionWorldPosition;
++        SetCustomerRoute(customer, BuildCustomerRoute(customer.worldPosition, customer.targetMachineWorldPosition, false));
+         return true;
+     }
+ 

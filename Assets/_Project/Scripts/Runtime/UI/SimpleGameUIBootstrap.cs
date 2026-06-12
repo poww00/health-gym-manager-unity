@@ -137,8 +137,25 @@ public partial class RuntimeGameUIController
     private const float InstallCategoryTabY = 274f;
     private const float InstallCategoryTabWidth = 158f;
     private const float InstallCategoryTabHeight = 68f;
+    private const float InstallCategoryVisualWidth = 200f;
+    private const float InstallCategoryVisualHeight = 90f;
     private const int InstallCategoryTabFontSize = 22;
-
+    private const float InstallListViewportX = 0f;
+    private const float InstallListViewportY = 61f;
+    private const float InstallListViewportWidth = 1010f;
+    private const float InstallListViewportHeight = 326f;
+    private const float InstallCardLeftX = -253f;
+    private const float InstallCardRightX = 253f;
+    private const float InstallCardWidth = 480f;
+    private const float InstallCardHeight = 100f;
+    private const float InstallCardVisualWidth = 550f;
+    private const float InstallCardVisualHeight = 140f;
+    private const float InstallCardTopPadding = 20f;
+    private const float InstallCardBottomPadding = 20f;
+    private const float InstallCardRowGap = 8f;
+    private const string InstallCategoryButtonActivePath = "GeneratedRuntimeUI/ui_v2/review/review_filter_button_active";
+    private const string InstallCategoryButtonInactivePath = "GeneratedRuntimeUI/ui_v2/review/review_filter_button_inactive";
+    private const string InstallEquipmentCardBasePath = "GeneratedRuntimeUI/ui_v2/review/review_summary_card_base";
     private GameUiTheme theme;
     private WalletManager walletManager;
     private TimeManager timeManager;
@@ -161,6 +178,7 @@ public partial class RuntimeGameUIController
     private Transform operatePanelRoot;
     private Transform installPanelRoot;
     private Transform installListRoot;
+    private ScrollRect installListScrollRect;
     private Transform comingSoonPanelRoot;
     private Transform economyPanelRoot;
     private Transform reviewPanelRoot;
@@ -234,6 +252,122 @@ public partial class RuntimeGameUIController
     private const float SharedPanelDamping = 12f;
     private const float ToastVisibleSeconds = 3f;
     private const float ToastFadeSeconds = 0.7f;
+    private const int HudLabelFontSize = 22;
+    private const int HudValueFontSize = 22;
+    private const float HudLabelY = 34f;
+    private const float HudLabelHeight = 34f;
+    private const float HudValueY = -16f;
+    private const float HudValueHeight = 46f;
+    private const float HudIconTextGap = 4f;
+    private const float HudIconLineInset = 6f;
+    private const float HudIconSize = 40f;
+    private const float HudStarIconSize = 40f;
+    private const float HudButtonIconSize = 40f;
+    private const float HudButtonIconY = 30f;
+    private const float HudButtonLabelY = -28f;
+    private const float HudButtonLabelHeight = 36f;
+    private const string HudDateIconPath = "GeneratedRuntimeUI/ui_v2/icons/hud/hud_date_icon";
+    private const string HudBranchIconPath = "GeneratedRuntimeUI/ui_v2/icons/hud/hud_branch_icon";
+    private const string HudMoneyIconPath = "GeneratedRuntimeUI/ui_v2/icons/hud/hud_money_icon";
+    private const string HudStarCoinIconPath = "GeneratedRuntimeUI/ui_v2/icons/hud/hud_starcoin_icon";
+    private const string HudMemberIconPath = "GeneratedRuntimeUI/ui_v2/icons/hud/hud_member_icon";
+    private const string HudStaffIconPath = "GeneratedRuntimeUI/ui_v2/icons/hud/hud_staff_icon";
+    private const string HudMenuIconPath = "GeneratedRuntimeUI/ui_v2/icons/hud/hud_menu_icon";
+    private const float BottomTabIconSize = 80f;
+    private const float BottomTabIconY = 23f;
+    private const float BottomTabLabelY = -42f;
+    private const string BottomOperateIconPath = "GeneratedRuntimeUI/ui_v2/icons/bottom_tab/bottom_operate_icon";
+    private const string BottomInstallIconPath = "GeneratedRuntimeUI/ui_v2/icons/bottom_tab/bottom_install_icon";
+    private const string BottomEconomyIconPath = "GeneratedRuntimeUI/ui_v2/icons/bottom_tab/bottom_economy_icon";
+    private const string BottomReviewIconPath = "GeneratedRuntimeUI/ui_v2/icons/bottom_tab/bottom_review_icon";
+    private const string OperateGoalIconPath = "GeneratedRuntimeUI/ui_v2/icons/operate/operate_goal_icon";
+    private const string OperateStatusIconPath = "GeneratedRuntimeUI/ui_v2/icons/operate/operate_status_icon";
+    private const string OperateCongestionIconPath = "GeneratedRuntimeUI/ui_v2/icons/operate/operate_congestion_icon";
+    private const string OperateCleanlinessIconPath = "GeneratedRuntimeUI/ui_v2/icons/operate/operate_cleanliness_icon";
+    private const string OperateMachineUsageIconPath = "GeneratedRuntimeUI/ui_v2/icons/operate/operate_machine_usage_icon";
+    private const string OperateWaitingMemberIconPath = "GeneratedRuntimeUI/ui_v2/icons/operate/operate_waiting_member_icon";
+    private const string OperateStaffStatusIconPath = "GeneratedRuntimeUI/ui_v2/icons/operate/operate_staff_status_icon";
+    private const string OperateTodayProfitIconPath = "GeneratedRuntimeUI/ui_v2/icons/operate/operate_today_profit_icon";
+    private const string EquipmentTreadmillBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_treadmill_b_icon";
+    private const string EquipmentTreadmillAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_treadmill_a_icon";
+    private const string EquipmentTreadmillSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_treadmill_s_icon";
+    private const string EquipmentTreadmillSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_treadmill_ss_icon";
+    private const string EquipmentExerciseBikeBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_exercise_bike_b_icon";
+    private const string EquipmentExerciseBikeAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_exercise_bike_a_icon";
+    private const string EquipmentExerciseBikeSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_exercise_bike_s_icon";
+    private const string EquipmentExerciseBikeSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_exercise_bike_ss_icon";
+    private const string EquipmentDumbbellRackBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_dumbbell_rack_b_icon";
+    private const string EquipmentDumbbellRackAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_dumbbell_rack_a_icon";
+    private const string EquipmentDumbbellRackSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_dumbbell_rack_s_icon";
+    private const string EquipmentDumbbellRackSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_dumbbell_rack_ss_icon";
+    private const string EquipmentYogaMatBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_yoga_mat_b_icon";
+    private const string EquipmentYogaMatAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_yoga_mat_a_icon";
+    private const string EquipmentYogaMatSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_yoga_mat_s_icon";
+    private const string EquipmentYogaMatSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_yoga_mat_ss_icon";
+    private const string EquipmentPowerRackBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_power_rack_b_icon";
+    private const string EquipmentPowerRackAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_power_rack_a_icon";
+    private const string EquipmentPowerRackSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_power_rack_s_icon";
+    private const string EquipmentPowerRackSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_power_rack_ss_icon";
+    private const string EquipmentBenchPressBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_bench_press_b_icon";
+    private const string EquipmentBenchPressAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_bench_press_a_icon";
+    private const string EquipmentBenchPressSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_bench_press_s_icon";
+    private const string EquipmentBenchPressSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_bench_press_ss_icon";
+    private const string EquipmentCableMachineBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_cable_machine_b_icon";
+    private const string EquipmentCableMachineAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_cable_machine_a_icon";
+    private const string EquipmentCableMachineSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_cable_machine_s_icon";
+    private const string EquipmentCableMachineSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_cable_machine_ss_icon";
+    private const string EquipmentLegPressBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_leg_press_b_icon";
+    private const string EquipmentLegPressAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_leg_press_a_icon";
+    private const string EquipmentLegPressSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_leg_press_s_icon";
+    private const string EquipmentLegPressSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_leg_press_ss_icon";
+    private const string EquipmentHipAbductionBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_hip_abduction_b_icon";
+    private const string EquipmentHipAbductionAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_hip_abduction_a_icon";
+    private const string EquipmentHipAbductionSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_hip_abduction_s_icon";
+    private const string EquipmentHipAbductionSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_hip_abduction_ss_icon";
+    private const string EquipmentMassageChairBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_massage_chair_b_icon";
+    private const string EquipmentMassageChairAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_massage_chair_a_icon";
+    private const string EquipmentMassageChairSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_massage_chair_s_icon";
+    private const string EquipmentMassageChairSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_massage_chair_ss_icon";
+    private const string EquipmentInBodyMachineBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_inbody_machine_b_icon";
+    private const string EquipmentInBodyMachineAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_inbody_machine_a_icon";
+    private const string EquipmentInBodyMachineSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_inbody_machine_s_icon";
+    private const string EquipmentInBodyMachineSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_inbody_machine_ss_icon";
+    private const string EquipmentLatPulldownBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_lat_pulldown_b_icon";
+    private const string EquipmentLatPulldownAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_lat_pulldown_a_icon";
+    private const string EquipmentLatPulldownSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_lat_pulldown_s_icon";
+    private const string EquipmentLatPulldownSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_lat_pulldown_ss_icon";
+    private const string EquipmentRowingMachineBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_rowing_machine_b_icon";
+    private const string EquipmentRowingMachineAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_rowing_machine_a_icon";
+    private const string EquipmentRowingMachineSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_rowing_machine_s_icon";
+    private const string EquipmentRowingMachineSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_rowing_machine_ss_icon";
+    private const string EquipmentStairMillBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_stair_mill_b_icon";
+    private const string EquipmentStairMillAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_stair_mill_a_icon";
+    private const string EquipmentStairMillSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_stair_mill_s_icon";
+    private const string EquipmentStairMillSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_stair_mill_ss_icon";
+    private const string EquipmentSmithMachineBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_smith_machine_b_icon";
+    private const string EquipmentSmithMachineAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_smith_machine_a_icon";
+    private const string EquipmentSmithMachineSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_smith_machine_s_icon";
+    private const string EquipmentSmithMachineSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_smith_machine_ss_icon";
+    private const string EquipmentChestPressBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_chest_press_b_icon";
+    private const string EquipmentChestPressAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_chest_press_a_icon";
+    private const string EquipmentChestPressSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_chest_press_s_icon";
+    private const string EquipmentChestPressSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_chest_press_ss_icon";
+    private const string EquipmentProteinBarBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_protein_bar_b_icon";
+    private const string EquipmentProteinBarAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_protein_bar_a_icon";
+    private const string EquipmentProteinBarSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_protein_bar_s_icon";
+    private const string EquipmentProteinBarSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_protein_bar_ss_icon";
+    private const string EquipmentLockerBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_locker_b_icon";
+    private const string EquipmentLockerAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_locker_a_icon";
+    private const string EquipmentLockerSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_locker_s_icon";
+    private const string EquipmentLockerSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_locker_ss_icon";
+    private const string EquipmentShowerBoothBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_shower_booth_b_icon";
+    private const string EquipmentShowerBoothAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_shower_booth_a_icon";
+    private const string EquipmentShowerBoothSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_shower_booth_s_icon";
+    private const string EquipmentShowerBoothSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_shower_booth_ss_icon";
+    private const string EquipmentWaterDispenserBIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_water_dispenser_b_icon";
+    private const string EquipmentWaterDispenserAIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_water_dispenser_a_icon";
+    private const string EquipmentWaterDispenserSIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_water_dispenser_s_icon";
+    private const string EquipmentWaterDispenserSsIconPath = "GeneratedRuntimeUI/ui_v2/icons/equipment/equipment_water_dispenser_ss_icon";
 
     private float toastVisibleUntil;
     private float toastFadeStartedAt;
@@ -259,6 +393,7 @@ public partial class RuntimeGameUIController
             EnsureStaffPopup();
             BindMonthlySettlementPopupEvents();
             EnsureInstallCategoryTabs();
+            EnsureInstallListScrollArea();
             BindStaticButtons();
             ShowOperatePanel();
             RefreshAllData();
@@ -311,6 +446,8 @@ public partial class RuntimeGameUIController
 
         if (TryBindExistingUi())
         {
+            HideLegacyRuntimeFloorMockup();
+            EnsureInstallCategoryTabs();
             EnsurePlacementActionOverlay();
             BindStaticButtons();
             PreviewOperatePanelForEditMode();
@@ -321,6 +458,38 @@ public partial class RuntimeGameUIController
         Initialize();
     }
 
+    public void RepairRuntimeEditPreviewForEditMode()
+    {
+        if (Application.isPlaying)
+        {
+            return;
+        }
+
+        theme = GameUiTheme.CreateDefault();
+        SimpleGameUIBootstrap.HideLegacySceneCanvases();
+        ResolveReferences();
+
+        if (!TryBindExistingUi())
+        {
+            return;
+        }
+
+        selectedCategoryIndex = Mathf.Clamp(selectedCategoryIndex, 0, InstallCategories.Length - 1);
+        selectedDefinition ??= EquipmentSelectionState.CurrentDefinition ?? GetFirstDefinitionForCategory(InstallCategories[selectedCategoryIndex]);
+
+        HideLegacyRuntimeFloorMockup();
+        EnsureInstallCategoryTabs();
+        EnsureInstallListScrollArea();
+        BindStaticButtons();
+        RefreshAllData();
+        RefreshPlacementActionOverlay();
+
+        if (installPanelRoot != null && installPanelRoot.gameObject.activeInHierarchy && installListRoot != null)
+        {
+            RefreshInstallPanel();
+        }
+    }
+
     public void PreviewOperatePanelForEditMode()
     {
         if (Application.isPlaying || !TryBindExistingUi())
@@ -329,8 +498,9 @@ public partial class RuntimeGameUIController
         }
 
         activePanel = PanelMode.Operate;
+        HideLegacyRuntimeFloorMockup();
         sharedPanelRoot.gameObject.SetActive(true);
-        SetSharedPanelTitle("?댁쁺 ?꾪솴");
+        SetSharedPanelTitle("운영 현황");
         operatePanelRoot.gameObject.SetActive(true);
         installPanelRoot.gameObject.SetActive(false);
         SetOptionalPanelActive("EconomyPanelRoot", false);
@@ -349,10 +519,13 @@ public partial class RuntimeGameUIController
         }
 
         activePanel = PanelMode.Install;
+        HideLegacyRuntimeFloorMockup();
+        EnsureInstallCategoryTabs();
+        EnsureInstallListScrollArea();
         selectedCategoryIndex = Mathf.Clamp(selectedCategoryIndex, 0, InstallCategories.Length - 1);
         selectedDefinition ??= EquipmentSelectionState.CurrentDefinition ?? GetFirstDefinitionForCategory(InstallCategories[selectedCategoryIndex]);
         sharedPanelRoot.gameObject.SetActive(true);
-        SetSharedPanelTitle("?ㅼ튂");
+        SetSharedPanelTitle("설치");
         operatePanelRoot.gameObject.SetActive(false);
         installPanelRoot.gameObject.SetActive(true);
         SetOptionalPanelActive("EconomyPanelRoot", false);
@@ -374,6 +547,7 @@ public partial class RuntimeGameUIController
         ApplySharedPanelPauseState();
         UpdateSharedPanelMotion();
         RefreshPlacementActionOverlay();
+        RefreshInstallTutorialDynamicStep();
         UpdateToastFade();
 
         if (Time.unscaledTime < nextDataRefreshAt)
@@ -433,6 +607,7 @@ public partial class RuntimeGameUIController
         operatePanelRoot = FindDeepChild(root, "OperatePanelRoot");
         installPanelRoot = FindDeepChild(root, "InstallPanelRoot");
         installListRoot = FindDeepChild(root, "EquipmentCardList");
+        installListScrollRect = FindDeepComponent<ScrollRect>(root, "EquipmentListScrollRoot");
         comingSoonPanelRoot = FindDeepChild(root, "ComingSoonPanelRoot");
         economyPanelRoot = FindDeepChild(root, "EconomyPanelRoot");
         reviewPanelRoot = FindDeepChild(root, "ReviewPanelRoot");
@@ -477,6 +652,10 @@ public partial class RuntimeGameUIController
         economyTabText = FindDeepComponent<Text>(root, "Label", "EconomyTabButton");
         reviewTabText = FindDeepComponent<Text>(root, "Label", "ReviewTabButton");
 
+        ApplyOperateCardIcons();
+        ApplyBottomTabIcons();
+        EnsureInstallListScrollArea();
+
         categoryButtons.Clear();
         categoryTexts.Clear();
         for (int i = 0; i < InstallCategoryLabels.Length; i++)
@@ -495,6 +674,8 @@ public partial class RuntimeGameUIController
                 categoryTexts.Add(text);
             }
         }
+
+        ApplyTopHudIconLayout();
 
         return gymSceneRoot != null &&
                topHudRoot != null &&
@@ -525,7 +706,7 @@ public partial class RuntimeGameUIController
             {
                 selectedCategoryIndex = index;
                 selectedDefinition = GetFirstDefinitionForCategory(InstallCategories[selectedCategoryIndex]);
-                RefreshInstallPanel();
+                RefreshInstallPanel(true);
             });
         }
 
@@ -542,6 +723,12 @@ public partial class RuntimeGameUIController
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(action);
+    }
+
+    private static T GetOrAddComponent<T>(GameObject target) where T : Component
+    {
+        T component = target.GetComponent<T>();
+        return component != null ? component : target.AddComponent<T>();
     }
 
     private static T FindDeepComponent<T>(Transform root, string objectName, string parentName = null)
@@ -629,11 +816,12 @@ public partial class RuntimeGameUIController
 
         branchValueText = CreateHudBox(frame.transform, "BranchBox", "지점", -208f, 0f, 202f, 124f);
         cashValueText = CreateHudBox(frame.transform, "MoneyBox", "자금", -40f, 0f, 126f, 124f);
-        starCoinValueText = CreateHudBox(frame.transform, "StarCoinBox", "스타코인", 94f, 0f, 126f, 124f);
+        starCoinValueText = CreateHudBox(frame.transform, "StarCoinBox", "스타", 94f, 0f, 126f, 124f);
         memberValueText = CreateHudBox(frame.transform, "MemberBox", "회원", 228f, 0f, 126f, 124f);
         ConfigureMemberHudValueText();
         CreateHudButton(frame.transform, "StaffButton", "직원", 350f, 0f, 104f, 124f, OpenStaffPopup);
         CreateHudButton(frame.transform, "MenuButton", "메뉴", 456f, 0f, 104f, 124f, OpenMenuPopup);
+        ApplyTopHudIconLayout();
     }
 
     private void BuildSharedContentPanel()
@@ -654,14 +842,15 @@ public partial class RuntimeGameUIController
         operatePanelRoot = GameUiFactory.CreateNode(sharedPanelContentRoot, "OperatePanelRoot").transform;
         SetRect(operatePanelRoot.GetComponent<RectTransform>(), 0f, 0f, 1010f, 682f, true);
 
-        operateGoalText = CreateOperateCard(operatePanelRoot, "GoalCard", -253f, 226f, "오늘의 목표", "GeneratedRuntimeUI/objects/wall_poster");
-        operateStatusText = CreateOperateCard(operatePanelRoot, "StatusCard", 253f, 226f, "운영 상태", "GeneratedRuntimeUI/objects/potted_plant");
-        operateCrowdText = CreateOperateCard(operatePanelRoot, "CrowdCard", -253f, 78f, "혼잡도", "GeneratedRuntimeUI/objects/door");
-        operateCleanText = CreateOperateCard(operatePanelRoot, "CleanCard", 253f, 78f, "청결", "GeneratedRuntimeUI/objects/water_cooler");
-        operateUsageText = CreateOperateCard(operatePanelRoot, "UsageCard", -253f, -70f, "기구 사용률", "GeneratedRuntimeUI/objects/treadmill");
-        operateWaitText = CreateOperateCard(operatePanelRoot, "WaitCard", 253f, -70f, "대기 회원", "GeneratedRuntimeUI/objects/window");
-        operateStaffText = CreateOperateCard(operatePanelRoot, "StaffCard", -253f, -218f, "직원 상태", "GeneratedRuntimeUI/objects/reception_desk");
-        operateRevenueText = CreateOperateCard(operatePanelRoot, "RevenueCard", 253f, -218f, "오늘 수익", "GeneratedRuntimeUI/ui_v2/category_tab_small_base");
+        operateGoalText = CreateOperateCard(operatePanelRoot, "GoalCard", -253f, 226f, "오늘의 목표", OperateGoalIconPath);
+        operateStatusText = CreateOperateCard(operatePanelRoot, "StatusCard", 253f, 226f, "운영 상태", OperateStatusIconPath);
+        operateCrowdText = CreateOperateCard(operatePanelRoot, "CrowdCard", -253f, 78f, "혼잡도", OperateCongestionIconPath);
+        operateCleanText = CreateOperateCard(operatePanelRoot, "CleanCard", 253f, 78f, "청결", OperateCleanlinessIconPath);
+        operateUsageText = CreateOperateCard(operatePanelRoot, "UsageCard", -253f, -70f, "기구 사용률", OperateMachineUsageIconPath);
+        operateWaitText = CreateOperateCard(operatePanelRoot, "WaitCard", 253f, -70f, "대기 회원", OperateWaitingMemberIconPath);
+        operateStaffText = CreateOperateCard(operatePanelRoot, "StaffCard", -253f, -218f, "직원 상태", OperateStaffStatusIconPath);
+        operateRevenueText = CreateOperateCard(operatePanelRoot, "RevenueCard", 253f, -218f, "오늘 수익", OperateTodayProfitIconPath);
+        ApplyOperateCardIcons();
     }
 
     private void BuildInstallContent()
@@ -671,8 +860,7 @@ public partial class RuntimeGameUIController
 
         BuildInstallCategoryTabs();
 
-        installListRoot = GameUiFactory.CreateNode(installPanelRoot, "EquipmentCardList").transform;
-        SetRect(installListRoot.GetComponent<RectTransform>(), 0f, 92f, 1010f, 420f, true);
+        BuildInstallListScrollArea();
 
         GameObject selectedFrame = CreateGeneratedImage(installPanelRoot, "SelectedInfoBox", "GeneratedRuntimeUI/ui_v2/selected_info_box_base", 0f, -214f, 982f, 198f, false, true);
         CreateGeneratedImage(selectedFrame.transform, "SelectedIconBack", "GeneratedRuntimeUI/ui_v2/button_small_beige_base", -430f, 0f, 122f, 122f, false, true);
@@ -698,7 +886,7 @@ public partial class RuntimeGameUIController
             Button button = CreateSpriteButton(
                 installPanelRoot,
                 $"CategoryTab_{InstallCategoryLabels[i]}",
-                "GeneratedRuntimeUI/ui_v2/category_tab_beige_base",
+                InstallCategoryButtonInactivePath,
                 InstallCategoryLabels[i],
                 InstallCategoryTabStartX + (i * InstallCategoryTabSpacingX),
                 InstallCategoryTabY,
@@ -711,12 +899,80 @@ public partial class RuntimeGameUIController
             {
                 selectedCategoryIndex = index;
                 selectedDefinition = GetFirstDefinitionForCategory(InstallCategories[selectedCategoryIndex]);
-                RefreshInstallPanel();
+                RefreshInstallPanel(true);
             });
             categoryButtons.Add(button);
             categoryTexts.Add(labelText);
             ApplyInstallCategoryTabStyle(button, labelText, i);
         }
+    }
+
+    private void BuildInstallListScrollArea()
+    {
+        EnsureInstallListScrollArea();
+    }
+
+    private void EnsureInstallListScrollArea()
+    {
+        if (installPanelRoot == null)
+        {
+            return;
+        }
+
+        Transform scrollRoot = FindDeepChild(installPanelRoot, "EquipmentListScrollRoot");
+        Transform existingListRoot = installListRoot != null ? installListRoot : FindDeepChild(installPanelRoot, "EquipmentCardList");
+
+        if (scrollRoot == null)
+        {
+            scrollRoot = GameUiFactory.CreateNode(installPanelRoot, "EquipmentListScrollRoot", typeof(ScrollRect)).transform;
+        }
+
+        scrollRoot.localScale = Vector3.one;
+        SetRect(scrollRoot.GetComponent<RectTransform>(), InstallListViewportX, InstallListViewportY, InstallListViewportWidth, InstallListViewportHeight, true);
+
+        Transform viewport = scrollRoot.Find("Viewport");
+        if (viewport == null)
+        {
+            viewport = GameUiFactory.CreateNode(scrollRoot, "Viewport", typeof(CanvasRenderer), typeof(Image), typeof(RectMask2D)).transform;
+        }
+
+        viewport.localScale = Vector3.one;
+        RectTransform viewportRect = viewport.GetComponent<RectTransform>();
+        SetRect(viewportRect, 0f, 0f, InstallListViewportWidth, InstallListViewportHeight, true);
+
+        Image viewportImage = GetOrAddComponent<Image>(viewport.gameObject);
+        viewportImage.color = Color.clear;
+        viewportImage.raycastTarget = true;
+
+        if (viewport.GetComponent<RectMask2D>() == null)
+        {
+            viewport.gameObject.AddComponent<RectMask2D>();
+        }
+
+        if (existingListRoot == null)
+        {
+            installListRoot = GameUiFactory.CreateNode(viewport, "EquipmentCardList").transform;
+        }
+        else
+        {
+            installListRoot = existingListRoot;
+            if (installListRoot.parent != viewport)
+            {
+                installListRoot.SetParent(viewport, false);
+            }
+        }
+
+        installListRoot.localScale = Vector3.one;
+        ConfigureInstallListContent(InstallListViewportHeight, false);
+
+        installListScrollRect = GetOrAddComponent<ScrollRect>(scrollRoot.gameObject);
+        installListScrollRect.horizontal = false;
+        installListScrollRect.vertical = true;
+        installListScrollRect.movementType = ScrollRect.MovementType.Clamped;
+        installListScrollRect.inertia = true;
+        installListScrollRect.scrollSensitivity = 36f;
+        installListScrollRect.viewport = viewportRect;
+        installListScrollRect.content = installListRoot.GetComponent<RectTransform>();
     }
 
     private void EnsureInstallCategoryTabs()
@@ -758,6 +1014,7 @@ public partial class RuntimeGameUIController
     {
         if (button != null)
         {
+            button.transform.localScale = Vector3.one;
             RectTransform rect = button.GetComponent<RectTransform>();
             if (rect != null)
             {
@@ -769,6 +1026,19 @@ public partial class RuntimeGameUIController
                     InstallCategoryTabHeight,
                     true);
             }
+
+            Image image = button.GetComponent<Image>();
+            if (image != null)
+            {
+                ConfigureInstallHitTarget(image);
+                ConfigureTransparentButtonTarget(button, image);
+            }
+
+            EnsureInstallVisualBackground(
+                button.transform,
+                index == selectedCategoryIndex ? InstallCategoryButtonActivePath : InstallCategoryButtonInactivePath,
+                InstallCategoryVisualWidth,
+                InstallCategoryVisualHeight);
         }
 
         if (labelText == null)
@@ -776,6 +1046,8 @@ public partial class RuntimeGameUIController
             return;
         }
 
+        SetRect(labelText.rectTransform, 0f, 0f, InstallCategoryTabWidth - 18f, InstallCategoryTabHeight - 12f, true);
+        labelText.alignment = TextAnchor.MiddleCenter;
         labelText.fontStyle = FontStyle.Normal;
         labelText.fontSize = InstallCategoryTabFontSize;
         labelText.lineSpacing = 1f;
@@ -900,10 +1172,11 @@ public partial class RuntimeGameUIController
         SetRect(bottomNavRoot.GetComponent<RectTransform>(), 0f, 86f, 1056f, 168f);
 
         GameObject frame = CreateGeneratedImage(bottomNavRoot, "BottomNavFrame", "GeneratedRuntimeUI/ui_v2/nav_base_bar", 0f, 0f, 1056f, 168f, false, true);
-        operateTabButton = CreateTabButton(frame.transform, "OperateTabButton", "운영", "GeneratedRuntimeUI/objects/wall_poster", -384f, PanelMode.Operate, ToggleOperatePanel, out operateTabText);
-        installTabButton = CreateTabButton(frame.transform, "InstallTabButton", "설치", "GeneratedRuntimeUI/objects/dumbbell_rack", -128f, PanelMode.Install, ToggleInstallPanel, out installTabText);
-        economyTabButton = CreateTabButton(frame.transform, "EconomyTabButton", "경제", "GeneratedRuntimeUI/ui_v2/category_tab_small_base", 128f, PanelMode.Economy, ToggleEconomyPanel, out economyTabText);
-        reviewTabButton = CreateTabButton(frame.transform, "ReviewTabButton", "리뷰", "GeneratedRuntimeUI/objects/wall_poster", 384f, PanelMode.Review, ToggleReviewPanel, out reviewTabText);
+        operateTabButton = CreateTabButton(frame.transform, "OperateTabButton", "운영", BottomOperateIconPath, -384f, PanelMode.Operate, ToggleOperatePanel, out operateTabText);
+        installTabButton = CreateTabButton(frame.transform, "InstallTabButton", "설치", BottomInstallIconPath, -128f, PanelMode.Install, ToggleInstallPanel, out installTabText);
+        economyTabButton = CreateTabButton(frame.transform, "EconomyTabButton", "경제", BottomEconomyIconPath, 128f, PanelMode.Economy, ToggleEconomyPanel, out economyTabText);
+        reviewTabButton = CreateTabButton(frame.transform, "ReviewTabButton", "리뷰", BottomReviewIconPath, 384f, PanelMode.Review, ToggleReviewPanel, out reviewTabText);
+        ApplyBottomTabIcons();
     }
 
     private void BuildToast()
@@ -1537,12 +1810,214 @@ public partial class RuntimeGameUIController
         return button;
     }
 
+    private void ApplyTopHudIconLayout()
+    {
+        if (topHudRoot == null)
+        {
+            return;
+        }
+
+        Transform frame = FindDeepChild(topHudRoot, "TopHUDFrame") ?? topHudRoot;
+        ApplyHudIconBox(frame, "DateBox", "DateIcon", HudDateIconPath, "날짜", HudIconSize);
+        ApplyHudIconBox(frame, "BranchBox", "BranchIcon", HudBranchIconPath, "지점", HudIconSize);
+        ApplyHudIconBox(frame, "MoneyBox", "MoneyIcon", HudMoneyIconPath, "자금", HudIconSize);
+        ApplyHudIconBox(frame, "StarCoinBox", "StarCoinIcon", HudStarCoinIconPath, "스타", HudStarIconSize);
+        ApplyHudIconBox(frame, "MemberBox", "MemberIcon", HudMemberIconPath, "회원", HudIconSize);
+        ApplyHudIconButton(frame, "StaffButton", "StaffIcon", HudStaffIconPath);
+        ApplyHudIconButton(frame, "MenuButton", "MenuIcon", HudMenuIconPath);
+    }
+
+    private void ApplyHudIconBox(Transform parent, string boxName, string iconName, string iconPath, string labelText, float iconSize)
+    {
+        Transform box = FindDeepChild(parent, boxName);
+        if (box == null)
+        {
+            return;
+        }
+
+        RectTransform rect = box.GetComponent<RectTransform>();
+        float width = rect != null ? rect.sizeDelta.x : 126f;
+        Text label = FindDeepComponent<Text>(box, "Label");
+        Text value = FindDeepComponent<Text>(box, "Value");
+
+        if (label != null)
+        {
+            label.text = labelText;
+            label.fontSize = HudLabelFontSize;
+            label.alignment = TextAnchor.MiddleLeft;
+            label.horizontalOverflow = HorizontalWrapMode.Overflow;
+            label.verticalOverflow = VerticalWrapMode.Truncate;
+            label.resizeTextForBestFit = false;
+            LayoutHudIconLabel(box, label, iconName, iconPath, width, iconSize);
+        }
+        else
+        {
+            EnsureHudIcon(box, iconName, iconPath, 0f, HudLabelY, iconSize);
+        }
+
+        if (value == null)
+        {
+            return;
+        }
+
+        value.alignment = TextAnchor.MiddleCenter;
+        value.horizontalOverflow = HorizontalWrapMode.Wrap;
+        value.verticalOverflow = VerticalWrapMode.Truncate;
+        SetRect(value.rectTransform, 0f, HudValueY, width - 24f, HudValueHeight, true);
+
+        switch (boxName)
+        {
+            case "DateBox":
+                ConfigureDateHudValueText();
+                break;
+            case "MemberBox":
+                ConfigureMemberHudValueText();
+                break;
+            default:
+                value.fontSize = HudValueFontSize;
+                value.resizeTextForBestFit = false;
+                break;
+        }
+    }
+
+    private static void ApplyHudIconButton(Transform parent, string buttonName, string iconName, string iconPath)
+    {
+        Transform button = FindDeepChild(parent, buttonName);
+        if (button == null)
+        {
+            return;
+        }
+
+        RectTransform rect = button.GetComponent<RectTransform>();
+        float width = rect != null ? rect.sizeDelta.x : 104f;
+        Text label = FindDeepComponent<Text>(button, "Label");
+        if (label == null)
+        {
+            EnsureHudIcon(button, iconName, iconPath, 0f, HudButtonIconY, HudButtonIconSize);
+        }
+        else
+        {
+            label.fontSize = 26;
+            label.alignment = TextAnchor.MiddleCenter;
+            label.horizontalOverflow = HorizontalWrapMode.Wrap;
+            label.verticalOverflow = VerticalWrapMode.Truncate;
+            label.resizeTextForBestFit = false;
+            SetRect(label.rectTransform, 0f, HudButtonLabelY, width - 18f, HudButtonLabelHeight, true);
+        }
+
+        EnsureHudIcon(button, iconName, iconPath, 0f, HudButtonIconY, HudButtonIconSize);
+    }
+
+    private static void LayoutHudIconLabel(Transform parent, Text label, string iconName, string iconPath, float width, float iconSize)
+    {
+        float maxLabelWidth = Mathf.Max(24f, width - (HudIconLineInset * 2f) - iconSize - HudIconTextGap);
+        float preferredLabelWidth = Mathf.Ceil(label.preferredWidth) + 2f;
+        float labelWidth = Mathf.Min(Mathf.Max(24f, preferredLabelWidth), maxLabelWidth);
+        float groupWidth = iconSize + HudIconTextGap + labelWidth;
+        float iconX = -(groupWidth * 0.5f) + (iconSize * 0.5f);
+        float minIconX = (-width * 0.5f) + HudIconLineInset + (iconSize * 0.5f);
+        if (iconX < minIconX)
+        {
+            iconX = minIconX;
+        }
+
+        float labelLeft = iconX + (iconSize * 0.5f) + HudIconTextGap;
+        float maxRight = (width * 0.5f) - HudIconLineInset;
+        if (labelLeft + labelWidth > maxRight)
+        {
+            labelWidth = Mathf.Max(24f, maxRight - labelLeft);
+        }
+
+        SetRect(label.rectTransform, labelLeft + (labelWidth * 0.5f), HudLabelY, labelWidth, HudLabelHeight, true);
+        EnsureHudIcon(parent, iconName, iconPath, iconX, HudLabelY, iconSize);
+    }
+
+    private static void EnsureHudIcon(Transform parent, string iconName, string iconPath, float x, float y, float size)
+    {
+        Transform existing = parent.Find(iconName);
+        GameObject iconObject;
+        if (existing != null)
+        {
+            iconObject = existing.gameObject;
+            iconObject.SetActive(true);
+        }
+        else
+        {
+            iconObject = new GameObject(iconName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            iconObject.transform.SetParent(parent, false);
+        }
+
+        Image image = iconObject.GetComponent<Image>();
+        Sprite sprite = Resources.Load<Sprite>(iconPath);
+        if (sprite == null)
+        {
+            Debug.LogWarning($"[SimpleGameUIBootstrap] Missing HUD icon sprite: {iconPath}");
+        }
+
+        image.sprite = sprite;
+        image.raycastTarget = false;
+        image.preserveAspect = true;
+        image.type = Image.Type.Simple;
+
+        SetRect(iconObject.GetComponent<RectTransform>(), x, y, size, size, true);
+        iconObject.transform.SetAsFirstSibling();
+    }
+
     private Text CreateOperateCard(Transform parent, string name, float x, float y, string label, string iconPath)
     {
         GameObject card = CreateGeneratedImage(parent, name, "GeneratedRuntimeUI/ui_v2/install_card_base", x, y, 498f, 134f, false, true);
         CreateGeneratedImage(card.transform, "Icon", iconPath, -196f, 0f, 78f, 78f, true, true);
         CreateText(card.transform, "Label", label, 23, theme.MutedInk, TextAnchor.MiddleLeft, 68f, 28f, 346f, 34f, true);
         return CreateText(card.transform, "Value", "-", 32, theme.Ink, TextAnchor.MiddleLeft, 68f, -24f, 346f, 44f, true);
+    }
+
+    private void ApplyOperateCardIcons()
+    {
+        if (operatePanelRoot == null)
+        {
+            return;
+        }
+
+        ApplyOperateCardIcon("GoalCard", OperateGoalIconPath);
+        ApplyOperateCardIcon("StatusCard", OperateStatusIconPath);
+        ApplyOperateCardIcon("CrowdCard", OperateCongestionIconPath);
+        ApplyOperateCardIcon("CleanCard", OperateCleanlinessIconPath);
+        ApplyOperateCardIcon("UsageCard", OperateMachineUsageIconPath);
+        ApplyOperateCardIcon("WaitCard", OperateWaitingMemberIconPath);
+        ApplyOperateCardIcon("StaffCard", OperateStaffStatusIconPath);
+        ApplyOperateCardIcon("RevenueCard", OperateTodayProfitIconPath);
+    }
+
+    private void ApplyOperateCardIcon(string cardName, string iconPath)
+    {
+        Transform card = FindDeepChild(operatePanelRoot, cardName);
+        if (card == null)
+        {
+            return;
+        }
+
+        Transform icon = card.Find("Icon");
+        if (icon == null)
+        {
+            Debug.LogWarning($"[SimpleGameUIBootstrap] Missing operate card icon object: {cardName}");
+            return;
+        }
+
+        Image image = icon.GetComponent<Image>();
+        if (image == null)
+        {
+            Debug.LogWarning($"[SimpleGameUIBootstrap] Missing operate card icon image: {cardName}");
+            return;
+        }
+
+        Sprite sprite = Resources.Load<Sprite>(iconPath);
+        if (sprite == null)
+        {
+            Debug.LogWarning($"[SimpleGameUIBootstrap] Missing operate card icon sprite: {iconPath}");
+            return;
+        }
+
+        image.sprite = sprite;
     }
 
     private Button CreateTabButton(Transform parent, string name, string label, string iconPath, float x, PanelMode mode, UnityEngine.Events.UnityAction action, out Text labelText)
@@ -1554,10 +2029,51 @@ public partial class RuntimeGameUIController
         Button button = node.AddComponent<Button>();
         button.targetGraphic = image;
 
-        CreateGeneratedImage(node.transform, "Icon", iconPath, 0f, 32f, 42f, 42f, true, true);
-        labelText = CreateText(node.transform, "Label", label, 33, active ? theme.BrightInk : theme.Ink, TextAnchor.MiddleCenter, 0f, -34f, 190f, 42f, true);
+        CreateGeneratedImage(node.transform, "Icon", iconPath, 0f, BottomTabIconY, BottomTabIconSize, BottomTabIconSize, true, true);
+        labelText = CreateText(node.transform, "Label", label, 33, active ? theme.BrightInk : theme.Ink, TextAnchor.MiddleCenter, 0f, BottomTabLabelY, 190f, 42f, true);
         button.onClick.AddListener(action);
         return button;
+    }
+
+    private void ApplyBottomTabIcons()
+    {
+        if (bottomNavRoot == null)
+        {
+            return;
+        }
+
+        Transform frame = FindDeepChild(bottomNavRoot, "BottomNavFrame") ?? bottomNavRoot;
+        ApplyBottomTabIcon(frame, "OperateTabButton", BottomOperateIconPath);
+        ApplyBottomTabIcon(frame, "InstallTabButton", BottomInstallIconPath);
+        ApplyBottomTabIcon(frame, "EconomyTabButton", BottomEconomyIconPath);
+        ApplyBottomTabIcon(frame, "ReviewTabButton", BottomReviewIconPath);
+    }
+
+    private void ApplyBottomTabIcon(Transform parent, string tabName, string iconPath)
+    {
+        Transform tab = FindDeepChild(parent, tabName);
+        if (tab == null)
+        {
+            return;
+        }
+
+        Transform icon = tab.Find("Icon");
+        GameObject iconObject = icon != null
+            ? icon.gameObject
+            : CreateGeneratedImage(tab, "Icon", iconPath, 0f, BottomTabIconY, BottomTabIconSize, BottomTabIconSize, true, true);
+
+        Image image = iconObject.GetComponent<Image>();
+        if (image == null)
+        {
+            image = iconObject.AddComponent<Image>();
+        }
+
+        GeneratedRuntimeSprites.Assign(image, iconPath, true);
+        image.raycastTarget = false;
+        image.preserveAspect = true;
+        image.type = Image.Type.Simple;
+        SetRect(iconObject.GetComponent<RectTransform>(), 0f, BottomTabIconY, BottomTabIconSize, BottomTabIconSize, true);
+        iconObject.transform.SetAsFirstSibling();
     }
 
     private Button CreateInstallActionButton(Transform parent, string name, string label, float x, float y, float width, float height, GameUiTone tone, UnityEngine.Events.UnityAction action)
@@ -1845,7 +2361,7 @@ public partial class RuntimeGameUIController
         SetOptionalPanelActive("ReviewPanelRoot", false);
         comingSoonPanelRoot.gameObject.SetActive(false);
         RefreshBottomTabs();
-        RefreshInstallPanel();
+        RefreshInstallPanel(true);
         NotifyInstallTutorialInstallTabOpened();
     }
 
@@ -2034,10 +2550,16 @@ public partial class RuntimeGameUIController
         SetText(operateRevenueText, $"{GetTodayRevenue():N0}G");
     }
 
-    private void RefreshInstallPanel()
+    private void RefreshInstallPanel(bool resetScrollToTop = false)
     {
+        EnsureInstallListScrollArea();
         RefreshCategoryTabs();
-        RebuildInstallCards();
+        RebuildInstallCards(resetScrollToTop);
+        if (resetScrollToTop)
+        {
+            ResetInstallListScrollToTop();
+        }
+
         RefreshSelectedDefinitionText();
     }
 
@@ -2046,28 +2568,42 @@ public partial class RuntimeGameUIController
         for (int i = 0; i < categoryButtons.Count; i++)
         {
             bool active = i == selectedCategoryIndex;
-            Image image = categoryButtons[i].GetComponent<Image>();
-            if (image != null)
-            {
-                GeneratedRuntimeSprites.Assign(image, active ? "GeneratedRuntimeUI/ui_v2/button_green_base" : "GeneratedRuntimeUI/ui_v2/category_tab_beige_base", false);
-            }
+            Text labelText = i < categoryTexts.Count ? categoryTexts[i] : null;
+            ApplyInstallCategoryTabStyle(categoryButtons[i], labelText, i);
 
-            if (i < categoryTexts.Count && categoryTexts[i] != null)
+            if (labelText != null)
             {
-                categoryTexts[i].color = active ? theme.BrightInk : theme.Ink;
-                categoryTexts[i].fontStyle = FontStyle.Normal;
+                labelText.color = active ? theme.BrightInk : theme.Ink;
+                labelText.fontStyle = FontStyle.Normal;
             }
         }
     }
 
-    private void RebuildInstallCards()
+    private void RebuildInstallCards(bool resetScrollToTop)
     {
+        if (installListRoot == null)
+        {
+            return;
+        }
+
         GameUiFactory.ClearChildren(installListRoot);
 
         List<EquipmentDefinition> definitions = GetDisplayDefinitionsForCategory(InstallCategories[selectedCategoryIndex]);
+        float contentHeight = CalculateInstallListContentHeight(definitions.Count);
+        ConfigureInstallListContent(contentHeight, resetScrollToTop);
+
         if (definitions.Count <= 0)
         {
-            GameObject empty = CreateGeneratedImage(installListRoot, "NoCatalogItemsCard", "GeneratedRuntimeUI/ui_v2/install_card_base", 0f, 34f, 890f, 98f, false, true);
+            float emptyY = GetInstallCardY(0, contentHeight);
+            GameObject empty = CreateGeneratedImage(installListRoot, "NoCatalogItemsCard", InstallEquipmentCardBasePath, 0f, emptyY, 890f, 98f, false, true);
+            Image emptyHitImage = empty.GetComponent<Image>();
+            ConfigureInstallHitTarget(emptyHitImage);
+            if (emptyHitImage != null)
+            {
+                emptyHitImage.raycastTarget = false;
+            }
+            EnsureInstallVisualBackground(empty.transform, InstallEquipmentCardBasePath, 890f, 98f);
+            SetGraphicMaskableRecursive(empty.transform, true);
             CreateText(empty.transform, "Message", "이 카테고리에 등록된 EquipmentDefinition이 없습니다.", 24, theme.MutedInk, TextAnchor.MiddleCenter, 0f, 0f, 820f, 60f, true);
             return;
         }
@@ -2077,36 +2613,181 @@ public partial class RuntimeGameUIController
             selectedDefinition = definitions[0];
         }
 
-        for (int i = 0; i < definitions.Count && i < 6; i++)
+        for (int i = 0; i < definitions.Count; i++)
         {
             EquipmentDefinition definition = definitions[i];
-            float x = i % 2 == 0 ? -253f : 253f;
-            float y = 140f - ((i / 2) * 108f);
+            float x = i % 2 == 0 ? InstallCardLeftX : InstallCardRightX;
+            float y = GetInstallCardY(i / 2, contentHeight);
             CreateInstallCard(definition, i, x, y);
         }
     }
 
+    private static void AssignInstallReviewBase(Image image, string spritePath)
+    {
+        if (image == null)
+        {
+            return;
+        }
+
+        GeneratedRuntimeSprites.Assign(image, spritePath, false);
+        image.type = Image.Type.Simple;
+        image.preserveAspect = false;
+    }
+
+    private static void ConfigureInstallHitTarget(Image image)
+    {
+        if (image == null)
+        {
+            return;
+        }
+
+        image.sprite = null;
+        image.type = Image.Type.Simple;
+        image.preserveAspect = false;
+        image.color = Color.clear;
+        image.raycastTarget = true;
+    }
+
+    private static void ConfigureTransparentButtonTarget(Button button, Image targetGraphic)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        button.targetGraphic = targetGraphic;
+        ColorBlock colors = button.colors;
+        colors.normalColor = Color.clear;
+        colors.highlightedColor = Color.clear;
+        colors.pressedColor = Color.clear;
+        colors.selectedColor = Color.clear;
+        colors.disabledColor = Color.clear;
+        button.colors = colors;
+    }
+
+    private static Image EnsureInstallVisualBackground(Transform parent, string spritePath, float width, float height)
+    {
+        if (parent == null)
+        {
+            return null;
+        }
+
+        Transform visual = parent.Find("VisualBackground");
+        if (visual == null)
+        {
+            visual = GameUiFactory.CreateNode(parent, "VisualBackground", typeof(CanvasRenderer), typeof(Image)).transform;
+        }
+
+        visual.localScale = Vector3.one;
+        SetRect(visual.GetComponent<RectTransform>(), 0f, 0f, width, height, true);
+        visual.SetAsFirstSibling();
+
+        Image image = GetOrAddComponent<Image>(visual.gameObject);
+        AssignInstallReviewBase(image, spritePath);
+        image.raycastTarget = false;
+        return image;
+    }
+
+    private void ConfigureInstallListContent(float contentHeight, bool resetPosition)
+    {
+        if (installListRoot == null)
+        {
+            return;
+        }
+
+        installListRoot.localScale = Vector3.one;
+        RectTransform contentRect = installListRoot.GetComponent<RectTransform>();
+        float height = Mathf.Max(InstallListViewportHeight, contentHeight);
+        contentRect.anchorMin = new Vector2(0f, 1f);
+        contentRect.anchorMax = new Vector2(1f, 1f);
+        contentRect.pivot = new Vector2(0.5f, 1f);
+        contentRect.sizeDelta = new Vector2(0f, height);
+
+        if (resetPosition)
+        {
+            contentRect.anchoredPosition = Vector2.zero;
+            return;
+        }
+
+        Vector2 currentPosition = contentRect.anchoredPosition;
+        float maxScrollY = Mathf.Max(0f, height - InstallListViewportHeight);
+        contentRect.anchoredPosition = new Vector2(0f, Mathf.Clamp(currentPosition.y, 0f, maxScrollY));
+    }
+
+    private static float CalculateInstallListContentHeight(int itemCount)
+    {
+        int rowCount = Mathf.Max(1, Mathf.CeilToInt(itemCount / 2f));
+        float rowsHeight = rowCount * InstallCardHeight;
+        float gapsHeight = Mathf.Max(0, rowCount - 1) * InstallCardRowGap;
+        return Mathf.Max(InstallListViewportHeight, InstallCardTopPadding + rowsHeight + gapsHeight + InstallCardBottomPadding);
+    }
+
+    private static float GetInstallCardY(int row, float contentHeight)
+    {
+        return (contentHeight * 0.5f) - InstallCardTopPadding - (InstallCardHeight * 0.5f) - (row * (InstallCardHeight + InstallCardRowGap));
+    }
+
+    private void ResetInstallListScrollToTop()
+    {
+        if (installListScrollRect == null)
+        {
+            return;
+        }
+
+        Canvas.ForceUpdateCanvases();
+        if (installListRoot != null)
+        {
+            installListRoot.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        }
+
+        installListScrollRect.verticalNormalizedPosition = 1f;
+    }
+
     private void CreateInstallCard(EquipmentDefinition definition, int index, float x, float y)
     {
-        GameObject card = CreateGeneratedImage(installListRoot, $"InstallCard_{index}_{definition.EquipmentId}", "GeneratedRuntimeUI/ui_v2/install_card_base", x, y, 480f, 100f, false, true);
+        GameObject card = CreateGeneratedImage(installListRoot, $"InstallCard_{index}_{definition.EquipmentId}", InstallEquipmentCardBasePath, x, y, InstallCardWidth, InstallCardHeight, false, true);
 
         Image image = card.GetComponent<Image>();
-        image.color = definition == selectedDefinition ? new Color(0.90f, 1.00f, 0.78f, 1f) : Color.white;
-        image.raycastTarget = true;
+        ConfigureInstallHitTarget(image);
         Button button = card.AddComponent<Button>();
-        button.targetGraphic = image;
+        ConfigureTransparentButtonTarget(button, image);
         button.onClick.AddListener(() =>
         {
             BeginPlacementForDefinition(definition);
         });
 
+        Image background = EnsureInstallVisualBackground(card.transform, InstallEquipmentCardBasePath, InstallCardVisualWidth, InstallCardVisualHeight);
+        if (background != null)
+        {
+            background.color = definition == selectedDefinition ? new Color(0.90f, 1.00f, 0.78f, 1f) : Color.white;
+        }
+
         GameObject icon = CreateGeneratedImage(card.transform, "Icon", GetEquipmentIconPath(definition), -198f, 8f, 80f, 78f, true, true);
-        icon.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
+        icon.transform.localScale = Vector3.one;
 
         SetInstallCardTextNormal(CreateText(card.transform, "Name", GetEquipmentDisplayName(definition), 24, theme.Ink, TextAnchor.MiddleLeft, 64f, 30f, 306f, 34f, true));
-        SetInstallCardTextNormal(CreateText(card.transform, "Price", $"{definition.InstallCost:N0}G", 23, theme.Ink, TextAnchor.MiddleRight, 110f, -2f, 220f, 30f, true));
-        SetInstallCardTextNormal(CreateText(card.transform, "Owned", placementManager != null ? $"보유 {GetOwnedCount(definition):N0}" : "보유 확인중", 19, theme.MutedInk, TextAnchor.MiddleRight, 110f, -29.9998f, 220f, 26f, true));
-        SetInstallCardTextNormal(CreateText(card.transform, "Footprint", $"{definition.Width}x{definition.Height}칸", 16, theme.MutedInk, TextAnchor.MiddleCenter, -192f, -30f, 92f, 22f, true));
+        SetInstallCardTextNormal(CreateText(card.transform, "Price", $"{definition.InstallCost:N0}G", 23, theme.Ink, TextAnchor.MiddleRight, 110f, 24f, 220f, 26f, true));
+        SetInstallCardTextNormal(CreateText(card.transform, "Footprint", $"{definition.Width}x{definition.Height}칸", 23, theme.MutedInk, TextAnchor.MiddleRight, 110f, 0f, 220f, 26f, true));
+        SetInstallCardTextNormal(CreateText(card.transform, "Grade", definition.BrandTierLabel, 23, theme.MutedInk, TextAnchor.MiddleRight, 110f, -24f, 220f, 26f, true));
+        SetGraphicMaskableRecursive(card.transform, true);
+    }
+
+    private static void SetGraphicMaskableRecursive(Transform root, bool maskable)
+    {
+        if (root == null)
+        {
+            return;
+        }
+
+        Graphic[] graphics = root.GetComponentsInChildren<Graphic>(true);
+        for (int i = 0; i < graphics.Length; i++)
+        {
+            MaskableGraphic maskableGraphic = graphics[i] as MaskableGraphic;
+            if (maskableGraphic != null)
+            {
+                maskableGraphic.maskable = maskable;
+            }
+        }
     }
 
     private static void SetInstallCardTextNormal(Text text)
@@ -2444,6 +3125,10 @@ public partial class RuntimeGameUIController
         {
             baseName = "스쿼트 랙";
         }
+        else if (id.Contains("protein_bar"))
+        {
+            baseName = "자판기";
+        }
         else if (!string.IsNullOrWhiteSpace(definition.DisplayName))
         {
             baseName = definition.DisplayName;
@@ -2464,6 +3149,12 @@ public partial class RuntimeGameUIController
         }
 
         string id = (definition.EquipmentId ?? string.Empty).ToLowerInvariant();
+        string sampleIconPath = GetEquipmentSampleIconPath(id);
+        if (!string.IsNullOrEmpty(sampleIconPath))
+        {
+            return sampleIconPath;
+        }
+
         if (id.Contains("treadmill"))
         {
             return "GeneratedRuntimeUI/objects/treadmill";
@@ -2497,6 +3188,175 @@ public partial class RuntimeGameUIController
         return definition.Category == EquipmentCategory.Cardio
             ? "GeneratedRuntimeUI/objects/treadmill"
             : "GeneratedRuntimeUI/objects/dumbbell_rack";
+    }
+
+    private static string GetEquipmentSampleIconPath(string equipmentId)
+    {
+        switch (equipmentId)
+        {
+            case "treadmill_b":
+                return EquipmentTreadmillBIconPath;
+            case "treadmill_a":
+                return EquipmentTreadmillAIconPath;
+            case "treadmill_s":
+                return EquipmentTreadmillSIconPath;
+            case "treadmill_ss":
+                return EquipmentTreadmillSsIconPath;
+            case "exercise_bike_b":
+                return EquipmentExerciseBikeBIconPath;
+            case "exercise_bike_a":
+                return EquipmentExerciseBikeAIconPath;
+            case "exercise_bike_s":
+                return EquipmentExerciseBikeSIconPath;
+            case "exercise_bike_ss":
+                return EquipmentExerciseBikeSsIconPath;
+            case "dumbbell_rack_b":
+                return EquipmentDumbbellRackBIconPath;
+            case "dumbbell_rack_a":
+                return EquipmentDumbbellRackAIconPath;
+            case "dumbbell_rack_s":
+                return EquipmentDumbbellRackSIconPath;
+            case "dumbbell_rack_ss":
+                return EquipmentDumbbellRackSsIconPath;
+            case "yoga_mat_b":
+                return EquipmentYogaMatBIconPath;
+            case "yoga_mat_a":
+                return EquipmentYogaMatAIconPath;
+            case "yoga_mat_s":
+                return EquipmentYogaMatSIconPath;
+            case "yoga_mat_ss":
+                return EquipmentYogaMatSsIconPath;
+            case "power_rack_b":
+                return EquipmentPowerRackBIconPath;
+            case "power_rack_a":
+                return EquipmentPowerRackAIconPath;
+            case "power_rack_s":
+                return EquipmentPowerRackSIconPath;
+            case "power_rack_ss":
+                return EquipmentPowerRackSsIconPath;
+            case "bench_press_b":
+                return EquipmentBenchPressBIconPath;
+            case "bench_press_a":
+                return EquipmentBenchPressAIconPath;
+            case "bench_press_s":
+                return EquipmentBenchPressSIconPath;
+            case "bench_press_ss":
+                return EquipmentBenchPressSsIconPath;
+            case "cable_machine_b":
+                return EquipmentCableMachineBIconPath;
+            case "cable_machine_a":
+                return EquipmentCableMachineAIconPath;
+            case "cable_machine_s":
+                return EquipmentCableMachineSIconPath;
+            case "cable_machine_ss":
+                return EquipmentCableMachineSsIconPath;
+            case "leg_press_b":
+                return EquipmentLegPressBIconPath;
+            case "leg_press_a":
+                return EquipmentLegPressAIconPath;
+            case "leg_press_s":
+                return EquipmentLegPressSIconPath;
+            case "leg_press_ss":
+                return EquipmentLegPressSsIconPath;
+            case "hip_abduction_b":
+                return EquipmentHipAbductionBIconPath;
+            case "hip_abduction_a":
+                return EquipmentHipAbductionAIconPath;
+            case "hip_abduction_s":
+                return EquipmentHipAbductionSIconPath;
+            case "hip_abduction_ss":
+                return EquipmentHipAbductionSsIconPath;
+            case "massage_chair_b":
+                return EquipmentMassageChairBIconPath;
+            case "massage_chair_a":
+                return EquipmentMassageChairAIconPath;
+            case "massage_chair_s":
+                return EquipmentMassageChairSIconPath;
+            case "massage_chair_ss":
+                return EquipmentMassageChairSsIconPath;
+            case "inbody_machine_b":
+                return EquipmentInBodyMachineBIconPath;
+            case "inbody_machine_a":
+                return EquipmentInBodyMachineAIconPath;
+            case "inbody_machine_s":
+                return EquipmentInBodyMachineSIconPath;
+            case "inbody_machine_ss":
+                return EquipmentInBodyMachineSsIconPath;
+            case "lat_pulldown_b":
+                return EquipmentLatPulldownBIconPath;
+            case "lat_pulldown_a":
+                return EquipmentLatPulldownAIconPath;
+            case "lat_pulldown_s":
+                return EquipmentLatPulldownSIconPath;
+            case "lat_pulldown_ss":
+                return EquipmentLatPulldownSsIconPath;
+            case "rowing_machine_b":
+                return EquipmentRowingMachineBIconPath;
+            case "rowing_machine_a":
+                return EquipmentRowingMachineAIconPath;
+            case "rowing_machine_s":
+                return EquipmentRowingMachineSIconPath;
+            case "rowing_machine_ss":
+                return EquipmentRowingMachineSsIconPath;
+            case "stair_mill_b":
+                return EquipmentStairMillBIconPath;
+            case "stair_mill_a":
+                return EquipmentStairMillAIconPath;
+            case "stair_mill_s":
+                return EquipmentStairMillSIconPath;
+            case "stair_mill_ss":
+                return EquipmentStairMillSsIconPath;
+            case "smith_machine_b":
+                return EquipmentSmithMachineBIconPath;
+            case "smith_machine_a":
+                return EquipmentSmithMachineAIconPath;
+            case "smith_machine_s":
+                return EquipmentSmithMachineSIconPath;
+            case "smith_machine_ss":
+                return EquipmentSmithMachineSsIconPath;
+            case "chest_press_b":
+                return EquipmentChestPressBIconPath;
+            case "chest_press_a":
+                return EquipmentChestPressAIconPath;
+            case "chest_press_s":
+                return EquipmentChestPressSIconPath;
+            case "chest_press_ss":
+                return EquipmentChestPressSsIconPath;
+            case "protein_bar_b":
+                return EquipmentProteinBarBIconPath;
+            case "protein_bar_a":
+                return EquipmentProteinBarAIconPath;
+            case "protein_bar_s":
+                return EquipmentProteinBarSIconPath;
+            case "protein_bar_ss":
+                return EquipmentProteinBarSsIconPath;
+            case "locker_b":
+                return EquipmentLockerBIconPath;
+            case "locker_a":
+                return EquipmentLockerAIconPath;
+            case "locker_s":
+                return EquipmentLockerSIconPath;
+            case "locker_ss":
+                return EquipmentLockerSsIconPath;
+            case "shower_booth_b":
+                return EquipmentShowerBoothBIconPath;
+            case "shower_booth_a":
+                return EquipmentShowerBoothAIconPath;
+            case "shower_booth_s":
+                return EquipmentShowerBoothSIconPath;
+            case "shower_booth_ss":
+                return EquipmentShowerBoothSsIconPath;
+            case "water_dispenser_b":
+                return EquipmentWaterDispenserBIconPath;
+            case "water_dispenser_a":
+                return EquipmentWaterDispenserAIconPath;
+            case "water_dispenser_s":
+                return EquipmentWaterDispenserSIconPath;
+            case "water_dispenser_ss":
+                return EquipmentWaterDispenserSsIconPath;
+            default:
+                return null;
+        }
     }
 
     private void HideLegacyRuntimeFloorMockup()

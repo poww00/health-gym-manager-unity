@@ -5,6 +5,27 @@ TextureImporter:
   - first:
       213: -6734160276474855803
     second: exercise_bike_0
+  - first:
+      213: -764382919762408531
+    second: exercise_bike_1
+  - first:
+      213: 2647309855125804438
+    second: exercise_bike_2
+  - first:
+      213: 7062143089124570351
+    second: exercise_bike_3
+  - first:
+      213: -3214861451004070201
+    second: exercise_bike_4
+  - first:
+      213: 4158027134680932844
+    second: exercise_bike_5
+  - first:
+      213: -8124537984837615332
+    second: exercise_bike_6
+  - first:
+      213: 2306947859713264117
+    second: exercise_bike_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -34,10 +55,10 @@ TextureImporter:
   cubemapConvolution: 0
   seamlessCubemap: 0
   textureFormat: 1
-  maxTextureSize: 2048
+  maxTextureSize: 4096
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,7 +72,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -72,7 +93,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -85,7 +106,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -98,7 +119,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
     buildTarget: WebGL
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -116,14 +137,14 @@ TextureImporter:
       name: exercise_bike_0
       rect:
         serializedVersion: 2
-        x: 5
-        y: 5
-        width: 239
-        height: 276
+        x: 0
+        y: 0
+        width: 293
+        height: 263
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
+      customData:
       outline: []
       physicsShape: []
       tessellationDetail: -1
@@ -131,17 +152,171 @@ TextureImporter:
       spriteID: 58e7b2c58e47b82a0800000000000000
       internalID: -6734160276474855803
       vertices: []
-      indices: 
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exercise_bike_1
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 0
+        width: 293
+        height: 263
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dd34c338caa4ef4aa3cda4e58ee1c16
+      internalID: -764382919762408531
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exercise_bike_2
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 0
+        width: 293
+        height: 263
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15540d6f42604904ba21fb1885f7c42f
+      internalID: 2647309855125804438
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exercise_bike_3
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 0
+        width: 293
+        height: 263
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b29e58eab284215b1cb77a2e6a59380
+      internalID: 7062143089124570351
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exercise_bike_4
+      rect:
+        serializedVersion: 2
+        x: 1172
+        y: 0
+        width: 293
+        height: 263
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a96733f2bce44c95887eb02d9eb2d7af
+      internalID: -3214861451004070201
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exercise_bike_5
+      rect:
+        serializedVersion: 2
+        x: 1465
+        y: 0
+        width: 293
+        height: 263
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7df42ef18376402497114e01af89d0c6
+      internalID: 4158027134680932844
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exercise_bike_6
+      rect:
+        serializedVersion: 2
+        x: 1758
+        y: 0
+        width: 293
+        height: 263
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0132b4aac2545cfbfbdd5f1f76e5460
+      internalID: -8124537984837615332
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exercise_bike_7
+      rect:
+        serializedVersion: 2
+        x: 2051
+        y: 0
+        width: 293
+        height: 263
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a8d713cb69d49afa1f471d86cff614e
+      internalID: 2306947859713264117
+      vertices: []
+      indices:
       edges: []
       weights: []
     outline: []
-    customData: 
+    customData:
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID:
     internalID: 0
     vertices: []
-    indices: 
+    indices:
     edges: []
     weights: []
     secondaryTextures: []
@@ -149,8 +324,15 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       exercise_bike_0: -6734160276474855803
-  mipmapLimitGroupName: 
+      exercise_bike_1: -764382919762408531
+      exercise_bike_2: 2647309855125804438
+      exercise_bike_3: 7062143089124570351
+      exercise_bike_4: -3214861451004070201
+      exercise_bike_5: 4158027134680932844
+      exercise_bike_6: -8124537984837615332
+      exercise_bike_7: 2306947859713264117
+  mipmapLimitGroupName:
   pSDRemoveMatte: 0
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+  userData:
+  assetBundleName:
+  assetBundleVariant:

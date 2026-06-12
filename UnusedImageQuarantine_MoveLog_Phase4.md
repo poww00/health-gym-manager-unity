@@ -1,0 +1,125 @@
+# Unused Image Quarantine Move Log - Phase 4
+
+- Quarantine root: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI`
+- Moved PNG count: 19
+- Moved meta count: 19
+- Missing files: None
+- `Tutorial_Arrow_Pointer_Down.png` quarantined: Yes
+- `Tutorial_Arrow_Pointer_Down.png` quarantine reason: no GUID reference, no exact runtime path reference, and `RuntimeInstallTutorialController.cs` uses `Tutorial_Arrow_Pointer_Down_v2`.
+- Final tutorial arrow loading path in `RuntimeInstallTutorialController.cs`: `GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Pointer_Down_v2`
+- Modified scripts in Phase 4: None
+
+## Reference Check Summary
+
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/`: no GUID references and no Runtime code or Resources.Load path references found. Manifest-only and archive text-list references were not treated as runtime use.
+- `Tutorial_Arrow_Curved.png`: no GUID reference and no runtime path reference found.
+- `Tutorial_Arrow_Pointer_Down.png`: no GUID reference and no exact runtime path reference found.
+- `Tutorial_Arrow_Pointer_Down_v2.png`: retained and still referenced by `RuntimeInstallTutorialController.cs`.
+- `Tutorial_StepBadge_Green.png`: retained.
+
+## Moved Files
+
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/bottom_nav_frame.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/bottom_nav_frame.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/bottom_nav_frame.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/bottom_nav_frame.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/button_beige.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/button_beige.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/button_beige.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/button_beige.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/button_green.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/button_green.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/button_green.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/button_green.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/cancel_button_beige.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/cancel_button_beige.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/cancel_button_beige.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/cancel_button_beige.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/category_tab_beige.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/category_tab_beige.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/category_tab_beige.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/category_tab_beige.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/category_tab_green.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/category_tab_green.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/category_tab_green.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/category_tab_green.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/confirm_button_green.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/confirm_button_green.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/confirm_button_green.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/confirm_button_green.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/hud_info_box.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/hud_info_box.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/hud_info_box.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/hud_info_box.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/install_card_row.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/install_card_row.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/install_card_row.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/install_card_row.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/install_panel_frame.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/install_panel_frame.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/install_panel_frame.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/install_panel_frame.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/operate_card_row.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/operate_card_row.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/operate_card_row.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/operate_card_row.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/operate_panel_frame.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/operate_panel_frame.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/operate_panel_frame.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/operate_panel_frame.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/selected_info_row.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/selected_info_row.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/selected_info_row.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/selected_info_row.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/slot_row.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/slot_row.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/slot_row.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/slot_row.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/small_panel.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/small_panel.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/small_panel.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/small_panel.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/small_panel_alt.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/small_panel_alt.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/small_panel_alt.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/small_panel_alt.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/title_menu_panel.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/title_menu_panel.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui/title_menu_panel.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui/title_menu_panel.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Curved.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Curved.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Curved.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Curved.png.meta`
+  - Missing file: `None`
+- PNG source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Pointer_Down.png`
+  - PNG quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Pointer_Down.png`
+  - Meta source: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Pointer_Down.png.meta`
+  - Meta quarantine: `_UnusedImageQuarantine/20260518_phase4_Legacy_RuntimeUI/Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Pointer_Down.png.meta`
+  - Missing file: `None`
+
+## Untouched Folders And Files
+
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2`
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits`
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/move`
+- `Assets/_Project/Resources/MockupUI`
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Pointer_Down_v2.png`
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_StepBadge_Green.png`

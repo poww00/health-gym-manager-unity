@@ -1,0 +1,99 @@
+Created At: 2026-06-07T08:58:01Z
+Completed At: 2026-06-07T08:58:01Z
+File Path: `file:///d:/unity/My%20project/Assets/_Project/Scripts/Runtime/Visual/GymPlacedObjectVisual.cs`
+Total Lines: 270
+Total Bytes: 10383
+Showing lines 1 to 270
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1: using UnityEngine;
+2: 
+3: [DisallowMultipleComponent]
+4: public sealed class GymPlacedObjectVisual : MonoBehaviour
+5: {
+6:     private static Sprite cachedWhiteSprite;
+7:     private static Font cachedFont;
+8: 
+9:     private SpriteRenderer shadowRenderer;
+10:     private SpriteRenderer baseRenderer;
+11:     private SpriteRenderer plateRenderer;
+12:     private SpriteRenderer accentRenderer;
+13:     private SpriteRenderer frameRenderer;
+14:     private TextMesh tokenText;
+15:     private TextMesh tierText;
+16:     private MeshRenderer tokenRenderer;
+17:     private MeshRenderer tierRenderer;
+18: 
+19:     private Vector2 footprintSize = Vector2.one;
+20:     private Color accentColor = new Color(0.91f, 0.63f, 0.22f, 1f);
+21:     private string token = "헬";
+22:     private string tier = "B";
+23: 
+24:     public void Initialize(PlacedObjectSaveData data, EquipmentDefinition definition, Vector2 size)
+25:     {
+26:         footprintSize = size;
+27:         accentColor = ResolveAccentColor(definition, data);
+28:         token = ResolveToken(definition, data);
+29:         tier = definition != null ? definition.BrandTierLabel : "B";
+30: 
+31:         EnsureAssets();
+32:         EnsureChildren();
+33:         ApplyLayout();
+34:         ApplyState(data, false, false);
+35:     }
+36: 
+37:     public void ApplyState(PlacedObjectSaveData data, bool selected, bool ghost)
+38:     {
+39:         bool isUnderConstruction = data != null && data.isUnderConstruction;
+40:         bool isBroken = data != null && data.isBroken;
+4
+<truncated 8088 bytes>
+                return "푸";
+223:                 case EquipmentCategory.Pull:
+224:                     return "풀";
+225:                 case EquipmentCategory.Legs:
+226:                     return "하";
+227:                 case EquipmentCategory.Recovery:
+228:                     return "회";
+229:                 default:
+230:                     return "헬";
+231:             }
+232:         }
+233: 
+234:         string name = data != null ? data.displayName : string.Empty;
+235:         if (string.IsNullOrWhiteSpace(name))
+236:         {
+237:             return "헬";
+238:         }
+239: 
+240:         string compact = name.Replace(" ", string.Empty).ToUpperInvariant();
+241:         return compact.Length <= 4 ? compact : compact.Substring(0, 4);
+242:     }
+243: 
+244:     private static Color ResolveAccentColor(EquipmentDefinition definition, PlacedObjectSaveData data)
+245:     {
+246:         if (definition != null)
+247:         {
+248:             switch (definition.Category)
+249:             {
+250:                 case EquipmentCategory.Cardio:
+251:                     return new Color(0.22f, 0.67f, 0.86f, 1f);
+252:                 case EquipmentCategory.Push:
+253:                     return new Color(0.92f, 0.48f, 0.22f, 1f);
+254:                 case EquipmentCategory.Pull:
+255:                     return new Color(0.58f, 0.48f, 0.92f, 1f);
+256:                 case EquipmentCategory.Legs:
+257:                     return new Color(0.92f, 0.72f, 0.22f, 1f);
+258:                 case EquipmentCategory.Recovery:
+259:                     return new Color(0.32f, 0.76f, 0.48f, 1f);
+260:                 default:
+261:                     return definition.DebugColor;
+262:             }
+263:         }
+264: 
+265:         return data != null && data.isBroken
+266:             ? new Color(0.84f, 0.32f, 0.28f, 1f)
+267:             : new Color(0.91f, 0.63f, 0.22f, 1f);
+268:     }
+269: }
+270: 
+The above content shows the entire, complete file contents of the requested file.

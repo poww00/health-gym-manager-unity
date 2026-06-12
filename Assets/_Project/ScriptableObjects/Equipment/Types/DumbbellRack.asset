@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb1562e7c2c46c89ce9d7996c4355db, type: 3}
+  m_Name: DumbbellRack
+  m_EditorClassIdentifier: Assembly-CSharp::EquipmentTypeDefinition
+  id: "dumbbell_rack"
+  displayName: "?? ?"
+  category: 6
+  unlockStage: 0
+  sizeX: 1
+  sizeY: 1
+  basePrice: 700
+  baseMonthlyMaintenanceCost: 60
+  baseIncomePerUse: 50
+  baseUseDurationSeconds: 9
+  baseSatisfaction: 2
+  baseCleanlinessCost: 1
+  baseDurability: 120
+  baseBreakdownRate: 0.7
+  requiredGymLevel: 1
+  spriteKey: "dumbbell_rack"
+  animationKey: "dumbbell_rack"
+  description: ""

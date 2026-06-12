@@ -1,0 +1,338 @@
+fileFormatVersion: 2
+guid: 2f42c4200b0e3f540bf3c50b2e9e5c14
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7067579872425134023
+    second: body_male_chubby_run_32x48_4x2 1_0
+  - first:
+      213: -5929073597485554738
+    second: body_male_chubby_run_32x48_4x2 1_1
+  - first:
+      213: 6228993929732065683
+    second: body_male_chubby_run_32x48_4x2 1_2
+  - first:
+      213: -8394681864017743607
+    second: body_male_chubby_run_32x48_4x2 1_3
+  - first:
+      213: -1142962644537280176
+    second: body_male_chubby_run_32x48_4x2 1_4
+  - first:
+      213: 6776086326763492456
+    second: body_male_chubby_run_32x48_4x2 1_5
+  - first:
+      213: 5684415295031999871
+    second: body_male_chubby_run_32x48_4x2 1_6
+  - first:
+      213: 5121472049722248108
+    second: body_male_chubby_run_32x48_4x2 1_7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 7
+  spritePivot: {x: 0.5, y: 0}
+  spritePixelsToUnits: 640
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: body_male_chubby_run_32x48_4x2 1_0
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 561
+        width: 342
+        height: 451
+      alignment: 9
+      pivot: {x: 0.7378849, y: 0.89926535}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 938366a3d89eaed90800000000000000
+      internalID: -7067579872425134023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: body_male_chubby_run_32x48_4x2 1_1
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 560
+        width: 318
+        height: 464
+      alignment: 9
+      pivot: {x: 0.7023797, y: 0.92641}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec3e9b60af2b7bda0800000000000000
+      internalID: -5929073597485554738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: body_male_chubby_run_32x48_4x2 1_2
+      rect:
+        serializedVersion: 2
+        x: 1118
+        y: 561
+        width: 333
+        height: 436
+      alignment: 9
+      pivot: {x: 0.66044545, y: 0.8939979}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3998eb9f9f4d17650800000000000000
+      internalID: 6228993929732065683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: body_male_chubby_run_32x48_4x2 1_3
+      rect:
+        serializedVersion: 2
+        x: 1564
+        y: 560
+        width: 394
+        height: 452
+      alignment: 9
+      pivot: {x: 0.7095712, y: 0.8972759}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 901fec45259108b80800000000000000
+      internalID: -8394681864017743607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: body_male_chubby_run_32x48_4x2 1_4
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 48
+        width: 358
+        height: 445
+      alignment: 9
+      pivot: {x: 0.6221062, y: 0.9113901}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05970dcc7816320f0800000000000000
+      internalID: -1142962644537280176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: body_male_chubby_run_32x48_4x2 1_5
+      rect:
+        serializedVersion: 2
+        x: 629
+        y: 49
+        width: 301
+        height: 464
+      alignment: 9
+      pivot: {x: 0.6815366, y: 0.9342608}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8649e1aec9e790e50800000000000000
+      internalID: 6776086326763492456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: body_male_chubby_run_32x48_4x2 1_6
+      rect:
+        serializedVersion: 2
+        x: 1104
+        y: 49
+        width: 358
+        height: 444
+      alignment: 9
+      pivot: {x: 0.6221068, y: 0.90523833}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7dfd20f79913ee40800000000000000
+      internalID: 5684415295031999871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: body_male_chubby_run_32x48_4x2 1_7
+      rect:
+        serializedVersion: 2
+        x: 1579
+        y: 49
+        width: 393
+        height: 444
+      alignment: 9
+      pivot: {x: 0.6691646, y: 0.8933252}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cab49cac1bf131740800000000000000
+      internalID: 5121472049722248108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: ffb2655d9a30426498d9753bb793f77e
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      body_male_chubby_run_32x48_4x2 1_0: -7067579872425134023
+      body_male_chubby_run_32x48_4x2 1_1: -5929073597485554738
+      body_male_chubby_run_32x48_4x2 1_2: 6228993929732065683
+      body_male_chubby_run_32x48_4x2 1_3: -8394681864017743607
+      body_male_chubby_run_32x48_4x2 1_4: -1142962644537280176
+      body_male_chubby_run_32x48_4x2 1_5: 6776086326763492456
+      body_male_chubby_run_32x48_4x2 1_6: 5684415295031999871
+      body_male_chubby_run_32x48_4x2 1_7: 5121472049722248108
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

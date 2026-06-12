@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b0d7c63ba96be64c81b3168e44ba910, type: 3}
+  m_Name: LatPulldown_SS
+  m_EditorClassIdentifier: Assembly-CSharp::EquipmentDefinition
+  equipmentId: lat_pulldown_ss
+  displayName: "\uc678\uc81c \ub7ab\ud480\ub2e4\uc6b4"
+  category: 2
+  brandTier: 3
+  width: 2
+  height: 1
+  installCost: 2477
+  prestigeBonus: 4
+  memberCapacityBonus: 6
+  electricityCostPerDay: 19
+  maintenanceCostPerDay: 206
+  ptDemandBonus: 140
+  iconReference:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  debugColor: {r: 0.95, g: 0.55, b: 0.88, a: 1}
+  unlockedByDefault: 1

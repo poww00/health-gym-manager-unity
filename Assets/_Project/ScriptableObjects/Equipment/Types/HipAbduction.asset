@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb1562e7c2c46c89ce9d7996c4355db, type: 3}
+  m_Name: HipAbduction
+  m_EditorClassIdentifier: Assembly-CSharp::EquipmentTypeDefinition
+  id: "hip_abduction"
+  displayName: "? ????"
+  category: 7
+  unlockStage: 3
+  sizeX: 2
+  sizeY: 1
+  basePrice: 3200
+  baseMonthlyMaintenanceCost: 300
+  baseIncomePerUse: 175
+  baseUseDurationSeconds: 16
+  baseSatisfaction: 5
+  baseCleanlinessCost: 2
+  baseDurability: 100
+  baseBreakdownRate: 0.85
+  requiredGymLevel: 4
+  spriteKey: "hip_abduction"
+  animationKey: "hip_abduction"
+  description: ""

@@ -3,27 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// [프로토타입/MVP]
-/// 손님 최소 시각화 + 다중 기구 사용 루프 + 기구 상태 오버레이 + 대기/포기 + 선호 기구 1차.
+/// [?꾨줈?좏???MVP]
+/// ?먮떂 理쒖냼 ?쒓컖??+ ?ㅼ쨷 湲곌뎄 ?ъ슜 猷⑦봽 + 湲곌뎄 ?곹깭 ?ㅻ쾭?덉씠 + ?湲??ш린 + ?좏샇 湲곌뎄 1李?
 ///
-/// 이번 버전 핵심:
-/// - 플레이 모드에서만 손님 루프 진행
-/// - 설치 모드로 들어가면 손님은 사라지지 않고 그대로 정지
-/// - 설치 모드에서는 예약/사용 오버레이만 숨김
-/// - 플레이 모드로 돌아오면 멈췄던 손님이 이어서 다시 움직임
-/// - 원하는 기구가 없으면 잠깐 대기
-/// - 대기 시간이 지나도 못 잡으면 퇴장
-/// - 손님은 선호 기구 계열을 먼저 찾고, 없으면 다른 기구를 사용
-/// - 혼잡 테스트용 강제 수요 모드는 기본 OFF
-/// - 손님 상태별 색/간단 펄스 연출 추가
+/// ?대쾲 踰꾩쟾 ?듭떖:
+/// - ?뚮젅??紐⑤뱶?먯꽌留??먮떂 猷⑦봽 吏꾪뻾
+/// - ?ㅼ튂 紐⑤뱶濡??ㅼ뼱媛硫??먮떂? ?щ씪吏吏 ?딄퀬 洹몃?濡??뺤?
+/// - ?ㅼ튂 紐⑤뱶?먯꽌???덉빟/?ъ슜 ?ㅻ쾭?덉씠留??④?
+/// - ?뚮젅??紐⑤뱶濡??뚯븘?ㅻ㈃ 硫덉톬???먮떂???댁뼱???ㅼ떆 ?吏곸엫
+/// - ?먰븯??湲곌뎄媛 ?놁쑝硫??좉퉸 ?湲?/// - ?湲??쒓컙??吏?섎룄 紐??≪쑝硫??댁옣
+/// - ?먮떂? ?좏샇 湲곌뎄 怨꾩뿴??癒쇱? 李얘퀬, ?놁쑝硫??ㅻⅨ 湲곌뎄瑜??ъ슜
+/// - ?쇱옟 ?뚯뒪?몄슜 媛뺤젣 ?섏슂 紐⑤뱶??湲곕낯 OFF
+/// - ?먮떂 ?곹깭蹂???媛꾨떒 ?꾩뒪 ?곗텧 異붽?
 ///
-/// 아직 안 하는 일:
-/// - 정교한 길찾기
-/// - 충돌 회피
-/// - 저장/불러오기
-/// - 경제와 1:1 정밀 연동
-/// - 실제 캐릭터 스프라이트 애니메이션
-/// </summary>
+/// ?꾩쭅 ???섎뒗 ??
+/// - ?뺢탳??湲몄갼湲?/// - 異⑸룎 ?뚰뵾
+/// - ???遺덈윭?ㅺ린
+/// - 寃쎌젣? 1:1 ?뺣? ?곕룞
+/// - ?ㅼ젣 罹먮┃???ㅽ봽?쇱씠???좊땲硫붿씠??/// </summary>
 [DefaultExecutionOrder(1200)]
 public sealed class CustomerFlowManager : MonoBehaviour
 {
@@ -31,6 +28,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
     {
         MovingToMachine,
         UsingMachine,
+        LeavingMachine,
         WaitingForMachine,
         Leaving,
     }
@@ -82,10 +80,17 @@ public sealed class CustomerFlowManager : MonoBehaviour
     {
         public GameObject visual;
         public SpriteRenderer renderer;
+        public int bodySortingOrder = 30;
+        public int headSortingOrder = 31;
 
         public string targetMachineKey;
         public Vector3 targetMachineWorldPosition;
+        public Vector3 machineDismountWorldPosition;
         public Vector3 worldPosition;
+        public Vector3 exitSafeHidePoint;
+        public Vector3 entranceRevealPointUsedForEntry;
+        public bool hasLayeredEntranceRevealPointForEntry = false;
+        public bool exitHidePointOverwrittenToEntranceReveal = false;
 
         public float remainingUseSeconds;
         public int remainingMachineStops;
@@ -104,6 +109,9 @@ public sealed class CustomerFlowManager : MonoBehaviour
         public MachinePreferenceGroup secondaryPreference = MachinePreferenceGroup.Other;
 
         public readonly HashSet<string> visitedMachineKeys = new HashSet<string>();
+
+        public List<Vector3> currentPath;
+        public int currentPathIndex;
     }
 
     private sealed class MachineRuntimeInfo
@@ -121,7 +129,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
         public float remainingSeconds;
     }
 
-    [Header("References (비워두면 자동 탐색)")]
+    [Header("References (鍮꾩썙?먮㈃ ?먮룞 ?먯깋)")]
     [SerializeField] private PlacementManager placementManager;
     [SerializeField] private GridManager gridManager;
     [SerializeField] private GymEconomyManager gymEconomyManager;
@@ -159,6 +167,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
     [Header("Prototype Motion")]
     [SerializeField] private float moveSpeed = 2.2f;
+    [SerializeField] private Vector2 treadmillDismountOffset = new Vector2(0.40f, -0.05f);
     [SerializeField] private float entryExitOffsetX = 1.6f;
     [SerializeField] private float entryExitHeightRatio = 0.18f;
 
@@ -169,13 +178,14 @@ public sealed class CustomerFlowManager : MonoBehaviour
     [SerializeField] private Color leavingCustomerColor = new Color(1f, 0.75f, 0.75f, 0.90f);
     [SerializeField] private Vector2 customerVisualSize = new Vector2(0.34f, 0.34f);
     [SerializeField] private int customerSortingOrder = 30;
+    [SerializeField] private Vector3 layeredCustomerHeadLocalOffset = new Vector3(0f, 0.68f, 0f);
     [SerializeField] private float usingPulseAmplitude = 0.14f;
     [SerializeField] private float usingPulseSpeed = 8f;
     [SerializeField] private float waitingPulseAmplitude = 0.07f;
     [SerializeField] private float waitingPulseSpeed = 5f;
 
     [Header("Machine Overlay")]
-    [SerializeField] private bool showMachineStateOverlay = true;
+    [SerializeField] private bool showMachineStateOverlay = false;
     [SerializeField] private Color reservedOverlayColor = new Color(0.45f, 0.75f, 1f, 0.30f);
     [SerializeField] private Color inUseOverlayColor = new Color(0.45f, 1f, 0.45f, 0.34f);
     [SerializeField] private int overlaySortingOrder = 12;
@@ -215,10 +225,10 @@ public sealed class CustomerFlowManager : MonoBehaviour
     private GUIStyle debugHeaderStyle;
 
     private readonly List<OperationFeedEntry> operationFeedEntries = new List<OperationFeedEntry>();
-    private string currentFlowSummary = "손님 없음";
-    private string currentBottleneckSummary = "병목 없음";
-    private string currentGuideSummary = "기구 설치 후 플레이 시작";
-    private string currentTopMachineSummary = "주요 기구 없음";
+    private string currentFlowSummary = "?먮떂 ?놁쓬";
+    private string currentBottleneckSummary = "蹂묐ぉ ?놁쓬";
+    private string currentGuideSummary = "湲곌뎄 ?ㅼ튂 ???뚮젅???쒖옉";
+    private string currentTopMachineSummary = "二쇱슂 湲곌뎄 ?놁쓬";
 
     public int ActiveCustomerCount => activeCustomers.Count;
 
@@ -333,7 +343,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
         if (!string.IsNullOrWhiteSpace(reason))
         {
-            Debug.Log($"[CustomerFlowManager] 일일 손님 경험 통계 리셋 / 사유: {reason}");
+            Debug.Log($"[CustomerFlowManager] ?쇱씪 ?먮떂 寃쏀뿕 ?듦퀎 由ъ뀑 / ?ъ쑀: {reason}");
         }
     }
 
@@ -348,20 +358,20 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
         if (placementManager == null || gridManager == null)
         {
-            Debug.LogWarning("[CustomerFlowManager] 필요한 참조가 아직 없어서 초기화를 보류해.");
+            Debug.LogWarning("[CustomerFlowManager] ?꾩슂??李몄“媛 ?꾩쭅 ?놁뼱??珥덇린?붾? 蹂대쪟??");
             return;
         }
 
         runtimeRoot = EnsureRuntimeRoot();
         overlayRoot = EnsureOverlayRoot();
         spawnCountdownSeconds = GetNextSpawnInterval();
-        ResetDailyExperienceMetrics("초기화");
+        ResetDailyExperienceMetrics("Init");
 
         placementManager.PlayerPlacedObject -= HandlePlacementChanged;
         placementManager.PlayerPlacedObject += HandlePlacementChanged;
 
         isInitialized = true;
-        Debug.Log("[CustomerFlowManager] 손님 다중 기구 + 대기/포기 프로토타입 초기화 완료");
+        Debug.Log("[CustomerFlowManager] Initialized");
     }
 
     private void Awake()
@@ -494,7 +504,6 @@ public sealed class CustomerFlowManager : MonoBehaviour
             return;
         }
 
-        // 이사 중에는 신규 손님 스폰 중단
         if (cachedRelocationManager == null)
         {
             cachedRelocationManager = FindFirstObjectByType<RelocationManager>();
@@ -557,7 +566,6 @@ public sealed class CustomerFlowManager : MonoBehaviour
         int activeMembers = gymEconomyManager != null ? gymEconomyManager.GetActiveMemberCount() : 0;
         int targetByMembers = activeMembers / Mathf.Max(1, activeMembersPerVisibleCustomer);
 
-        // 기구가 있고 최소 한 명은 방문하도록 허용하는 옵션
         if (allowMinimumPrototypeCustomerWhenMachinesExist && machineCount > 0 && targetByMembers < minimumPrototypeVisibleCustomers)
         {
             targetByMembers = minimumPrototypeVisibleCustomers;
@@ -569,10 +577,8 @@ public sealed class CustomerFlowManager : MonoBehaviour
             eventMultiplier = gymEventManager.ActiveSpawnMultiplier;
         }
 
-        // 실제 회원 수 기반 타겟에 이벤트 배율 적용
         float scaled = targetByMembers * Mathf.Max(0.1f, eventMultiplier);
         
-        // 최대 동시 접속자 수 제한
         return Mathf.Clamp(Mathf.RoundToInt(scaled), 0, maxConcurrentCustomers);
     }
 
@@ -596,6 +602,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
         renderer.size = customerVisualSize;
         renderer.color = movingCustomerColor;
         renderer.sortingOrder = customerSortingOrder;
+        renderer.enabled = false;
 
         ActiveCustomer customer = new ActiveCustomer
         {
@@ -603,9 +610,15 @@ public sealed class CustomerFlowManager : MonoBehaviour
             renderer = renderer,
             state = CustomerState.MovingToMachine,
             worldPosition = spawnWorldPosition,
+            entranceRevealPointUsedForEntry = spawnWorldPosition,
+            exitSafeHidePoint = spawnWorldPosition,
+            hasLayeredEntranceRevealPointForEntry = true,
             leaveReason = CustomerLeaveReason.None,
             waitSlotIndex = -1,
         };
+
+        LayeredCustomerAnimator animator = visual.AddComponent<LayeredCustomerAnimator>();
+        animator.Initialize(customer);
 
         return customer;
     }
@@ -618,8 +631,6 @@ public sealed class CustomerFlowManager : MonoBehaviour
         }
 
         float moveStep = Mathf.Max(0.01f, moveSpeed) * simulationDeltaTime;
-        Vector3 exitPos = GetExitWorldPosition();
-
         for (int i = activeCustomers.Count - 1; i >= 0; i--)
         {
             ActiveCustomer customer = activeCustomers[i];
@@ -633,18 +644,26 @@ public sealed class CustomerFlowManager : MonoBehaviour
             {
                 case CustomerState.MovingToMachine:
                 {
-                    Vector3 target = customer.targetMachineWorldPosition;
-                    float dist = Vector3.Distance(customer.worldPosition, target);
+                    Vector3 finalTarget = customer.targetMachineWorldPosition;
+                    Vector3 immediateTarget = GetPathfindingImmediateTarget(customer, finalTarget, true);
+                    float dist = Vector3.Distance(customer.worldPosition, immediateTarget);
 
                     if (dist <= moveStep)
                     {
-                        customer.worldPosition = target;
-                        customer.state = CustomerState.UsingMachine;
-                        ApplyCustomerVisualForState(customer);
+                        customer.worldPosition = immediateTarget;
+                        customer.currentPathIndex++;
+
+                        if (Vector3.Distance(customer.worldPosition, finalTarget) < moveStep)
+                        {
+                            customer.worldPosition = finalTarget;
+                            customer.state = CustomerState.UsingMachine;
+                            customer.currentPath = null;
+                            ApplyCustomerVisualForState(customer);
+                        }
                     }
                     else
                     {
-                        customer.worldPosition = Vector3.MoveTowards(customer.worldPosition, target, moveStep);
+                        customer.worldPosition = Vector3.MoveTowards(customer.worldPosition, immediateTarget, moveStep);
                     }
 
                     if (customer.visual != null)
@@ -662,35 +681,61 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
                     if (customer.remainingUseSeconds <= 0f)
                     {
+                        string completedMachineKey = customer.targetMachineKey;
                         if (machines != null)
                         {
-                            var machine = machines.FirstOrDefault(m => m.key == customer.targetMachineKey);
+                            var machine = machines.FirstOrDefault(m => m.key == completedMachineKey);
                             if (machine != null && machine.data != null && machine.data.runtimeDefinition != null)
                             {
                                 float breakdownChance = EquipmentBrandTierRules.GetBreakdownChancePerUse(machine.data.runtimeDefinition.BrandTier);
                                 if (UnityEngine.Random.value < breakdownChance)
                                 {
                                     machine.data.isBroken = true;
-                                    Debug.Log($"[CustomerFlowManager] 기구 고장 발생! ({machine.data.runtimeDefinition.DisplayName})");
-                                    PushOperationFeed("기구가 고장났습니다! 수리가 필요해", operationFeedAlertColor);
+                                    Debug.Log($"[CustomerFlowManager] Machine broken! ({machine.data.runtimeDefinition.DisplayName})");
+                                    PushOperationFeed("Equipment broken! Repair needed", operationFeedAlertColor);
                                 }
                             }
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(completedMachineKey))
+                        {
+                            customer.visitedMachineKeys.Add(completedMachineKey);
                         }
 
                         ReleaseReservationIfNeeded(customer);
                         customer.remainingMachineStops -= 1;
 
-                        if (customer.remainingMachineStops > 0 && machines != null && machines.Count > 0)
+                        if (TryBeginMachineDismount(customer, completedMachineKey))
                         {
-                            if (!TryAssignNextMachine(customer, machines))
-                            {
-                                EnterWaitingState(customer);
-                            }
+                            break;
                         }
-                        else
-                        {
-                            BeginLeaving(customer, CustomerLeaveReason.CompletedVisit);
-                        }
+
+                        CompletePostUseDecision(customer, machines);
+                    }
+
+                    break;
+                }
+
+                case CustomerState.LeavingMachine:
+                {
+                    Vector3 finalTarget = customer.machineDismountWorldPosition;
+                    float dist = Vector3.Distance(customer.worldPosition, finalTarget);
+
+                    if (dist <= moveStep)
+                    {
+                        customer.worldPosition = finalTarget;
+                        customer.currentPath = null;
+                        customer.currentPathIndex = 0;
+                        CompletePostUseDecision(customer, machines);
+                    }
+                    else
+                    {
+                        customer.worldPosition = Vector3.MoveTowards(customer.worldPosition, finalTarget, moveStep);
+                    }
+
+                    if (customer.visual != null)
+                    {
+                        customer.visual.transform.position = customer.worldPosition;
                     }
 
                     break;
@@ -703,7 +748,6 @@ public sealed class CustomerFlowManager : MonoBehaviour
                     dailyTotalWaitSeconds += simulationDeltaTime;
                     UpdateCustomerVisualAnimation(customer);
 
-                    // Move to waiting slot visual position
                     if (customer.waitSlotIndex >= 0)
                     {
                         Vector3 slotPos = GetWaitingWorldPosition(customer.waitSlotIndex);
@@ -734,32 +778,87 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
                 case CustomerState.Leaving:
                 {
-                    float dist = Vector3.Distance(customer.worldPosition, exitPos);
+                    Vector3 exitPos = GetLayeredCustomerExitHidePoint(customer);
+                    Vector3 immediateExit = GetPathfindingImmediateTarget(customer, exitPos, false);
+                    float dist = Vector3.Distance(customer.worldPosition, immediateExit);
 
                     if (dist <= moveStep)
                     {
-                        FinalizeCustomerDeparture(customer);
+                        customer.worldPosition = immediateExit;
+                        customer.currentPathIndex++;
 
-                        if (customer.visual != null)
+                        if (Vector3.Distance(customer.worldPosition, exitPos) < moveStep)
                         {
-                            Destroy(customer.visual);
-                        }
+                            FinalizeCustomerDeparture(customer);
 
-                        activeCustomers.RemoveAt(i);
+                            if (customer.visual != null)
+                            {
+                                Destroy(customer.visual);
+                            }
+
+                            activeCustomers.RemoveAt(i);
+                        }
                     }
                     else
                     {
-                        customer.worldPosition = Vector3.MoveTowards(customer.worldPosition, exitPos, moveStep);
+                        customer.worldPosition = Vector3.MoveTowards(customer.worldPosition, immediateExit, moveStep);
+                    }
 
-                        if (customer.visual != null)
-                        {
-                            customer.visual.transform.position = customer.worldPosition;
-                        }
+                    if (customer.visual != null)
+                    {
+                        customer.visual.transform.position = customer.worldPosition;
                     }
 
                     break;
                 }
             }
+        }
+    }
+
+    private bool TryBeginMachineDismount(ActiveCustomer customer, string completedMachineKey)
+    {
+        if (customer == null || !IsTreadmillMachineKey(completedMachineKey))
+        {
+            return false;
+        }
+
+        Vector3 dismountOffset = new Vector3(treadmillDismountOffset.x, treadmillDismountOffset.y, 0f);
+        if (dismountOffset.sqrMagnitude <= 0.000001f)
+        {
+            return false;
+        }
+
+        customer.machineDismountWorldPosition = customer.worldPosition + dismountOffset;
+        customer.state = CustomerState.LeavingMachine;
+        customer.currentPath = null;
+        customer.currentPathIndex = 0;
+        ApplyCustomerVisualForState(customer);
+        return true;
+    }
+
+    private static bool IsTreadmillMachineKey(string machineKey)
+    {
+        return !string.IsNullOrWhiteSpace(machineKey) &&
+            machineKey.StartsWith("treadmill_", System.StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void CompletePostUseDecision(ActiveCustomer customer, List<MachineRuntimeInfo> machines)
+    {
+        if (customer == null)
+        {
+            return;
+        }
+
+        if (customer.remainingMachineStops > 0 && machines != null && machines.Count > 0)
+        {
+            if (!TryAssignNextMachine(customer, machines))
+            {
+                EnterWaitingState(customer);
+            }
+        }
+        else
+        {
+            BeginLeaving(customer, CustomerLeaveReason.CompletedVisit);
         }
     }
 
@@ -778,24 +877,35 @@ public sealed class CustomerFlowManager : MonoBehaviour
         bool wasWaiting = customer.state == CustomerState.WaitingForMachine;
 
         customer.targetMachineKey = targetMachine.key;
-        customer.targetMachineWorldPosition = targetMachine.centerWorldPosition;
+
+        Vector3 finalPos = targetMachine.centerWorldPosition;
+        if (targetMachine.data != null && targetMachine.data.runtimeDefinition != null)
+        {
+            finalPos += new Vector3(targetMachine.data.runtimeDefinition.CustomerUseOffset.x, targetMachine.data.runtimeDefinition.CustomerUseOffset.y, 0f);
+        }
+        customer.targetMachineWorldPosition = finalPos;
+        customer.bodySortingOrder = GymPlacedObjectVisual.GetCustomerBodySortingOrder(targetMachine.data);
+        customer.headSortingOrder = GymPlacedObjectVisual.GetCustomerHeadSortingOrder(targetMachine.data);
+
         customer.remainingUseSeconds = Random.Range(machineUseDurationMinSeconds, machineUseDurationMaxSeconds);
         customer.state = CustomerState.MovingToMachine;
+        customer.currentPath = null;
         customer.leaveReason = CustomerLeaveReason.None;
         customer.waitSlotIndex = -1;
         customer.remainingWaitSeconds = 0f;
         customer.retrySearchCountdown = 0f;
+        customer.currentPath = null;
+        customer.currentPathIndex = 0;
 
         if (wasWaiting)
         {
             dailyRecoveredFromWaiting += 1;
             PushOperationFeed(
-                $"대기 해소 · {GetMachineDisplayName(targetMachine)} 확보",
+                $"Resumed: {GetMachineDisplayName(targetMachine)}",
                 operationFeedInfoColor
             );
         }
 
-        customer.visitedMachineKeys.Add(targetMachine.key);
         reservedMachineKeys.Add(targetMachine.key);
 
         ApplyCustomerVisualForState(customer);
@@ -947,7 +1057,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
         RefreshDailyWaitingPeak();
 
         PushOperationFeed(
-            $"대기 발생 · 현재 {WaitingCustomerCount}명 대기",
+            $"Waiting: {WaitingCustomerCount}",
             WaitingCustomerCount >= 4 ? operationFeedAlertColor : operationFeedWarnColor
         );
     }
@@ -992,6 +1102,9 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
         ReleaseReservationIfNeeded(customer);
         customer.state = CustomerState.Leaving;
+        ForceLayeredCustomerExitHidePointToEntranceReveal(customer, "begin leaving");
+        customer.currentPath = BuildLayeredCustomerExitRoute(customer);
+        customer.currentPathIndex = 0;
         customer.waitSlotIndex = -1;
         customer.remainingWaitSeconds = 0f;
         customer.retrySearchCountdown = 0f;
@@ -1015,7 +1128,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
             case CustomerLeaveReason.WaitTimeout:
                 dailyAbandonedVisits += 1;
                 PushOperationFeed(
-                    $"포기 퇴장 · 누적 {dailyAbandonedVisits}회",
+                    $"Abandoned: {dailyAbandonedVisits}",
                     operationFeedAlertColor
                 );
                 break;
@@ -1066,11 +1179,9 @@ public sealed class CustomerFlowManager : MonoBehaviour
         switch (customer.state)
         {
             case CustomerState.UsingMachine:
-                scale += Mathf.Sin(Time.time * Mathf.Max(0.1f, usingPulseSpeed)) * Mathf.Max(0f, usingPulseAmplitude);
                 break;
 
             case CustomerState.WaitingForMachine:
-                scale += Mathf.Sin(Time.time * Mathf.Max(0.1f, waitingPulseSpeed)) * Mathf.Max(0f, waitingPulseAmplitude);
                 break;
         }
 
@@ -1107,6 +1218,11 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
     private Vector3 GetEntryWorldPosition()
     {
+        if (gridManager != null && gridManager.TryGetEntranceOutsideWorldPosition(out Vector3 pos))
+        {
+            return pos;
+        }
+
         float halfWidth = gridManager.Width * gridManager.CellSize * 0.5f;
         float halfHeight = gridManager.Height * gridManager.CellSize * 0.5f;
 
@@ -1119,11 +1235,16 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
     private Vector3 GetExitWorldPosition()
     {
+        if (gridManager != null && gridManager.TryGetEntranceOutsideWorldPosition(out Vector3 pos))
+        {
+            return pos;
+        }
+
         float halfWidth = gridManager.Width * gridManager.CellSize * 0.5f;
         float halfHeight = gridManager.Height * gridManager.CellSize * 0.5f;
 
         return new Vector3(
-            halfWidth + Mathf.Max(0.8f, entryExitOffsetX),
+            -halfWidth - Mathf.Max(0.8f, entryExitOffsetX),
             -halfHeight + (gridManager.Height * gridManager.CellSize * Mathf.Clamp01(entryExitHeightRatio)),
             0f
         );
@@ -1285,11 +1406,19 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
     private void RebuildMachineOverlays(List<MachineRuntimeInfo> machines)
     {
-        if (!showMachineStateOverlay)
+        if (placementManager == null || machines == null) return;
+
+        HashSet<string> inUseKeys = new HashSet<string>();
+        for (int i = 0; i < activeCustomers.Count; i++)
         {
-            HideAllMachineOverlays();
-            return;
+            if (activeCustomers[i].state == CustomerState.UsingMachine && !string.IsNullOrEmpty(activeCustomers[i].targetMachineKey))
+            {
+                inUseKeys.Add(activeCustomers[i].targetMachineKey);
+            }
         }
+
+        placementManager.UpdateMachineInUseVisuals(inUseKeys);
+        return;
 
         HashSet<string> validKeys = new HashSet<string>();
         Dictionary<string, MachineOverlayState> stateByKey = new Dictionary<string, MachineOverlayState>();
@@ -1481,7 +1610,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
         return Random.Range(min, max);
     }
 
-    private static string BuildMachineKey(PlacedObjectSaveData data)
+    public static string BuildMachineKey(PlacedObjectSaveData data)
     {
         if (data == null)
         {
@@ -1496,6 +1625,20 @@ public sealed class CustomerFlowManager : MonoBehaviour
             data.anchorY + "|" +
             data.width + "|" +
             data.height;
+    }
+
+    public bool IsMachineInUse(string machineKey)
+    {
+        if (string.IsNullOrEmpty(machineKey)) return false;
+        for (int i = 0; i < activeCustomers.Count; i++)
+        {
+            var customer = activeCustomers[i];
+            if (customer != null && customer.state == CustomerState.UsingMachine && customer.targetMachineKey == machineKey)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private MachinePreferenceGroup GetPreferenceGroupForPlacedObject(PlacedObjectSaveData data)
@@ -1643,14 +1786,14 @@ public sealed class CustomerFlowManager : MonoBehaviour
         }
 
         currentFlowSummary = isBuildMode
-            ? "설치 모드 정지"
+            ? "Build Mode"
             : waiting > 0
-                ? $"대기 {waiting}명 · 사용 {usingCount}명"
+                ? $"Waiting {waiting} / Using {usingCount}"
                 : usingCount > 0
-                    ? $"사용 {usingCount}명 · 원활"
+                    ? $"Using {usingCount} / Active"
                     : engaged > 0
-                        ? $"이동 {engaged}명 · 대기 없음"
-                        : "손님 없음";
+                        ? $"Moving {engaged} / No waiting"
+                        : "No customers";
 
         currentBottleneckSummary = BuildBottleneckSummary(machines, waiting, out string topMachineSummary);
         currentTopMachineSummary = topMachineSummary;
@@ -1658,46 +1801,46 @@ public sealed class CustomerFlowManager : MonoBehaviour
         if (isBuildMode)
         {
             currentGuideSummary = machineCount > 0
-                ? "배치 조정 후 플레이 전환"
-                : "기구 설치 후 플레이 시작";
+                ? "Adjust layout or build"
+                : "Start by placing equipment";
             return;
         }
 
         if (machineCount <= 0)
         {
-            currentGuideSummary = "기구 설치 후 손님 흐름 확인";
+            currentGuideSummary = "Check equipment placement";
             return;
         }
 
         if (waiting >= 4)
         {
-            currentGuideSummary = "병목 심함 · 동일 계열 보강 또는 이사 검토";
+            currentGuideSummary = "Bottleneck alert: consider adding same type equipment";
         }
         else if (waiting >= 2)
         {
-            currentGuideSummary = "대기 발생 · 인기 기구 1대 더 보강";
+            currentGuideSummary = "Waiting customers: consider adding 1 popular equipment";
         }
         else if (engaged >= Mathf.Max(1, machineCount))
         {
-            currentGuideSummary = "가동률 높음 · 혼잡 직전 상태";
+            currentGuideSummary = "Full capacity: peak state";
         }
         else if (activeCustomers.Count <= 0)
         {
-            currentGuideSummary = "손님 적음 · 회원 증가 추이 확인";
+            currentGuideSummary = "No customers: check member promotion";
         }
         else
         {
-            currentGuideSummary = "운영 원활 · 현재 배치 유지 가능";
+            currentGuideSummary = "Operating normally";
         }
     }
 
     private string BuildBottleneckSummary(List<MachineRuntimeInfo> machines, int waitingCount, out string topMachineSummary)
     {
-        topMachineSummary = "주요 기구 없음";
+        topMachineSummary = "No main equipment";
 
         if (machines == null || machines.Count <= 0)
         {
-            return waitingCount > 0 ? "기구 없음 대기" : "병목 없음";
+            return waitingCount > 0 ? "No equipment, waiting" : "No bottleneck";
         }
 
         Dictionary<string, int> engagedByMachine = new Dictionary<string, int>();
@@ -1752,32 +1895,32 @@ public sealed class CustomerFlowManager : MonoBehaviour
         if (!string.IsNullOrWhiteSpace(topKey))
         {
             string label = labelByMachine.TryGetValue(topKey, out string foundLabel) ? foundLabel : topKey;
-            topMachineSummary = $"{label} ×{topCount}";
+            topMachineSummary = $"{label} 횞{topCount}";
         }
 
         if (waitingCount >= 4)
         {
-            return topCount >= 2 ? $"{topMachineSummary} 집중" : "기구 수 부족 대기 심화";
+            return topCount >= 2 ? $"{topMachineSummary} 吏묒쨷" : "湲곌뎄 ??遺議??湲??ы솕";
         }
 
         if (waitingCount >= 2)
         {
-            return topCount >= 2 ? $"{topMachineSummary} 병목" : "가벼운 병목 발생";
+            return topCount >= 2 ? $"{topMachineSummary} 蹂묐ぉ" : "媛踰쇱슫 蹂묐ぉ 諛쒖깮";
         }
 
         if (topCount >= 2)
         {
-            return $"{topMachineSummary} 집중";
+            return $"{topMachineSummary} 吏묒쨷";
         }
 
-        return "병목 없음";
+        return "蹂묐ぉ ?놁쓬";
     }
 
     private string GetMachineDisplayName(MachineRuntimeInfo machine)
     {
         if (machine == null)
         {
-            return "알 수 없는 기구";
+            return "?????녿뒗 湲곌뎄";
         }
 
         if (machine.data != null && !string.IsNullOrWhiteSpace(machine.data.displayName))
@@ -1790,7 +1933,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
             return machine.data.equipmentId;
         }
 
-        return string.IsNullOrWhiteSpace(machine.key) ? "알 수 없는 기구" : machine.key;
+        return string.IsNullOrWhiteSpace(machine.key) ? "?????녿뒗 湲곌뎄" : machine.key;
     }
 
     private void OnGUI()
@@ -1830,18 +1973,18 @@ public sealed class CustomerFlowManager : MonoBehaviour
         GUI.Box(boxRect, GUIContent.none, debugBoxStyle);
         GUI.Label(
             new Rect(boxRect.x + 10f, boxRect.y + 8f, boxRect.width - 20f, boxRect.height - 16f),
-            $"손님 루프\n" +
-            $"활성 손님: {activeCustomers.Count}\n" +
-            $"대기 손님: {WaitingCustomerCount}\n" +
-            $"사용 손님: {UsingCustomerCount}\n" +
-            $"예약 기구: {reservedMachineKeys.Count}\n" +
-            $"오버레이: {machineOverlayMap.Count}\n" +
-            $"대기 이벤트: {snapshot.waitingEvents}\n" +
-            $"완주/포기: {snapshot.completedVisits}/{snapshot.abandonedVisits}\n" +
-            $"평균 대기: {snapshot.averageWaitSeconds:0.0}s\n" +
-            $"최대 대기열: {snapshot.peakWaitingCustomers}\n" +
-            $"스트레스 테스트: {(enableCrowdingStressTest ? "ON" : "OFF")}\n" +
-            $"속도: {(timeManager != null ? timeManager.CurrentSpeedLabel : "x1")}",
+            $"?먮떂 猷⑦봽\n" +
+            $"?쒖꽦 ?먮떂: {activeCustomers.Count}\n" +
+            $"?湲??먮떂: {WaitingCustomerCount}\n" +
+            $"?ъ슜 ?먮떂: {UsingCustomerCount}\n" +
+            $"?덉빟 湲곌뎄: {reservedMachineKeys.Count}\n" +
+            $"?ㅻ쾭?덉씠: {machineOverlayMap.Count}\n" +
+            $"?湲??대깽?? {snapshot.waitingEvents}\n" +
+            $"?꾩＜/?ш린: {snapshot.completedVisits}/{snapshot.abandonedVisits}\n" +
+            $"?됯퇏 ?湲? {snapshot.averageWaitSeconds:0.0}s\n" +
+            $"理쒕? ?湲곗뿴: {snapshot.peakWaitingCustomers}\n" +
+            $"?ㅽ듃?덉뒪 ?뚯뒪?? {(enableCrowdingStressTest ? "ON" : "OFF")}\n" +
+            $"?띾룄: {(timeManager != null ? timeManager.CurrentSpeedLabel : "x1")}",
             debugLabelStyle
         );
     }
@@ -1879,8 +2022,403 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
         return cachedWhiteSprite;
     }
+
+    private Vector3 GetLayeredCustomerExitHidePoint(ActiveCustomer customer)
+    {
+        if (customer == null)
+        {
+            return GetExitWorldPosition();
+        }
+
+        ForceLayeredCustomerExitHidePointToEntranceReveal(customer, "exit target read");
+        return customer.exitSafeHidePoint;
+    }
+
+    private Vector3 GetLayeredCustomerEntranceRevealPoint(ActiveCustomer customer)
+    {
+        if (customer != null && customer.hasLayeredEntranceRevealPointForEntry)
+        {
+            return customer.entranceRevealPointUsedForEntry;
+        }
+
+        return GetEntryWorldPosition();
+    }
+
+    private void ForceLayeredCustomerExitHidePointToEntranceReveal(ActiveCustomer customer, string reason)
+    {
+        if (customer == null)
+        {
+            return;
+        }
+
+        Vector3 entranceRevealPoint = GetLayeredCustomerEntranceRevealPoint(customer);
+        Vector3 previousExitHidePoint = customer.exitSafeHidePoint;
+        bool overwritten = customer.hasLayeredEntranceRevealPointForEntry &&
+            GetPlanarDistance(previousExitHidePoint, entranceRevealPoint) > 0.01f;
+
+        if (overwritten && !customer.exitHidePointOverwrittenToEntranceReveal)
+        {
+            Debug.LogWarning(
+                "[CustomerFlowManager] Layered customer exit hide point differed from the saved entrance reveal point; forcing exit to reuse entry point.\n" +
+                $"Reason: {reason}\n" +
+                $"Previous exit hide point: {FormatVector3(previousExitHidePoint)}\n" +
+                $"Saved entrance reveal point: {FormatVector3(entranceRevealPoint)}");
+        }
+
+        customer.entranceRevealPointUsedForEntry = entranceRevealPoint;
+        customer.hasLayeredEntranceRevealPointForEntry = true;
+        customer.exitSafeHidePoint = entranceRevealPoint;
+        customer.exitHidePointOverwrittenToEntranceReveal = overwritten;
+
+        ValidateLayeredCustomerExitUsesEntranceRevealPoint(customer, reason);
+    }
+
+    private void ValidateLayeredCustomerExitUsesEntranceRevealPoint(ActiveCustomer customer, string reason)
+    {
+        if (customer == null)
+        {
+            return;
+        }
+
+        float exitToEntryDistance = GetPlanarDistance(customer.exitSafeHidePoint, customer.entranceRevealPointUsedForEntry);
+        if (exitToEntryDistance > 0.01f)
+        {
+            Debug.LogError(
+                "[CustomerFlowManager] Layered customer exit hide point is not equal to the entrance reveal point.\n" +
+                $"Reason: {reason}\n" +
+                $"Entrance reveal point: {FormatVector3(customer.entranceRevealPointUsedForEntry)}\n" +
+                $"Exit hide point: {FormatVector3(customer.exitSafeHidePoint)}\n" +
+                $"Distance: {exitToEntryDistance:0.###}");
+        }
+    }
+
+    private List<Vector3> BuildLayeredCustomerExitRoute(ActiveCustomer customer)
+    {
+        List<Vector3> route = new List<Vector3>();
+        if (customer == null)
+        {
+            return route;
+        }
+
+        ForceLayeredCustomerExitHidePointToEntranceReveal(customer, "exit route build");
+
+        Vector3 entranceInsideWorld = GetEntranceInsideWorldPosition();
+        if (!AppendGridPathWaypoints(route, customer.worldPosition, entranceInsideWorld, true))
+        {
+            AddWaypointIfDistinct(route, entranceInsideWorld);
+        }
+
+        AddWaypointIfDistinct(route, GetEntrancePassWorldPosition());
+        AddWaypointIfDistinct(route, customer.exitSafeHidePoint);
+
+        ValidateLayeredCustomerExitRouteUsesEntranceRevealPoint(customer, route);
+        return route;
+    }
+
+    private void ValidateLayeredCustomerExitRouteUsesEntranceRevealPoint(ActiveCustomer customer, List<Vector3> route)
+    {
+        if (customer == null)
+        {
+            return;
+        }
+
+        Vector3 entranceRevealPoint = GetLayeredCustomerEntranceRevealPoint(customer);
+        bool routeContainsEntranceRevealPoint = false;
+        if (route != null)
+        {
+            for (int i = 0; i < route.Count; i++)
+            {
+                if (GetPlanarDistance(route[i], entranceRevealPoint) <= 0.01f)
+                {
+                    routeContainsEntranceRevealPoint = true;
+                    break;
+                }
+            }
+        }
+
+        if (!routeContainsEntranceRevealPoint)
+        {
+            Debug.LogError(
+                "[CustomerFlowManager] Layered customer exit route does not include the saved entrance reveal point before leaving.\n" +
+                $"Saved state.EntranceRevealPoint: {FormatVector3(entranceRevealPoint)}\n" +
+                $"Exit hide point used for leaving: {FormatVector3(customer.exitSafeHidePoint)}\n" +
+                $"Route waypoint count: {(route != null ? route.Count : 0)}");
+        }
+    }
+
+    private bool AppendGridPathWaypoints(
+        List<Vector3> route,
+        Vector3 startWorld,
+        Vector3 destinationWorld,
+        bool includeExactDestination = false)
+    {
+        if (!TryBuildGridPath(startWorld, destinationWorld, out List<Vector2Int> pathCells))
+        {
+            return false;
+        }
+
+        int exclusiveEnd = includeExactDestination
+            ? Mathf.Max(1, pathCells.Count - 1)
+            : pathCells.Count;
+        for (int i = 1; i < exclusiveEnd; i++)
+        {
+            Vector2Int cell = pathCells[i];
+            AddWaypointIfDistinct(route, gridManager.GetAreaCenterWorldPosition(cell.x, cell.y, 1, 1));
+        }
+
+        if (includeExactDestination)
+        {
+            AddWaypointIfDistinct(route, destinationWorld);
+        }
+
+        return true;
+    }
+
+    private bool TryBuildGridPath(Vector3 startWorld, Vector3 destinationWorld, out List<Vector2Int> pathCells)
+    {
+        pathCells = new List<Vector2Int>();
+        if (gridManager == null ||
+            !TryFindNearestAvailableCell(startWorld, out Vector2Int startCell) ||
+            !TryFindNearestAvailableCell(destinationWorld, out Vector2Int destinationCell))
+        {
+            return false;
+        }
+
+        bool[,] visited = new bool[gridManager.Width, gridManager.Height];
+        Vector2Int[,] previous = new Vector2Int[gridManager.Width, gridManager.Height];
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        Vector2Int[] directions =
+        {
+            new Vector2Int(1, 0),
+            new Vector2Int(-1, 0),
+            new Vector2Int(0, 1),
+            new Vector2Int(0, -1),
+        };
+
+        visited[startCell.x, startCell.y] = true;
+        queue.Enqueue(startCell);
+
+        while (queue.Count > 0)
+        {
+            Vector2Int current = queue.Dequeue();
+            if (current == destinationCell)
+            {
+                break;
+            }
+
+            for (int i = 0; i < directions.Length; i++)
+            {
+                Vector2Int next = current + directions[i];
+                if (next.x < 0 ||
+                    next.x >= gridManager.Width ||
+                    next.y < 0 ||
+                    next.y >= gridManager.Height ||
+                    visited[next.x, next.y] ||
+                    !gridManager.IsAreaAvailable(next.x, next.y, 1, 1))
+                {
+                    continue;
+                }
+
+                visited[next.x, next.y] = true;
+                previous[next.x, next.y] = current;
+                queue.Enqueue(next);
+            }
+        }
+
+        if (!visited[destinationCell.x, destinationCell.y])
+        {
+            return false;
+        }
+
+        Vector2Int cursor = destinationCell;
+        pathCells.Add(cursor);
+        while (cursor != startCell)
+        {
+            cursor = previous[cursor.x, cursor.y];
+            pathCells.Add(cursor);
+        }
+
+        pathCells.Reverse();
+        return true;
+    }
+
+    private bool TryFindNearestAvailableCell(Vector3 worldPosition, out Vector2Int cell)
+    {
+        cell = default;
+        if (gridManager == null)
+        {
+            return false;
+        }
+
+        float bestDistance = float.PositiveInfinity;
+        bool found = false;
+
+        for (int y = 0; y < gridManager.Height; y++)
+        {
+            for (int x = 0; x < gridManager.Width; x++)
+            {
+                if (!gridManager.IsAreaAvailable(x, y, 1, 1))
+                {
+                    continue;
+                }
+
+                Vector3 cellWorld = gridManager.GetAreaCenterWorldPosition(x, y, 1, 1);
+                float distance = (cellWorld - worldPosition).sqrMagnitude;
+                if (distance >= bestDistance)
+                {
+                    continue;
+                }
+
+                bestDistance = distance;
+                cell = new Vector2Int(x, y);
+                found = true;
+            }
+        }
+
+        return found;
+    }
+
+    private Vector3 GetEntrancePassWorldPosition()
+    {
+        if (gridManager != null && gridManager.TryGetEntranceWalkWorldPosition(out Vector3 entranceWalk))
+        {
+            return entranceWalk;
+        }
+
+        return GetEntryWorldPosition();
+    }
+
+    private Vector3 GetEntranceInsideWorldPosition()
+    {
+        if (gridManager != null && gridManager.TryGetEntranceInsideSafeWorldPosition(out Vector3 entranceInside))
+        {
+            return entranceInside;
+        }
+
+        return GetEntryWorldPosition();
+    }
+
+    private static void AddWaypointIfDistinct(List<Vector3> route, Vector3 waypoint)
+    {
+        if (route == null)
+        {
+            return;
+        }
+
+        if (route.Count > 0 && Vector3.Distance(route[route.Count - 1], waypoint) <= 0.01f)
+        {
+            return;
+        }
+
+        route.Add(waypoint);
+    }
+
+    private static float GetPlanarDistance(Vector3 a, Vector3 b)
+    {
+        a.z = 0f;
+        b.z = 0f;
+        return Vector3.Distance(a, b);
+    }
+
+    private static string FormatVector3(Vector3 value)
+    {
+        return $"({value.x:0.###}, {value.y:0.###}, {value.z:0.###})";
+    }
+
+    private Vector3 GetPathfindingImmediateTarget(ActiveCustomer customer, Vector3 finalTarget, bool allowTargetOccupied)
+    {
+        Vector3 immediateTarget = finalTarget;
+
+        if (customer.currentPath == null)
+        {
+            int startX, startY;
+            bool validStart = gridManager.TryGetCellIndexFromWorldPosition(customer.worldPosition, out startX, out startY);
+            if (!validStart)
+            {
+                // Clamp to nearest cell
+                Vector2 originOffset = new Vector2(
+                    -(gridManager.Width * gridManager.CellSize) / 2f + gridManager.CellSize / 2f,
+                    -(gridManager.Height * gridManager.CellSize) / 2f + gridManager.CellSize / 2f
+                );
+                startX = Mathf.Clamp(Mathf.RoundToInt((customer.worldPosition.x - originOffset.x) / gridManager.CellSize), 0, gridManager.Width - 1);
+                startY = Mathf.Clamp(Mathf.RoundToInt((customer.worldPosition.y - originOffset.y) / gridManager.CellSize), 0, gridManager.Height - 1);
+            }
+
+            // Ensure start cell is not an obstacle (e.g., spawned near the reception desk)
+            var startCell = gridManager.GetCell(startX, startY);
+            if (startCell != null && startCell.IsOccupied)
+            {
+                int bestX = startX;
+                int bestY = startY;
+                float bestDist = float.MaxValue;
+                for (int nx = startX - 1; nx <= startX + 1; nx++)
+                {
+                    for (int ny = startY - 1; ny <= startY + 1; ny++)
+                    {
+                        var neighbor = gridManager.GetCell(nx, ny);
+                        if (neighbor != null && !neighbor.IsOccupied)
+                        {
+                            Vector3 nCenter = gridManager.GetAreaCenterWorldPosition(nx, ny, 1, 1);
+                            float dist = Vector3.Distance(customer.worldPosition, nCenter);
+                            if (dist < bestDist)
+                            {
+                                bestDist = dist;
+                                bestX = nx;
+                                bestY = ny;
+                            }
+                        }
+                    }
+                }
+                startX = bestX;
+                startY = bestY;
+            }
+
+            bool targetInsideGrid = gridManager.TryGetCellIndexFromWorldPosition(finalTarget, out int targetX, out int targetY);
+            if (targetInsideGrid)
+            {
+                var cellPath = AStarPathfinder.FindPath(gridManager, new Vector2Int(startX, startY), new Vector2Int(targetX, targetY), allowTargetOccupied);
+                if (cellPath != null && cellPath.Count > 0)
+                {
+                    customer.currentPath = new List<Vector3>();
+                    foreach (var cellPos in cellPath)
+                    {
+                        customer.currentPath.Add(gridManager.GetAreaCenterWorldPosition(cellPos.x, cellPos.y, 1, 1));
+                    }
+                    if (customer.currentPath.Count > 0)
+                    {
+                        customer.currentPath[customer.currentPath.Count - 1] = finalTarget;
+                    }
+                    customer.currentPathIndex = 0;
+                }
+            }
+
+            if (customer.currentPath == null)
+            {
+                if (targetInsideGrid)
+                {
+                    customer.currentPathIndex = 0;
+                    if (allowTargetOccupied && customer.state == CustomerState.MovingToMachine)
+                    {
+                        EnterWaitingState(customer);
+                    }
+
+                    return customer.worldPosition;
+                }
+
+                customer.currentPath = new List<Vector3> { finalTarget };
+                customer.currentPathIndex = 0;
+            }
+        }
+
+        if (customer.currentPathIndex < customer.currentPath.Count)
+        {
+            immediateTarget = customer.currentPath[customer.currentPathIndex];
+        }
+        else
+        {
+            immediateTarget = finalTarget;
+        }
+
+        return immediateTarget;
+    }
 }
-
-
-
-

@@ -1,0 +1,2766 @@
+﻿# Unused Image Audit Report
+
+- Generated at: 2026-05-18 02:23:11 +09:00
+- Audit root: `Assets/_Project`
+- Target extensions: `.png, .jpg, .jpeg, .webp, .psd, .tga`
+- Note: this is a read-only audit. `B. Candidate unused` means candidate only; it is not a deletion instruction.
+
+## Summary
+
+| Item | Count |
+| --- | ---: |
+| Total images | 187 |
+| A. Used confirmed | 67 |
+| B. Candidate unused | 50 |
+| C. Hold | 70 |
+| GeneratedRuntimeUI/ui_v2 images | 83 |
+
+## Method
+
+- The script reads each image `.meta` GUID and searches Unity YAML/text asset files for GUID references.
+- String references include full filename, extensionless filename, Resources-relative path, and GeneratedRuntimeUI path.
+- JSON/TXT/Archive hits are listed as evidence, but they do not by themselves promote an image to used-confirmed.
+- Resources items with ambiguous direct references are held for manual review because dynamic loading is possible.
+- `.spriteatlas` GUID references are reported separately.
+
+## Folder Summary
+
+| Folder | Total | Used confirmed | Candidate | Hold |
+| --- | ---: | ---: | ---: | ---: |
+| `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/BottomNav` | 1 | 0 | 1 | 0 |
+| `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Common` | 2 | 0 | 2 | 0 |
+| `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/HUD` | 1 | 0 | 1 | 0 |
+| `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Panels/Economy` | 1 | 0 | 1 | 0 |
+| `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Panels/Install` | 2 | 0 | 2 | 0 |
+| `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Panels/Review` | 1 | 0 | 1 | 0 |
+| `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Popups` | 2 | 0 | 2 | 0 |
+| `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Preview` | 11 | 0 | 11 | 0 |
+| `Assets/_Project/_Archive/Unused_UI_Assets/Sprites/UI` | 11 | 0 | 11 | 0 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/objects` | 11 | 10 | 0 | 1 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/title` | 2 | 2 | 0 | 0 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/ui` | 17 | 0 | 17 | 0 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2` | 20 | 16 | 0 | 4 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/common/locations` | 3 | 3 | 0 | 0 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy` | 10 | 10 | 0 | 0 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/monthly_settlement` | 5 | 5 | 0 | 0 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/move` | 4 | 0 | 0 | 4 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review` | 11 | 11 | 0 | 0 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/settings` | 3 | 3 | 0 | 0 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff` | 3 | 3 | 0 | 0 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female` | 10 | 0 | 0 | 10 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male` | 10 | 1 | 0 | 9 |
+| `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial` | 4 | 3 | 1 | 0 |
+| `Assets/_Project/Resources/MockupUI` | 42 | 0 | 0 | 42 |
+
+## GeneratedRuntimeUI/ui_v2 Section
+
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/bar_long_base.png`
+  - guid: `d8c69e80e07b6594888418f5b5da5f02`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/button_beige_base.png`
+  - guid: `2f9a22c1952fb7742b95777af6e5e83b`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (4).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/button_green_base.png`
+  - guid: `16496472d9a834c4c99b9eec09dfdd51`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (4).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/button_small_beige_base.png`
+  - guid: `edd912157ec09f54ea0cacf49b0d25f4`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (4).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/category_tab_beige_base.png`
+  - guid: `d36a3aa1c29893f4590404cd3d72e5db`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/category_tab_small_base.png`
+  - guid: `e590fdc9975277e4fa712e23af347808`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/common/locations/icon_location_downtown.png`
+  - guid: `8d294b6d3a4d15a4599c4ebe4c0f66f5`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/common/locations/icon_location_neighborhood.png`
+  - guid: `722e48401154ef04fb0a7b22d4882cc3`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/common/locations/icon_location_station.png`
+  - guid: `6ee8d883d4077da4eb1b9db0ee706f94`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_bottom_box.png`
+  - guid: `1fa764339127537469b83b5f47c662ff`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_chart_bar_green.png`
+  - guid: `eaa6d3eab45624e499361e5d3f840192`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_chart_bar_orange.png`
+  - guid: `7e495b97b1a9b8d468bb30beee6eedf1`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_detail_box.png`
+  - guid: `4ad1f0e3d9af13b49a6a6d7cc3c85361`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_icon_expense_down.png`
+  - guid: `8c76248d96a3f7c44805febbb1a290ed`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_icon_income_up.png`
+  - guid: `d68b6f01c6ded964eb82019d20c09aa0`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_icon_money_bag.png`
+  - guid: `d62490ec3254b45409622c525a7d579c`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_icon_profit_up.png`
+  - guid: `1c8f950d4b61804468d665979c9711e7`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_manager_character.png`
+  - guid: `6e00aaa75c5f84440ab97a3e72ae513b`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_summary_card_box.png`
+  - guid: `f8a1ae37103087c4da60ba41eebc37fe`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/header_bar_blue.png`
+  - guid: `fc12b4fbbffea1b44aec14d7e4e9160b`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (4).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/hud_base_bar.png`
+  - guid: `db625ad8bd17a804480e6eb79b3c9e75`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/hud_info_box_base.png`
+  - guid: `0b9a442278af888429a49de0c48f20b0`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/install_card_base.png`
+  - guid: `12f002d5a080976418f94f8f062ddda5`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Panels/Install/__AssetList.txt` [filename-with-extension]; `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/regenerate.txt` [filename-with-extension]; `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/install_panel_base.png`
+  - guid: `0b932abedd2f9de41b8c7e7a5d58a795`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/monthly_settlement/icon_monthly_electricity.png`
+  - guid: `ff3b8bc199c949e193858964a744cdb9`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/monthly_settlement/icon_monthly_maintenance.png`
+  - guid: `cb4cd6ca30704270ba13248dc21128d4`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/monthly_settlement/monthly_breakdown_panel_base.png`
+  - guid: `7ebf15c931011504cb0a9a5481a37f53`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/monthly_settlement/monthly_comment_bubble_base.png`
+  - guid: `7352dd169875d7e468fb5e71720d34bc`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/monthly_settlement/monthly_summary_card_base.png`
+  - guid: `f9194168194d0ba40a29b01f087532a5`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/move/move_current_info_box_base.png`
+  - guid: `1414ab56a07d1c346b7848d7a0638aa2`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/move/move_option_row_base.png`
+  - guid: `a199d2c7ffbcc6340a49a07cb93f55cc`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/move/move_option_row_selected.png`
+  - guid: `09dd37cad1b58b14094148eed40329df`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/move/move_selected_check.png`
+  - guid: `71460cd245509c64d847ae4b4ca12afe`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/nav_base_bar.png`
+  - guid: `d4e5138c393e3d847a3392df903c39b2`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/operate_panel_base.png`
+  - guid: `0139d4252c9aa7f42b017920fa890e98`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/panel_large_base.png`
+  - guid: `eaaa2d2dee7d5ab419461fb656ff86ef`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_mood_bad.png`
+  - guid: `1f9d3a390a290b24fadddd038511fa27`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_mood_good.png`
+  - guid: `ad1d4890d597f7e4690e3b36294284b6`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_mood_normal.png`
+  - guid: `f839edd3f95855d4eb8875de659b27ee`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_review_chat.png`
+  - guid: `3bc3b2c5c63e5194fb6497d1abd55fed`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_review_like.png`
+  - guid: `75fd8d29c6f141640a1bac19a2f2482f`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_star_empty.png`
+  - guid: `ffc829910454f7d4c81fe07dce0c24a8`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_star_full.png`
+  - guid: `ac026c7f6dac1074590611077f619a9d`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/review_filter_button_active.png`
+  - guid: `4eb74b36b44710b478b6278340f2d025`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/GeneratedRuntimeSprites.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/review_filter_button_inactive.png`
+  - guid: `9c030d190abd7f545923d2d5f54b0eb8`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/GeneratedRuntimeSprites.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/review_list_item_base.png`
+  - guid: `3e50f0de723793244b4f96863a0d2fd2`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/GeneratedRuntimeSprites.cs` [stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/review_summary_card_base.png`
+  - guid: `d93865c891892404daf06e4c7b8a6f26`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/GeneratedRuntimeSprites.cs` [stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/selected_info_box_base.png`
+  - guid: `b5815650b10223a41a49c3444f1bca17`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/settings/settings_slider_fill_green.png`
+  - guid: `0f4bd8cffb7ce554ab3e31d11194d935`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/settings/settings_slider_knob_green.png`
+  - guid: `213c548bd16ff4547802a751c2e2e821`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/settings/settings_slider_track_base.png`
+  - guid: `3393aedc7486039419b2359719f42b3a`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/slot_row_base.png`
+  - guid: `7dad352706d83d14892ae6d94e23a1bf`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (4).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_00.png`
+  - guid: `a4e57e3f3d710304f8a51c41fd6478fc`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_01.png`
+  - guid: `e210e6db545c9074a9e2fd2b344f38d4`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_02.png`
+  - guid: `f7aaaa7bc97a99d4b81b7029cf18f200`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_03.png`
+  - guid: `d95102c8f9eee9c46ac6dda930716e68`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_04.png`
+  - guid: `2a8a1094a10b8d649921f2913c5c7385`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_05.png`
+  - guid: `ecce095eb4c7bc546a8fbf7de745568c`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_06.png`
+  - guid: `6b33b92b836c5cc4e8db1928ef24796f`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_07.png`
+  - guid: `00bbd46aa1c93204a8f49be3930dd795`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_08.png`
+  - guid: `69650c601aef36d4084073713b51adf1`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_09.png`
+  - guid: `0ea945d9dc5667c4f81ffd306c2f3af7`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_00.png`
+  - guid: `bf0b2a2f024923542aecc0e49a94b7f2`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint, generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_01.png`
+  - guid: `98b2796e5aedad3498926f12d87f8700`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_02.png`
+  - guid: `82dd99229b0889644947cc57aa6e461c`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_03.png`
+  - guid: `89188aba81ebd6947ac99ea022a0b9e9`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_04.png`
+  - guid: `57c928e6d0aaba84fafb47613f6c26b7`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_05.png`
+  - guid: `c2d610af06866d64caca000f6db53638`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_06.png`
+  - guid: `69966adc46b14274ba38a3dba0b8e1b3`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_07.png`
+  - guid: `f8e0a8d1951b81f4d891c7d00d440092`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_08.png`
+  - guid: `846de6de906be304da536b6e61ca2db6`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_09.png`
+  - guid: `d45a282028993f2429503e149ff73b24`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/staff_close_button.png`
+  - guid: `c5c41375de23b804eba3bb93e0ece9a7`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/staff_list_row_base.png`
+  - guid: `4afec6bdd3ec6074d8d9adf7055e0484`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeInstallTutorialController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/staff_window_base.png`
+  - guid: `270ed3527bef1a24f92e4bd5623f4e29`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tab_active_green_base.png`
+  - guid: `5b66b305fdb2cfb4fad079faa54c49e4`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/EconomyPanelRuntimeConnector.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelRuntimeConnector.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tab_inactive_beige_base.png`
+  - guid: `7cf453f1cfe140e438276e2941469117`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/EconomyPanelRuntimeConnector.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelRuntimeConnector.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/title_menu_panel_base.png`
+  - guid: `26c9e5b8faccd624c8d0e7b4d2626657`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (4).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/toast_small_base.png`
+  - guid: `9d959e2828e66fd47939638c077fb459`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Curved.png`
+  - guid: `c2ffe620ba5607443b2d6a0e33bc815c`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Pointer_Down.png`
+  - guid: `51e1f1c6ff6e45ec83d46d50e510bb5d`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeInstallTutorialController.cs` [generated-runtime-path, resources-path]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Pointer_Down_v2.png`
+  - guid: `6ffbb05a6d4a90d43bddcefda53e722c`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeInstallTutorialController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_StepBadge_Green.png`
+  - guid: `270d2c6a599e32e47a6314d81702380d`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeInstallTutorialController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+
+## A. Used Confirmed Images
+
+- `Assets/_Project/Resources/GeneratedRuntimeUI/objects/bench_press.png`
+  - guid: `caa88dfcdcb2f8e478687c132571b24e`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/objects/door.png`
+  - guid: `f5426aaf771c0e64082f236e425efd64`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/objects/dumbbell_rack.png`
+  - guid: `35d0b400e2cbf014cb16080a517cef0a`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/objects/exercise_bike.png`
+  - guid: `3c61e5345c8f9f2459fa8633732879fe`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/objects/potted_plant.png`
+  - guid: `153c2eb8dbe033440be306bf33c118f8`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/objects/reception_desk.png`
+  - guid: `ed531e66333918144a9d40cd1a7705fd`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/objects/treadmill.png`
+  - guid: `4f5e0d69900745a4993b52fb079f1f83`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Prefabs/UIRebuild/Common/PF_UIRoot_Canvas.prefab` [stem]; `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Icons/Equipment/__AssetList.txt` [filename-with-extension]; `Assets/_Project/Prefabs/UIRebuild/Panels/PF_UI_InstallPanel.prefab` [stem]; `Assets/_Project/Prefabs/UIRebuild/Panels/PF_UI_OperatePanel.prefab` [stem]; `Assets/_Project/Prefabs/UIRebuild/Panels/PF_UI_ReviewPanel.prefab` [stem]; `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]; `Assets/_Project/Scripts/Runtime/Core/CustomerFlowManager.cs` [stem]; `Assets/_Project/Scripts/Runtime/Equipment/EquipmentCatalog.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeInstallTutorialController.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/objects/wall_poster.png`
+  - guid: `087571a112309bc4b9d7a4f935a42e2a`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/objects/water_cooler.png`
+  - guid: `2b0a998821c012845b2e3450779e0fd4`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/objects/window.png`
+  - guid: `43e9dfb2cd4939849934a1c3a010cfef`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]; `Assets/_Project/Scripts/Runtime/Core/GymEventManager.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/StaffUIController.cs` [stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/title/title_background_v2.png`
+  - guid: `c66697f06d0f58a42bb5f9beba4b3cb2`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (4).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/title/title_logo_v2.png`
+  - guid: `11792123a7685e241a814a739704cb1c`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (4).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/button_beige_base.png`
+  - guid: `2f9a22c1952fb7742b95777af6e5e83b`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (4).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/button_green_base.png`
+  - guid: `16496472d9a834c4c99b9eec09dfdd51`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (4).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/button_small_beige_base.png`
+  - guid: `edd912157ec09f54ea0cacf49b0d25f4`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (4).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/category_tab_beige_base.png`
+  - guid: `d36a3aa1c29893f4590404cd3d72e5db`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/category_tab_small_base.png`
+  - guid: `e590fdc9975277e4fa712e23af347808`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/common/locations/icon_location_downtown.png`
+  - guid: `8d294b6d3a4d15a4599c4ebe4c0f66f5`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/common/locations/icon_location_neighborhood.png`
+  - guid: `722e48401154ef04fb0a7b22d4882cc3`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/common/locations/icon_location_station.png`
+  - guid: `6ee8d883d4077da4eb1b9db0ee706f94`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_bottom_box.png`
+  - guid: `1fa764339127537469b83b5f47c662ff`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_chart_bar_green.png`
+  - guid: `eaa6d3eab45624e499361e5d3f840192`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_chart_bar_orange.png`
+  - guid: `7e495b97b1a9b8d468bb30beee6eedf1`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_detail_box.png`
+  - guid: `4ad1f0e3d9af13b49a6a6d7cc3c85361`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_icon_expense_down.png`
+  - guid: `8c76248d96a3f7c44805febbb1a290ed`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_icon_income_up.png`
+  - guid: `d68b6f01c6ded964eb82019d20c09aa0`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_icon_money_bag.png`
+  - guid: `d62490ec3254b45409622c525a7d579c`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_icon_profit_up.png`
+  - guid: `1c8f950d4b61804468d665979c9711e7`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_manager_character.png`
+  - guid: `6e00aaa75c5f84440ab97a3e72ae513b`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/economy/economy_summary_card_box.png`
+  - guid: `f8a1ae37103087c4da60ba41eebc37fe`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/header_bar_blue.png`
+  - guid: `fc12b4fbbffea1b44aec14d7e4e9160b`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (4).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/hud_base_bar.png`
+  - guid: `db625ad8bd17a804480e6eb79b3c9e75`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/hud_info_box_base.png`
+  - guid: `0b9a442278af888429a49de0c48f20b0`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/install_card_base.png`
+  - guid: `12f002d5a080976418f94f8f062ddda5`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Panels/Install/__AssetList.txt` [filename-with-extension]; `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/regenerate.txt` [filename-with-extension]; `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/monthly_settlement/icon_monthly_electricity.png`
+  - guid: `ff3b8bc199c949e193858964a744cdb9`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/monthly_settlement/icon_monthly_maintenance.png`
+  - guid: `cb4cd6ca30704270ba13248dc21128d4`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/monthly_settlement/monthly_breakdown_panel_base.png`
+  - guid: `7ebf15c931011504cb0a9a5481a37f53`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/monthly_settlement/monthly_comment_bubble_base.png`
+  - guid: `7352dd169875d7e468fb5e71720d34bc`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/monthly_settlement/monthly_summary_card_base.png`
+  - guid: `f9194168194d0ba40a29b01f087532a5`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/nav_base_bar.png`
+  - guid: `d4e5138c393e3d847a3392df903c39b2`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/panel_large_base.png`
+  - guid: `eaaa2d2dee7d5ab419461fb656ff86ef`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_mood_bad.png`
+  - guid: `1f9d3a390a290b24fadddd038511fa27`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_mood_good.png`
+  - guid: `ad1d4890d597f7e4690e3b36294284b6`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_mood_normal.png`
+  - guid: `f839edd3f95855d4eb8875de659b27ee`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_review_chat.png`
+  - guid: `3bc3b2c5c63e5194fb6497d1abd55fed`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_review_like.png`
+  - guid: `75fd8d29c6f141640a1bac19a2f2482f`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_star_empty.png`
+  - guid: `ffc829910454f7d4c81fe07dce0c24a8`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/icon_star_full.png`
+  - guid: `ac026c7f6dac1074590611077f619a9d`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/review_filter_button_active.png`
+  - guid: `4eb74b36b44710b478b6278340f2d025`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/GeneratedRuntimeSprites.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/review_filter_button_inactive.png`
+  - guid: `9c030d190abd7f545923d2d5f54b0eb8`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/GeneratedRuntimeSprites.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelDataBinder.cs` [stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/review_list_item_base.png`
+  - guid: `3e50f0de723793244b4f96863a0d2fd2`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/GeneratedRuntimeSprites.cs` [stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/review/review_summary_card_base.png`
+  - guid: `d93865c891892404daf06e4c7b8a6f26`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [stem]; `Assets/_Project/Scripts/Runtime/UI/GeneratedRuntimeSprites.cs` [stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/selected_info_box_base.png`
+  - guid: `b5815650b10223a41a49c3444f1bca17`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/settings/settings_slider_fill_green.png`
+  - guid: `0f4bd8cffb7ce554ab3e31d11194d935`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/settings/settings_slider_knob_green.png`
+  - guid: `213c548bd16ff4547802a751c2e2e821`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/settings/settings_slider_track_base.png`
+  - guid: `3393aedc7486039419b2359719f42b3a`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/slot_row_base.png`
+  - guid: `7dad352706d83d14892ae6d94e23a1bf`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (4).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_00.png`
+  - guid: `bf0b2a2f024923542aecc0e49a94b7f2`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint, generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/staff_close_button.png`
+  - guid: `c5c41375de23b804eba3bb93e0ece9a7`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/staff_list_row_base.png`
+  - guid: `4afec6bdd3ec6074d8d9adf7055e0484`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/RuntimeInstallTutorialController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/staff_window_base.png`
+  - guid: `270ed3527bef1a24f92e4bd5623f4e29`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeGameMenuPopupController.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tab_active_green_base.png`
+  - guid: `5b66b305fdb2cfb4fad079faa54c49e4`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/EconomyPanelRuntimeConnector.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelRuntimeConnector.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tab_inactive_beige_base.png`
+  - guid: `7cf453f1cfe140e438276e2941469117`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/TestSandbox.unity`; `Assets/_Recovery/0 (10).unity`; `Assets/_Recovery/0 (11).unity`; `Assets/_Recovery/0 (12).unity`; `Assets/_Recovery/0 (13).unity`; `Assets/_Recovery/0 (14).unity`; `Assets/_Recovery/0 (15).unity`; `Assets/_Recovery/0 (16).unity`; `Assets/_Recovery/0 (17).unity`; `Assets/_Recovery/0 (18).unity`; `Assets/_Recovery/0 (19).unity`; `Assets/_Recovery/0 (20).unity`; `Assets/_Recovery/0 (21).unity`; `Assets/_Recovery/0 (22).unity`; `Assets/_Recovery/0 (23).unity`; `Assets/_Recovery/0 (5).unity`; `Assets/_Recovery/0 (6).unity`; `Assets/_Recovery/0 (7).unity`; `Assets/_Recovery/0 (8).unity`; `Assets/_Recovery/0 (9).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Editor/GameRuntimeUIControllerEditor.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/EconomyPanelRuntimeConnector.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/ReviewPanelRuntimeConnector.cs` [generated-runtime-path, resources-path, stem]; `Assets/_Project/Scripts/Runtime/UI/SimpleGameUIBootstrap.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/title_menu_panel_base.png`
+  - guid: `26c9e5b8faccd624c8d0e7b4d2626657`
+  - classification: A. Used confirmed
+  - GUID reference found: yes
+  - GUID reference files: `Assets/_Project/Scenes/Title.unity`; `Assets/_Recovery/0 (4).unity`
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]; `Assets/_Project/Scripts/Runtime/UI/TitleMenuUIController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: GUID is referenced by Unity scene/prefab/asset files
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Pointer_Down.png`
+  - guid: `51e1f1c6ff6e45ec83d46d50e510bb5d`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeInstallTutorialController.cs` [generated-runtime-path, resources-path]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Pointer_Down_v2.png`
+  - guid: `6ffbb05a6d4a90d43bddcefda53e722c`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeInstallTutorialController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_StepBadge_Green.png`
+  - guid: `270d2c6a599e32e47a6314d81702380d`
+  - classification: A. Used confirmed
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeInstallTutorialController.cs` [generated-runtime-path, resources-path, stem]
+  - Resources.Load/path string reference found: yes
+  - SpriteAtlas reference found: no
+  - classification reason: Resources-relative path or GeneratedRuntimeUI path string reference was found
+
+## B. Candidate Unused Images (candidate only, do not delete)
+
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/BottomNav/UI_BottomNav_Base.old.png`
+  - guid: `35ac00d0a779e184db999521947fbb80`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Common/UI_Common_MainPanel_Base_L.old.png`
+  - guid: `be86ae1b882e8224295583c9019e18bd`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Common/UI_Common_SectionBox_M.old.png`
+  - guid: `42e9b1cac77e03949a6675417ec5e5c8`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/HUD/UI_HUD_TopBar_Base.old.png`
+  - guid: `0c0e0e603636eb947998c564bf77835a`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Panels/Economy/UI_Economy_DetailBox.old.png`
+  - guid: `07305b2c162deff4489da0e7e7f61c0c`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Panels/Install/UI_Install_Card_Base.old.png`
+  - guid: `1bf725b4d9050184fb066cc49fb7bbab`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Panels/Install/UI_Install_Card_Selected.old.png`
+  - guid: `444c9eb1e2ab822489c9bf2a48cd1afe`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Panels/Review/UI_Review_ListBox.old.png`
+  - guid: `30e153e34f6b4fb469766a4bb8a03bc8`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Popups/UI_Popup_Base_Large.old.png`
+  - guid: `130e4cbb16d75db439059169e0254bf5`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Backup_20260422_R1/Popups/UI_Popup_ListRow.old.png`
+  - guid: `264513a5036390c439b9d551d4e7af31`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Preview/Preview_BottomNav.png`
+  - guid: `6db876606086c97cca2c6a12f4ff8585`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/discard.txt` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Preview/Preview_EconomyPanel.png`
+  - guid: `c1d7933e0d7a057f0744693c23f63487`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/discard.txt` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Preview/Preview_GameMenuPopup.png`
+  - guid: `358d91ff651d685f663b09dcdd406630`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/discard.txt` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Preview/Preview_InstallPanel.png`
+  - guid: `5714ca5eac59a47f7aed45f1fe80d3cc`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/discard.txt` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Preview/Preview_OperatePanel.png`
+  - guid: `8ec47fcd47594e295d6ff0fe2440bf1e`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/discard.txt` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Preview/Preview_RecruitPopup.png`
+  - guid: `2d6d211caaaeac718a3732f0f891636b`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/discard.txt` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Preview/Preview_ReviewPanel.png`
+  - guid: `ccb70cae3bd6734f1d94cce19bec8327`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/discard.txt` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Preview/Preview_StaffPopup.png`
+  - guid: `e4043ac6e8705ae33c4ec57d3ad4586c`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/discard.txt` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Preview/Preview_TitleScreen.png`
+  - guid: `0dd159f2f62f921603d0dd6a64d3d2fc`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/discard.txt` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Preview/Preview_TopHUD.png`
+  - guid: `ab2c73d6b985d98cd64088cb21e664de`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/discard.txt` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Preview/Preview_UIRoot_Canvas.png`
+  - guid: `181208b6bc45f9cdd81f293625a38591`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/discard.txt` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/Unused_UI_Assets/Sprites/UI/Bottom_Tab_Active.png`
+  - guid: `bf60c7234456bd548bd4cf1ab9d19058`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/Unused_UI_Assets/Sprites/UI/Bottom_Tab_Inactive.png`
+  - guid: `7974f82d5470bfb4eb77337948245432`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/Unused_UI_Assets/Sprites/UI/Bottom_TabBar_Base.png`
+  - guid: `a28551cde3b84ca4aa3abe7fce0f7926`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/Unused_UI_Assets/Sprites/UI/Title_Button_Beige.png`
+  - guid: `7763ce297fd6c864c936951070832f8d`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/Unused_UI_Assets/Sprites/UI/Title_Button_Green.png`
+  - guid: `bf12951508b7dcc4ea5047d75d25ac50`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/Unused_UI_Assets/Sprites/UI/Title_Logo.png`
+  - guid: `df5e06407e4335b4a99bff01cf88a28a`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Title/__AssetList.txt` [filename-with-extension]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/Unused_UI_Assets/Sprites/UI/Title_MenuHeader.png`
+  - guid: `41e9bcd763e195047b070cc26ac273c3`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Title/__AssetList.txt` [filename-with-extension]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/Unused_UI_Assets/Sprites/UI/Title_MenuPanel.png`
+  - guid: `9c706ee54ecb5524c917484e8a9af3d1`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/Unused_UI_Assets/Sprites/UI/Title_SlotRow.png`
+  - guid: `c9159217290ccb844a07493b143bac83`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/Unused_UI_Assets/Sprites/UI/TopHUD_InfoRow.png`
+  - guid: `dc357c5c92a4315498a0404d07bc60be`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/_Archive/Unused_UI_Assets/Sprites/UI/TopHUD_Speed_4x.png`
+  - guid: `1ef40e3e7e4aaf443938a1968424cdc3`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference was found
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/bottom_nav_frame.png`
+  - guid: `1871bdd4347f82345bd6a7f4a92f1558`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/button_beige.png`
+  - guid: `9fc8d66346bdb124baf1850c8865fba7`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/usable.txt` [filename-with-extension]; `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/button_green.png`
+  - guid: `3ab3767ab6b99ce49a23f31c10963326`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Review/usable.txt` [filename-with-extension]; `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/cancel_button_beige.png`
+  - guid: `697fedd771f1bca4798f3d9b074fdde2`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/category_tab_beige.png`
+  - guid: `a295b01348fa0304fbf20bd8512289ef`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/category_tab_green.png`
+  - guid: `74e15b2be255b3f49974b36db28677cc`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/confirm_button_green.png`
+  - guid: `10b3d3f75d8ddf24cab1d16cb040e62e`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/hud_info_box.png`
+  - guid: `50a7500327feda84cad40ac24516b778`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/install_card_row.png`
+  - guid: `f9402465e1091254b9d1238b0fda99ad`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/install_panel_frame.png`
+  - guid: `eed6b2a0bec10394985bb2463919985c`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/operate_card_row.png`
+  - guid: `d71e29ac79c21704897eb7136fc474d2`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/operate_panel_frame.png`
+  - guid: `1f8506f9429b120439a41646dfd5b23f`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/selected_info_row.png`
+  - guid: `1fa1e825b0c6f5e41b7bcb21cb628b46`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/slot_row.png`
+  - guid: `9d6c6d8650ef554499429946bbd4aae3`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/_Archive/UIRebuild_Trash/Sprites/UI_Rebuild/Title/__AssetList.txt` [filename-with-extension]; `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/small_panel.png`
+  - guid: `2ebda14e0d52d704285528af703f35b8`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/small_panel_alt.png`
+  - guid: `61650a9d7fb6c774ba17462e0a0767e0`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui/title_menu_panel.png`
+  - guid: `31ed6270f105e5a428d099f268e62cef`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/tutorial/Tutorial_Arrow_Curved.png`
+  - guid: `c2ffe620ba5607443b2d6a0e33bc815c`
+  - classification: B. Candidate unused
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No active GUID/source string reference; name or folder looks disposable/legacy
+
+## C. Hold Images
+
+- `Assets/_Project/Resources/GeneratedRuntimeUI/objects/floor_tile.png`
+  - guid: `6e8dc2eb7e7343e45bc544af82072498`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/generated_runtime_ui_manifest.json` [filename-with-extension, generated-runtime-path, generated-runtime-path-with-extension, resources-path, resources-path-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/bar_long_base.png`
+  - guid: `d8c69e80e07b6594888418f5b5da5f02`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/install_panel_base.png`
+  - guid: `0b932abedd2f9de41b8c7e7a5d58a795`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/move/move_current_info_box_base.png`
+  - guid: `1414ab56a07d1c346b7848d7a0638aa2`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/move/move_option_row_base.png`
+  - guid: `a199d2c7ffbcc6340a49a07cb93f55cc`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/move/move_option_row_selected.png`
+  - guid: `09dd37cad1b58b14094148eed40329df`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/move/move_selected_check.png`
+  - guid: `71460cd245509c64d847ae4b4ca12afe`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/operate_panel_base.png`
+  - guid: `0139d4252c9aa7f42b017920fa890e98`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_00.png`
+  - guid: `a4e57e3f3d710304f8a51c41fd6478fc`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_01.png`
+  - guid: `e210e6db545c9074a9e2fd2b344f38d4`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_02.png`
+  - guid: `f7aaaa7bc97a99d4b81b7029cf18f200`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_03.png`
+  - guid: `d95102c8f9eee9c46ac6dda930716e68`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_04.png`
+  - guid: `2a8a1094a10b8d649921f2913c5c7385`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_05.png`
+  - guid: `ecce095eb4c7bc546a8fbf7de745568c`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_06.png`
+  - guid: `6b33b92b836c5cc4e8db1928ef24796f`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_07.png`
+  - guid: `00bbd46aa1c93204a8f49be3930dd795`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_08.png`
+  - guid: `69650c601aef36d4084073713b51adf1`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/female/staff_female_09.png`
+  - guid: `0ea945d9dc5667c4f81ffd306c2f3af7`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_01.png`
+  - guid: `98b2796e5aedad3498926f12d87f8700`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_02.png`
+  - guid: `82dd99229b0889644947cc57aa6e461c`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_03.png`
+  - guid: `89188aba81ebd6947ac99ea022a0b9e9`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_04.png`
+  - guid: `57c928e6d0aaba84fafb47613f6c26b7`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_05.png`
+  - guid: `c2d610af06866d64caca000f6db53638`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_06.png`
+  - guid: `69966adc46b14274ba38a3dba0b8e1b3`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_07.png`
+  - guid: `f8e0a8d1951b81f4d891c7d00d440092`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_08.png`
+  - guid: `846de6de906be304da536b6e61ca2db6`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/staff/portraits/male/staff_male_09.png`
+  - guid: `d45a282028993f2429503e149ff73b24`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Scripts/Runtime/UI/RuntimeMonthlySettlementPopupController.cs` [dynamic-prefix-hint]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: No direct individual-file reference, but numbered/prefix-based dynamic loading is possible
+- `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/toast_small_base.png`
+  - guid: `9d959e2828e66fd47939638c077fb459`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: yes
+  - string reference files: `Assets/_Project/Resources/GeneratedRuntimeUI/ui_v2/ui_v2_manifest.json` [filename-with-extension, stem]
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/BottomNav_Crop.png`
+  - guid: `2220880698d7f944b911b23de1397de2`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_BenchPress.png`
+  - guid: `56ee75f293b46704691c16e4142117c6`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_Bike.png`
+  - guid: `7d64b229427593f41afc00bd51c7782b`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_Character_Dumbbell.png`
+  - guid: `02b6ca1aa0b9fba43a32e86006b7bcfe`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_Character_Run.png`
+  - guid: `d5afdb84f8c271b4b9d8304e3a1e8992`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_Character_Stretch.png`
+  - guid: `56d5d15f8e60bb046b1f489e443fa00a`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_Clock.png`
+  - guid: `c8e2e3f95271f884080d40e2d081f97c`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_Door.png`
+  - guid: `4ecc3462ef090de41a15a923e6090371`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_DumbbellRack.png`
+  - guid: `310a07c6cf0aaf94c8a98837287ca717`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_FloorTile.png`
+  - guid: `d9b5027c5f6726c4782650d8489006af`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_Plant.png`
+  - guid: `18205ae02542d6f41a3d515829dcc45c`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_Poster_Fighting.png`
+  - guid: `4061ee84c6505104ebc5b6f70e539889`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_Poster_NoPain.png`
+  - guid: `4c7c6ecf91d0d1944a7b6c6d78900804`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_ReceptionDesk.png`
+  - guid: `773f6d5191e9271429c60f4ab42ea9b2`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_Treadmill.png`
+  - guid: `834fb4fe23730e7438dcd338c81083b3`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_Treadmill_Alt.png`
+  - guid: `2cacd0521add3c048a651f3c3f71e2f4`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_WaterCooler.png`
+  - guid: `a229a31da1ea21749b3ff87aa54e5041`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Gym_Window.png`
+  - guid: `610c2dde89c81f64b97e7dcae56a87da`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/InGameBasicMockup.png`
+  - guid: `e0b1476a550a7bc4589af499dbe5e59f`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/InstallButton_Green_Crop.png`
+  - guid: `d3e51c0522028e541a4949252ebe9415`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/InstallCard_Selected_Crop.png`
+  - guid: `6885d04623b5969449480a40d0f2e332`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/InstallMockup.png`
+  - guid: `06420466478266545a3ab278b8beac1b`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/InstallPanel_Crop.png`
+  - guid: `c5ccd7b5a14750c4f9d58ed63e3a0835`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/OperateMockup.png`
+  - guid: `0891b0d379af0e94eb2b298333a1c73c`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/OperatePanel_Crop.png`
+  - guid: `dbf97b15e7ecea24d9dfaf013cd5e355`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Title_Button_Beige_Crop.png`
+  - guid: `6b65b7c013dfd9842a6f3dd427be7cd7`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Title_Button_Green_Crop.png`
+  - guid: `6fe9b497a990d0647b52456fbf73b4c0`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Title_GymExterior_Crop.png`
+  - guid: `2a9d306ace188c54fa5b2764d0c3198a`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Title_Logo_Crop.png`
+  - guid: `6a76443d8b282d84e858008c6013d5d2`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Title_MenuPanel_Crop.png`
+  - guid: `d6e526940e44e6349a5ebab690a87f85`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Title_SlotRow_Crop.png`
+  - guid: `c418b9e3f21e39e46a67001cb1669b2c`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/Title_Street_Crop.png`
+  - guid: `ca509cb0ae776b14aaf5235c2cfb73f0`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/TitleMockup.png`
+  - guid: `81792edc86962b343ac3f124a54d0959`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/TopHUD_Crop.png`
+  - guid: `a7e099cb17feaf14086fb897d2846a6a`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/UI_Button_Beige.png`
+  - guid: `b492d0d6d0434144bb3c8944181ddf7e`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/UI_Button_Green.png`
+  - guid: `8585fe9bff9fd2b42babcb7cb89d9c9c`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/UI_Card_Frame.png`
+  - guid: `03707a8f9a040f241a90dd670b04ac31`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/UI_Hud_Card.png`
+  - guid: `cbc814c1b3cdd9a45ba841e099c7b628`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/UI_Panel_Frame.png`
+  - guid: `440a08394fa79ac4091a05812c447f2b`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/UI_Slot_Row.png`
+  - guid: `d28a62fa1d78aeb43afd8b313599cb3d`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/UI_Tab_Active.png`
+  - guid: `2749b6f8ad311464c8fdebcba68c50ed`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+- `Assets/_Project/Resources/MockupUI/UI_Tab_Inactive.png`
+  - guid: `ff7037e826f1dee4eb20fd4bc1081fa6`
+  - classification: C. Hold
+  - GUID reference found: no
+  - GUID reference files: None
+  - string reference found: no
+  - string reference files: None
+  - Resources.Load/path string reference found: no
+  - SpriteAtlas reference found: no
+  - classification reason: Inside Resources with no active direct GUID/source string reference; dynamic loading needs manual confirmation
+

@@ -1,0 +1,105 @@
+Created At: 2026-06-05T15:47:12Z
+Completed At: 2026-06-05T15:47:13Z
+
+				The command completed successfully.
+				Output:
+				commit b52ef4a13a58c23ede6023c859aba54781d14482
+Author: Gukil Kim <kki0287@naver.com>
+Date:   Sun May 3 23:58:45 2026 +0900
+
+    Initial Unity project snapshot
+
+diff --git a/Assets/_Project/Scripts/Runtime/Visual/GymPlacedObjectVisual.cs b/Assets/_Project/Scripts/Runtime/Visual/GymPlacedObjectVisual.cs
+new file mode 100644
+index 0000000..5890a5f
+--- /dev/null
++++ b/Assets/_Project/Scripts/Runtime/Visual/GymPlacedObjectVisual.cs
+@@ -0,0 +1,269 @@
++using UnityEngine;
++
++[DisallowMultipleComponent]
++public sealed class GymPlacedObjectVisual : MonoBehaviour
++{
++    private static Sprite cachedWhiteSprite;
++    private static Font cachedFont;
++
++    private SpriteRenderer shadowRenderer;
++    private SpriteRenderer baseRenderer;
++    private SpriteRenderer plateRenderer;
++    private SpriteRenderer accentRenderer;
++    private SpriteRenderer frameRenderer;
++    private TextMesh tokenText;
++    private TextMesh tierText;
++    private MeshRenderer tokenRenderer;
++    private MeshRenderer tierRenderer;
++
++    private Vector2 footprintSize = Vector2.one;
++    private Color accentColor = new Color(0.91f, 0.63f, 0.22f, 1f);
++    private string token = "??;
++    private string tier = "B";
++
++    public void Initialize(PlacedObjectSaveData data, EquipmentDefinition definition, Vector2 size)
++    {
++        footprintSize = size;
++        accentColor = ResolveAccentColor(definition, data);
++        token = ResolveToken(definition, data);
++        tier = definition != null ? definition.BrandTierLabel : "B";
++
++        EnsureAssets();
++        EnsureChildren();
++        ApplyLayout();
++        ApplyState(data, false, false);
++    }
++
++    public void ApplyState(PlacedObjectSaveData data, bool selected, bool ghost)
++    {
++        bool isUnderConstruction = data != null && data.isUnderConstruction;
++        bool isBroken = data != null && data.isBroken;
++
+
+<truncated 143 bytes>
+
++        }
++        else if (isUnderConstruction)
++        {
++            activeAccent = Color.Lerp(accentColor, new Color(0.60f, 0.67f, 0.76f, 1f), 0.55f);
++        }
++
++        Color shellColor = Color.Lerp(new Color(0.12f, 0.16f, 0.23f, 1f), activeAccent, 0.20f);
++        Color plateColor = Color.Lerp(new Color(0.22f, 0.27f, 0.36f, 1f), activeAccent, 0.14f);
++        Color selectedFrame = isUnderConstruction
++            ? new Color(0.72f, 0.77f, 0.82f, 0.86f)
++            : new Color(0.62f, 1.00f, 0.25f, 0.88f);
++        Color frameColor = selected
++            ? selectedFrame
++            : new Color(0.98f, 0.92f, 0.82f, 0f);
++
++        if (ghost)
++        {
++            Color ghostFrame = isUnderConstruction
++                ? new Color(0.72f, 0.77f, 0.82f, 0.36f)
++                : new Color(0.62f, 1.00f, 0.25f, 0.40f);
++            shadowRenderer.color = new Color(0f, 0f, 0f, 0.10f);
++            baseRenderer.color = new Color(shellColor.r, shellColor.g, shellColor.b, 0.20f);
++            plateRenderer.color = new Color(plateColor.r, plateColor.g, plateColor.b, 0.14f);
++            accentRenderer.color = new Color(activeAccent.r, activeAccent.g, activeAccent.b, 0.22f);
++            frameRenderer.color = ghostFrame;
++            tokenText.color = new Color(0.97f, 0.97f, 0.95f, 0.45f);
++            tierText.color = new Color(0.97f, 0.97f, 0.95f, 0.45f);
++            return;
++        }
++
++        if (selected)
++        {
++            Color selectedTint = isUnderConstruction
++                ? new Color(0.74f, 0.78f, 0.82f, 1f)
++                : new Color(0.58f, 1.00f, 0.26f, 1f);
++            shellColor = Color.Lerp(shellColor, selectedTint, 0.08f);
++            plateColor = Color.Lerp(plateColor, new Color(0.97f, 0.98f, 0.92f, 1f), 0.08f);
++        }
++
++        shadowRenderer.color = new Color(0f, 0f, 0f, selected ? 0.34f : 0.24f);
++        baseRenderer.color = shellColor;
++        plateRenderer.color = plateColor;
++        accentRenderer.color = activeAccent;
+

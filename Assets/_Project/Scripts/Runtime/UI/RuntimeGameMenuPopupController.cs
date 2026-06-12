@@ -36,10 +36,16 @@ public partial class RuntimeGameUIController
     private Text menuMemberText;
     private Text menuCashText;
 
+    private Image relocationCurrentIconImage;
+    private Image relocationTargetIconImage;
     private Text relocationCurrentText;
     private Text relocationTargetText;
-    private Text relocationSummaryText;
+    private Text relocationTargetRiskText;
+    private Text relocationTargetFlowText;
+    private Text relocationTargetRentText;
     private Text relocationCostText;
+    private RectTransform relocationCurrentSizeBadge;
+    private RectTransform relocationTargetSizeBadge;
     private Button relocationExecuteButton;
     private RuntimeSettingsSliderControl backgroundMusicSlider;
     private RuntimeSettingsSliderControl effectSoundSlider;
@@ -433,17 +439,33 @@ public partial class RuntimeGameUIController
 
     private void BuildRelocationPopup()
     {
+        const float relocationWindowWidth = 800f;
+        const float relocationWindowHeight = 1060f;
+        const float relocationTitleY = 452f;
+        const float relocationCurrentY = 240f;
+        const float relocationTargetY = 0f;
+        const float relocationQuoteY = -240f;
+        const float relocationButtonY = -430f;
+
         relocationPopupRoot = CreatePopupRoot("RuntimeRelocationPopupRoot");
-        GameObject frame = CreateGeneratedImage(relocationPopupRoot, "RelocationPopupFrame", MenuPanelSprite, 0f, 0f, menuWindowSize.x, menuWindowSize.y, false, true);
+        GameObject frame = CreateGeneratedImage(relocationPopupRoot, "RelocationPopupFrame", MenuPanelSprite, 0f, 0f, relocationWindowWidth, relocationWindowHeight, false, true);
 
-        CreateText(frame.transform, "RelocationTitle", "지점 이전", 43, theme.Ink, TextAnchor.MiddleCenter, 0f, menuTitleY, 430f, 62f, true);
-        Button closeButton = CreateIconButton(frame.transform, "RelocationClose", "X", menuClosePosition.x, menuClosePosition.y, 78f, 78f);
-        closeButton.onClick.AddListener(CloseRuntimeMenuPopups);
+        CreateText(frame.transform, "RelocationTitle", "지점 이전", 44, theme.Ink, TextAnchor.MiddleCenter, 0f, relocationTitleY, 430f, 62f, true);
 
-        GameObject currentBox = CreateGeneratedImage(frame.transform, "RelocationCurrentBox", MenuInfoBoxSprite, 0f, 226f, 590f, 164f, false, true);
-        relocationCurrentText = CreateText(currentBox.transform, "CurrentInfo", "", 27, theme.Ink, TextAnchor.MiddleLeft, 0f, 12f, 510f, 104f, true);
+        GameObject currentBox = CreateGeneratedImage(frame.transform, "RelocationCurrentBox", MenuInfoBoxSprite, 0f, relocationCurrentY, 700f, 220f, false, true);
+        relocationCurrentIconImage = CreateGeneratedImage(currentBox.transform, "CurrentLocationIcon", GetLocationIconPath(GymLocationType.Neighborhood), -278f, 3f, 120f, 120f, true, true).GetComponent<Image>();
+        relocationCurrentText = CreateText(currentBox.transform, "CurrentInfo", "", 31, theme.Ink, TextAnchor.MiddleLeft, 0f, 3f, 430f, 150f, true);
+        relocationCurrentSizeBadge = CreateRelocationSizeBadge(currentBox.transform, "CurrentSizeBadge", 238f, 3f, 150f, 150f);
 
-        Button prevButton = CreateIconButton(frame.transform, "RelocationPrev", "<", -254f, 84f, 72f, 72f);
+        GameObject targetBox = CreateGeneratedImage(frame.transform, "RelocationTargetBox", MenuInfoBoxSprite, 0f, relocationTargetY, 700f, 220f, false, true);
+        relocationTargetIconImage = CreateGeneratedImage(targetBox.transform, "TargetLocationIcon", GetLocationIconPath(GymLocationType.Neighborhood), -278f, -19f, 120f, 120f, true, true).GetComponent<Image>();
+        relocationTargetText = CreateText(targetBox.transform, "TargetTitleRow", "", 34, theme.Ink, TextAnchor.MiddleCenter, -18f, 62f, 390f, 48f, true);
+        relocationTargetRiskText = CreateText(targetBox.transform, "RiskText", "", 25, theme.MutedInk, TextAnchor.MiddleCenter, -18f, 26f, 350f, 36f, true);
+        relocationTargetFlowText = CreateText(targetBox.transform, "FlowText", "", 25, theme.MutedInk, TextAnchor.MiddleCenter, -18f, -14f, 350f, 36f, true);
+        relocationTargetRentText = CreateText(targetBox.transform, "RentText", "", 25, theme.MutedInk, TextAnchor.MiddleCenter, -18f, -54f, 350f, 36f, true);
+        relocationTargetSizeBadge = CreateRelocationSizeBadge(targetBox.transform, "TargetSizeBadge", 240f, -19f, 150f, 150f);
+
+        Button prevButton = CreateTransparentButton(targetBox.transform, "RelocationPrev", -178f, 62f, 90f, 66f);
         prevButton.onClick.AddListener(() =>
         {
             CacheMenuManager();
@@ -451,7 +473,7 @@ public partial class RuntimeGameUIController
             RefreshRelocationPopup();
         });
 
-        Button nextButton = CreateIconButton(frame.transform, "RelocationNext", ">", 254f, 84f, 72f, 72f);
+        Button nextButton = CreateTransparentButton(targetBox.transform, "RelocationNext", 142f, 62f, 90f, 66f);
         nextButton.onClick.AddListener(() =>
         {
             CacheMenuManager();
@@ -459,15 +481,11 @@ public partial class RuntimeGameUIController
             RefreshRelocationPopup();
         });
 
-        GameObject targetBox = CreateGeneratedImage(frame.transform, "RelocationTargetBox", MenuInfoBoxSprite, 0f, 62f, 420f, 138f, false, true);
-        relocationTargetText = CreateText(targetBox.transform, "TargetLabel", "", 31, theme.Ink, TextAnchor.MiddleCenter, 0f, 34f, 360f, 42f, true);
-        relocationSummaryText = CreateText(targetBox.transform, "TargetSummary", "", 22, theme.MutedInk, TextAnchor.MiddleCenter, 0f, -24f, 360f, 58f, true);
+        GameObject quoteBox = CreateGeneratedImage(frame.transform, "RelocationQuoteBox", MenuInfoBoxSprite, 0f, relocationQuoteY, 700f, 220f, false, true);
+        relocationCostText = CreateText(quoteBox.transform, "QuoteText", "", 30, theme.Ink, TextAnchor.MiddleLeft, -18f, 8f, 620f, 146f, true);
 
-        GameObject quoteBox = CreateGeneratedImage(frame.transform, "RelocationQuoteBox", MenuInfoBoxSprite, 0f, -118f, 590f, 164f, false, true);
-        relocationCostText = CreateText(quoteBox.transform, "QuoteText", "", 26, theme.Ink, TextAnchor.MiddleLeft, 0f, 8f, 510f, 116f, true);
-
-        relocationExecuteButton = CreateSpriteButton(frame.transform, "RelocationExecuteButton", MenuGreenButtonSprite, "이전하기", -150f, -278f, 250f, 78f, theme.BrightInk, out Text executeLabel, 32);
-        executeLabel.fontSize = 32;
+        relocationExecuteButton = CreateSpriteButton(frame.transform, "RelocationExecuteButton", MenuGreenButtonSprite, "이전하기", -165f, relocationButtonY, 300f, 92f, theme.BrightInk, out Text executeLabel, 35);
+        executeLabel.fontSize = 35;
         relocationExecuteButton.onClick.AddListener(() =>
         {
             CacheMenuManager();
@@ -482,11 +500,10 @@ public partial class RuntimeGameUIController
             ShowToast("지금은 지점 이전을 진행할 수 없습니다.");
         });
 
-        Button cancelButton = CreateSpriteButton(frame.transform, "RelocationCancelButton", MenuBeigeButtonSprite, "취소", 150f, -278f, 250f, 78f, theme.Ink, out Text cancelLabel, 32);
-        cancelLabel.fontSize = 32;
+        Button cancelButton = CreateSpriteButton(frame.transform, "RelocationCancelButton", MenuBeigeButtonSprite, "취소", 165f, relocationButtonY, 300f, 92f, theme.Ink, out Text cancelLabel, 35);
+        cancelLabel.fontSize = 35;
         cancelButton.onClick.AddListener(CloseRuntimeMenuPopups);
 
-        CreateText(frame.transform, "RelocationHint", "기존 이사 시스템의 견적/실행 지점에 연결되어 있습니다", 22, theme.MutedInk, TextAnchor.MiddleCenter, 0f, -370f, 600f, 42f, true);
         SetRuntimeMenuTextNormal(relocationPopupRoot);
     }
 
@@ -554,6 +571,25 @@ public partial class RuntimeGameUIController
     {
         Button button = CreateSpriteButton(parent, name, MenuBeigeButtonSprite, label, x, y, width, height, theme.Ink, out Text labelText, 34);
         labelText.fontSize = 34;
+        return button;
+    }
+
+    private Button CreateTransparentButton(Transform parent, string name, float x, float y, float width, float height)
+    {
+        GameObject node = CreateSolid(parent, name, new Color(1f, 1f, 1f, 0f), x, y, width, height, true);
+        Image image = node.GetComponent<Image>();
+        image.raycastTarget = true;
+
+        Button button = node.AddComponent<Button>();
+        button.targetGraphic = image;
+
+        ColorBlock colors = button.colors;
+        colors.normalColor = Color.clear;
+        colors.highlightedColor = new Color(1f, 1f, 1f, 0.05f);
+        colors.pressedColor = new Color(1f, 1f, 1f, 0.10f);
+        colors.selectedColor = colors.highlightedColor;
+        colors.disabledColor = Color.clear;
+        button.colors = colors;
         return button;
     }
 
@@ -654,31 +690,111 @@ public partial class RuntimeGameUIController
 
         string currentSite = inGameMenuManager != null ? inGameMenuManager.GetCurrentSiteLabelText() : "지점 정보 없음";
         string currentSize = siteManager != null ? $"{siteManager.CurrentGridWidth}x{siteManager.CurrentGridHeight}" : "-";
+        int currentGridWidth = siteManager != null ? siteManager.CurrentGridWidth : 0;
+        int currentGridHeight = siteManager != null ? siteManager.CurrentGridHeight : 0;
+        GymLocationType currentLocationType = siteManager != null ? siteManager.CurrentLocationType : GymLocationType.Neighborhood;
         int cash = walletManager != null ? walletManager.CurrentCash : 0;
+
+        if (relocationCurrentIconImage != null)
+        {
+            GeneratedRuntimeSprites.Assign(relocationCurrentIconImage, GetLocationIconPath(currentLocationType), true);
+        }
+
         SetText(relocationCurrentText, $"현재 지점:  {currentSite}\n현재 크기:  {currentSize}\n보유 자금:  {cash:N0}G");
+        ApplyRelocationSizeBadge(relocationCurrentSizeBadge, currentGridWidth, currentGridHeight, false);
 
         string target = inGameMenuManager != null ? inGameMenuManager.GetSelectedTargetLocationLabelText() : "목표 지점 없음";
         string summary = inGameMenuManager != null ? inGameMenuManager.GetSelectedTargetLocationSummaryText() : string.Empty;
-        SetText(relocationTargetText, target);
-        SetText(relocationSummaryText, summary);
+        SetRelocationTargetDisplay(target, summary, 0, 0);
 
         bool canExecute = false;
         if (inGameMenuManager != null && inGameMenuManager.TryGetCurrentRelocationQuote(out RelocationManager.RelocationQuote quote))
         {
             canExecute = quote.isValid && quote.shortageAmount <= 0;
+
+            if (relocationCurrentIconImage != null)
+            {
+                GeneratedRuntimeSprites.Assign(relocationCurrentIconImage, GetLocationIconPath(quote.currentLocationType), true);
+            }
+
+            if (relocationTargetIconImage != null)
+            {
+                GeneratedRuntimeSprites.Assign(relocationTargetIconImage, GetLocationIconPath(quote.targetLocationType), true);
+            }
+
+            SetText(relocationCurrentText, $"현재 지점:  {quote.currentSiteLabel}\n현재 크기:  {FormatGridSize(quote.currentGridWidth, quote.currentGridHeight)}\n보유 자금:  {cash:N0}G");
+            SetRelocationTargetDisplay(quote.targetSiteLabel, quote.targetLocationSummary, quote.targetGridWidth, quote.targetGridHeight);
             SetText(
                 relocationCostText,
-                $"선택 지점:  {quote.targetSiteLabel}\n이전 비용:  {quote.totalCost:N0}G\n예상 변화:  {quote.targetGridWidth}x{quote.targetGridHeight} 공간"
+                $"선택 지점:  {quote.targetSiteLabel}\n이전 비용:  {quote.totalCost:N0}G\n예상 변화:  {FormatGridSize(quote.targetGridWidth, quote.targetGridHeight)} 공간"
             );
+
+            ApplyRelocationSizeBadge(relocationCurrentSizeBadge, quote.currentGridWidth, quote.currentGridHeight, false);
+            ApplyRelocationSizeBadge(relocationTargetSizeBadge, quote.targetGridWidth, quote.targetGridHeight, true);
         }
         else
         {
+            if (relocationTargetIconImage != null)
+            {
+                GeneratedRuntimeSprites.Assign(relocationTargetIconImage, GetLocationIconPath(currentLocationType), true);
+            }
+
+            SetRelocationTargetDisplay(target, summary, 0, 0);
             SetText(relocationCostText, "현재 이사 가능한 부지가 없습니다.");
+            ApplyRelocationSizeBadge(relocationTargetSizeBadge, currentGridWidth, currentGridHeight, true);
         }
 
         if (relocationExecuteButton != null)
         {
             relocationExecuteButton.interactable = canExecute;
+        }
+    }
+
+    private void SetRelocationTargetDisplay(string label, string summary, int gridWidth, int gridHeight)
+    {
+        SetText(relocationTargetText, BuildRelocationTargetTitle(label, gridWidth, gridHeight));
+        SplitRelocationSummary(summary, out string firstLine, out string secondLine, out string thirdLine);
+        SetText(relocationTargetRiskText, firstLine);
+        SetText(relocationTargetFlowText, secondLine);
+        SetText(relocationTargetRentText, thirdLine);
+    }
+
+    private static string BuildRelocationTargetTitle(string label, int gridWidth, int gridHeight)
+    {
+        string value = string.IsNullOrWhiteSpace(label) ? "목표 지점 없음" : label.Trim();
+        if (!value.Contains("/") && gridWidth > 0 && gridHeight > 0)
+        {
+            value = $"{value} / {FormatGridSize(gridWidth, gridHeight)}";
+        }
+
+        return $"<  {value}  >";
+    }
+
+    private static void SplitRelocationSummary(string summary, out string firstLine, out string secondLine, out string thirdLine)
+    {
+        firstLine = string.Empty;
+        secondLine = string.Empty;
+        thirdLine = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(summary))
+        {
+            return;
+        }
+
+        string[] parts = summary.Split(new[] { '/' }, System.StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length > 0)
+        {
+            firstLine = parts[0].Trim();
+        }
+
+        if (parts.Length > 1)
+        {
+            secondLine = parts[1].Trim();
+        }
+
+        if (parts.Length > 2)
+        {
+            thirdLine = parts[2].Trim();
         }
     }
 
@@ -724,6 +840,195 @@ public partial class RuntimeGameUIController
     private static string GetGymNameForLocation(GymLocationType locationType)
     {
         return $"{GymSiteManager.GetLocationDisplayName(locationType)} 헬스장";
+    }
+
+    private RectTransform CreateRelocationSizeBadge(Transform parent, string name, float x, float y, float width, float height)
+    {
+        GameObject root = GameUiFactory.CreateNode(parent, name);
+        SetRect(root.GetComponent<RectTransform>(), x, y, width, height, true);
+
+        const float initialVisualSize = 112f;
+        CreateSolid(root.transform, "SizeShadow", new Color(0.08f, 0.07f, 0.05f, 0.20f), 4f, -4f, initialVisualSize, initialVisualSize, true);
+        GameObject square = CreateSolid(root.transform, "SizeSquare", new Color(0.56f, 0.56f, 0.54f, 0.94f), 0f, 0f, initialVisualSize, initialVisualSize, true);
+        CreateSolid(square.transform, "SteelTopSheen", new Color(0.88f, 0.88f, 0.84f, 0.18f), 0f, initialVisualSize * 0.24f, initialVisualSize, initialVisualSize * 0.40f, true);
+        CreateSolid(square.transform, "SteelBottomShade", new Color(0.22f, 0.22f, 0.21f, 0.16f), 0f, -initialVisualSize * 0.28f, initialVisualSize, initialVisualSize * 0.34f, true);
+        CreateSolid(square.transform, "BadgeOutlineLeft", new Color(0.25f, 0.23f, 0.20f, 0.86f), -initialVisualSize * 0.5f, 0f, 2f, initialVisualSize, true);
+        CreateSolid(square.transform, "BadgeOutlineRight", new Color(0.25f, 0.23f, 0.20f, 0.86f), initialVisualSize * 0.5f, 0f, 2f, initialVisualSize, true);
+        CreateSolid(square.transform, "BadgeOutlineTop", new Color(0.25f, 0.23f, 0.20f, 0.86f), 0f, initialVisualSize * 0.5f, initialVisualSize, 2f, true);
+        CreateSolid(square.transform, "BadgeOutlineBottom", new Color(0.25f, 0.23f, 0.20f, 0.86f), 0f, -initialVisualSize * 0.5f, initialVisualSize, 2f, true);
+
+        Color dimensionColor = new Color(0.20f, 0.18f, 0.15f, 0.78f);
+        CreateSolid(root.transform, "DimensionTopLineLeft", dimensionColor, -24f, 56f, 36f, 2f, true);
+        CreateSolid(root.transform, "DimensionTopLineRight", dimensionColor, 24f, 56f, 36f, 2f, true);
+        CreateSolid(root.transform, "DimensionTopTickLeft", dimensionColor, -56f, 50f, 2f, 12f, true);
+        CreateSolid(root.transform, "DimensionTopTickRight", dimensionColor, 56f, 50f, 2f, 12f, true);
+        CreateSolid(root.transform, "DimensionLeftLineTop", dimensionColor, -56f, 24f, 2f, 36f, true);
+        CreateSolid(root.transform, "DimensionLeftLineBottom", dimensionColor, -56f, -24f, 2f, 36f, true);
+        CreateSolid(root.transform, "DimensionLeftTickTop", dimensionColor, -50f, 56f, 12f, 2f, true);
+        CreateSolid(root.transform, "DimensionLeftTickBottom", dimensionColor, -50f, -56f, 12f, 2f, true);
+        CreateText(root.transform, "DimensionTopLabel", "", 20, new Color(0.16f, 0.14f, 0.11f, 0.96f), TextAnchor.MiddleCenter, 0f, 56f, 42f, 24f, true);
+        CreateText(root.transform, "DimensionLeftLabel", "", 20, new Color(0.16f, 0.14f, 0.11f, 0.96f), TextAnchor.MiddleCenter, -56f, 0f, 42f, 24f, true);
+
+        return root.GetComponent<RectTransform>();
+    }
+
+    private void ApplyRelocationSizeBadge(RectTransform root, int gridWidth, int gridHeight, bool highlighted)
+    {
+        if (root == null)
+        {
+            return;
+        }
+
+        float size = GetRelocationBadgeBoardSize(gridWidth, gridHeight);
+        RectTransform squareRect = root.transform.Find("SizeSquare") as RectTransform;
+        RectTransform shadowRect = root.transform.Find("SizeShadow") as RectTransform;
+
+        if (shadowRect != null)
+        {
+            SetRect(shadowRect, 4f, -4f, size, size, true);
+            Image shadowImage = shadowRect.GetComponent<Image>();
+            if (shadowImage != null)
+            {
+                shadowImage.color = new Color(0.08f, 0.07f, 0.05f, 0.20f);
+            }
+        }
+
+        if (squareRect == null)
+        {
+            return;
+        }
+
+        SetRect(squareRect, 0f, 0f, size, size, true);
+        Image squareImage = squareRect.GetComponent<Image>();
+        if (squareImage != null)
+        {
+            squareImage.color = highlighted
+                ? new Color(0.58f, 0.58f, 0.55f, 0.94f)
+                : new Color(0.56f, 0.56f, 0.54f, 0.94f);
+        }
+
+        Color outlineColor = highlighted
+            ? new Color(0.30f, 0.27f, 0.21f, 0.88f)
+            : new Color(0.25f, 0.23f, 0.20f, 0.86f);
+        float half = size * 0.5f;
+        float outlineThickness = size >= 120f ? 2.5f : 2f;
+
+        ApplyRelocationBadgeLine(squareRect, "SteelTopSheen", 0f, size * 0.24f, size, size * 0.40f, new Color(0.88f, 0.88f, 0.84f, 0.18f), true);
+        ApplyRelocationBadgeLine(squareRect, "SteelBottomShade", 0f, -size * 0.28f, size, size * 0.34f, new Color(0.22f, 0.22f, 0.21f, 0.16f), true);
+        ApplyRelocationBadgeLine(squareRect, "BadgeOutlineLeft", -half, 0f, outlineThickness, size, outlineColor, true);
+        ApplyRelocationBadgeLine(squareRect, "BadgeOutlineRight", half, 0f, outlineThickness, size, outlineColor, true);
+        ApplyRelocationBadgeLine(squareRect, "BadgeOutlineTop", 0f, half, size, outlineThickness, outlineColor, true);
+        ApplyRelocationBadgeLine(squareRect, "BadgeOutlineBottom", 0f, -half, size, outlineThickness, outlineColor, true);
+
+        ApplyRelocationSizeDimensionLines(root, size, GetRelocationBadgeDimension(gridWidth, gridHeight));
+    }
+
+    private static float GetRelocationBadgeBoardSize(int gridWidth, int gridHeight)
+    {
+        int max = Mathf.Max(gridWidth, gridHeight);
+        if (max <= 8)
+        {
+            return 64f;
+        }
+
+        if (max <= 16)
+        {
+            return 92f;
+        }
+
+        return 112f;
+    }
+
+    private static int GetRelocationBadgeDimension(int gridWidth, int gridHeight)
+    {
+        int max = Mathf.Max(gridWidth, gridHeight);
+        if (max <= 8)
+        {
+            return 8;
+        }
+
+        if (max <= 16)
+        {
+            return 16;
+        }
+
+        return 32;
+    }
+
+    private void ApplyRelocationSizeDimensionLines(RectTransform root, float boardSize, int dimension)
+    {
+        if (root == null)
+        {
+            return;
+        }
+
+        const float lineOffset = 12f;
+        const float maxLineCenter = 68f;
+        const float labelGap = 34f;
+        const float lineThickness = 2f;
+
+        float half = boardSize * 0.5f;
+        float topY = Mathf.Min(maxLineCenter, half + lineOffset);
+        float leftX = Mathf.Max(-maxLineCenter, -half - lineOffset);
+        float topSegmentWidth = Mathf.Max(7f, half - (labelGap * 0.5f));
+        float topSegmentCenter = (half + (labelGap * 0.5f)) * 0.5f;
+        float verticalSegmentHeight = topSegmentWidth;
+        float verticalSegmentCenter = topSegmentCenter;
+        float topTickHeight = Mathf.Max(6f, topY - half);
+        float topTickY = half + (topTickHeight * 0.5f);
+        float leftTickWidth = Mathf.Max(6f, -half - leftX);
+        float leftTickX = leftX + (leftTickWidth * 0.5f);
+        Color dimensionColor = new Color(0.20f, 0.18f, 0.15f, 0.78f);
+
+        ApplyRelocationBadgeLine(root, "DimensionTopLineLeft", -topSegmentCenter, topY, topSegmentWidth, lineThickness, dimensionColor, true);
+        ApplyRelocationBadgeLine(root, "DimensionTopLineRight", topSegmentCenter, topY, topSegmentWidth, lineThickness, dimensionColor, true);
+        ApplyRelocationBadgeLine(root, "DimensionTopTickLeft", -half, topTickY, lineThickness, topTickHeight, dimensionColor, true);
+        ApplyRelocationBadgeLine(root, "DimensionTopTickRight", half, topTickY, lineThickness, topTickHeight, dimensionColor, true);
+        ApplyRelocationBadgeLine(root, "DimensionLeftLineTop", leftX, verticalSegmentCenter, lineThickness, verticalSegmentHeight, dimensionColor, true);
+        ApplyRelocationBadgeLine(root, "DimensionLeftLineBottom", leftX, -verticalSegmentCenter, lineThickness, verticalSegmentHeight, dimensionColor, true);
+        ApplyRelocationBadgeLine(root, "DimensionLeftTickTop", leftTickX, half, leftTickWidth, lineThickness, dimensionColor, true);
+        ApplyRelocationBadgeLine(root, "DimensionLeftTickBottom", leftTickX, -half, leftTickWidth, lineThickness, dimensionColor, true);
+
+        Text topLabel = root.transform.Find("DimensionTopLabel")?.GetComponent<Text>();
+        if (topLabel != null)
+        {
+            SetText(topLabel, dimension.ToString());
+            SetRect(topLabel.rectTransform, 0f, topY, 42f, 24f, true);
+        }
+
+        Text leftLabel = root.transform.Find("DimensionLeftLabel")?.GetComponent<Text>();
+        if (leftLabel != null)
+        {
+            SetText(leftLabel, dimension.ToString());
+            SetRect(leftLabel.rectTransform, leftX, 0f, 42f, 24f, true);
+        }
+    }
+
+    private static void ApplyRelocationBadgeLine(RectTransform parent, string name, float x, float y, float width, float height, Color color, bool active)
+    {
+        Transform line = parent != null ? parent.Find(name) : null;
+        if (line == null)
+        {
+            return;
+        }
+
+        line.gameObject.SetActive(active);
+        Image image = line.GetComponent<Image>();
+        if (image != null)
+        {
+            image.color = color;
+        }
+
+        RectTransform rect = line.GetComponent<RectTransform>();
+        if (rect != null)
+        {
+            SetRect(rect, x, y, width, height, true);
+        }
+    }
+
+    private static string FormatGridSize(int width, int height)
+    {
+        return $"{width}x{height}";
     }
 
     private static void ShowRuntimeMenuPopup(Transform popup)

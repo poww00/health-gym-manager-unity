@@ -10,15 +10,24 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
     private const int MinimumRowCount = 5;
     private const string ReviewAssetPath = "GeneratedRuntimeUI/ui_v2/review/";
     private const float RuntimeFirstRowY = 100f;
-    private const int RuntimeCommentFontSize = 24;
-    private const float RuntimeCommentMinHeight = 40f;
+    private const int RuntimeUserNameFontSize = 26;
+    private const int RuntimeCommentFontSize = 23;
+    private const float RuntimeUserNameHeight = 32f;
+    private const float RuntimeCommentHeight = 34f;
     private const float RuntimeSummaryCardVisibleBottomInset = 36f;
     private const float RuntimeViewportTopGap = 0f;
     private const float RuntimeViewportBottomGap = 4f;
-    private const float RuntimeUserNameX = -300f;
-    private const float RuntimeUserNameWidth = 170f;
-    private const float RuntimeCommentX = 55f;
-    private const float RuntimeCommentWidth = 500f;
+    private const string IconBoxName = "IconBox";
+    private const float RuntimeIconBoxCenterNormalizedX = 215f / 2172f;
+    private const float RuntimeIconBoxSize = 80f;
+    private const float RuntimeMoodIconSize = 56f;
+    private const float RuntimeTextColumnLeft = 174f;
+    private const float RuntimeUserNameY = 18f;
+    private const float RuntimeCommentY = -18f;
+    private const float RuntimeStarsRightInset = 56f;
+    private const float RuntimeStarsY = 0f;
+    private const float RuntimeStarsReservedWidth = 360f;
+    private const float RuntimeMinimumTextColumnWidth = 280f;
     private const string EmptyReviewMessage = "아직 작성된 리뷰가 없습니다.";
 
     private enum ReviewFilterMode
@@ -89,6 +98,7 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
     {
         public GameObject root;
         public RectTransform rect;
+        public RectTransform iconBoxRect;
         public Image moodIcon;
         public RectTransform moodIconRect;
         public Text userName;
@@ -395,6 +405,12 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
         row.rect = rowTransform as RectTransform;
         row.moodIcon = GetImage(rowTransform, "MoodIcon");
         row.moodIconRect = row.moodIcon != null ? row.moodIcon.rectTransform : null;
+        row.iconBoxRect = GetRect(rowTransform, IconBoxName);
+        if (Application.isPlaying)
+        {
+            row.iconBoxRect = EnsureRuntimeIconBox(rowTransform, row.iconBoxRect, row.moodIconRect);
+        }
+
         row.userName = GetText(rowTransform, "UserName");
         row.userNameRect = row.userName != null ? row.userName.GetComponent<RectTransform>() : null;
         row.comment = GetText(rowTransform, "Comment");
@@ -444,13 +460,13 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
             CopyRect(templateCommentRect, row.commentRect);
             CopyTextStyle(templateUser, row.userName);
             CopyTextStyle(templateComment, row.comment);
-            ApplyRuntimeUserNameStyle(row.userName, row.userNameRect);
-            ApplyRuntimeCommentStyle(row.comment, row.commentRect);
             CopyRect(templateStarsRect, row.starsRootRect);
             for (int star = 0; star < templateStarRects.Length; star++)
             {
                 CopyRect(templateStarRects[star], row.starRects[star]);
             }
+
+            ApplyRuntimeRowLayout(row);
         }
     }
 
@@ -464,6 +480,8 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
             {
                 continue;
             }
+
+            ApplyRuntimeStarsRootLayout(row.starsRootRect);
 
             int count = row.starRects.Length;
             float totalWidth = starSize.x + (effectiveStarStep * (count - 1));
@@ -591,8 +609,7 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
             }
 
             row.root.SetActive(true);
-            ApplyRuntimeUserNameStyle(row.userName, row.userNameRect);
-            ApplyRuntimeCommentStyle(row.comment, row.commentRect);
+            ApplyRuntimeRowLayout(row);
             SetMood(row, visible[i].stars);
             SetText(row.userName, visible[i].authorName);
             SetText(row.comment, visible[i].text);
@@ -916,6 +933,107 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
         target.color = source.color;
     }
 
+    private static void ApplyRuntimeRowLayout(ReviewRow row)
+    {
+        if (!Application.isPlaying || row == null)
+        {
+            return;
+        }
+
+        row.iconBoxRect = EnsureRuntimeIconBox(row.rect, row.iconBoxRect, row.moodIconRect);
+        ApplyRuntimeIconBoxLayout(row.rect, row.iconBoxRect);
+        ApplyRuntimeMoodIconLayout(row.moodIconRect);
+        ApplyRuntimeStarsRootLayout(row.starsRootRect);
+        ApplyRuntimeUserNameStyle(row.userName, row.userNameRect);
+        ApplyRuntimeCommentStyle(row.comment, row.commentRect);
+    }
+
+    private static RectTransform EnsureRuntimeIconBox(Transform rowTransform, RectTransform iconBoxRect, RectTransform moodIconRect)
+    {
+        if (!Application.isPlaying || rowTransform == null)
+        {
+            return iconBoxRect;
+        }
+
+        if (iconBoxRect == null)
+        {
+            GameObject iconBox = new GameObject(IconBoxName, typeof(RectTransform));
+            iconBox.transform.SetParent(rowTransform, false);
+            iconBox.transform.SetAsFirstSibling();
+            iconBoxRect = iconBox.GetComponent<RectTransform>();
+        }
+
+        if (moodIconRect != null && moodIconRect.parent != iconBoxRect)
+        {
+            moodIconRect.SetParent(iconBoxRect, false);
+        }
+
+        return iconBoxRect;
+    }
+
+    private static void ApplyRuntimeIconBoxLayout(RectTransform rowRect, RectTransform iconBoxRect)
+    {
+        if (!Application.isPlaying || rowRect == null || iconBoxRect == null)
+        {
+            return;
+        }
+
+        iconBoxRect.anchorMin = new Vector2(0f, 0.5f);
+        iconBoxRect.anchorMax = new Vector2(0f, 0.5f);
+        iconBoxRect.pivot = new Vector2(0.5f, 0.5f);
+        iconBoxRect.anchoredPosition = new Vector2(GetRuntimeIconBoxCenterX(rowRect), 0f);
+        iconBoxRect.sizeDelta = new Vector2(RuntimeIconBoxSize, RuntimeIconBoxSize);
+        iconBoxRect.localScale = Vector3.one;
+        iconBoxRect.localRotation = Quaternion.identity;
+    }
+
+    private static void ApplyRuntimeMoodIconLayout(RectTransform moodIconRect)
+    {
+        if (!Application.isPlaying || moodIconRect == null)
+        {
+            return;
+        }
+
+        moodIconRect.anchorMin = new Vector2(0.5f, 0.5f);
+        moodIconRect.anchorMax = new Vector2(0.5f, 0.5f);
+        moodIconRect.pivot = new Vector2(0.5f, 0.5f);
+        moodIconRect.anchoredPosition = Vector2.zero;
+        moodIconRect.sizeDelta = new Vector2(RuntimeMoodIconSize, RuntimeMoodIconSize);
+        moodIconRect.localScale = Vector3.one;
+        moodIconRect.localRotation = Quaternion.identity;
+    }
+
+    private static float GetRuntimeIconBoxCenterX(RectTransform rowRect)
+    {
+        float rowWidth = rowRect != null ? rowRect.rect.width : 0f;
+        if (rowWidth <= 0f && rowRect != null)
+        {
+            rowWidth = Mathf.Abs(rowRect.sizeDelta.x);
+        }
+
+        if (rowWidth <= 0f)
+        {
+            rowWidth = 960f;
+        }
+
+        return rowWidth * RuntimeIconBoxCenterNormalizedX;
+    }
+
+    private static void ApplyRuntimeStarsRootLayout(RectTransform starsRootRect)
+    {
+        if (!Application.isPlaying || starsRootRect == null)
+        {
+            return;
+        }
+
+        starsRootRect.anchorMin = new Vector2(1f, 0.5f);
+        starsRootRect.anchorMax = new Vector2(1f, 0.5f);
+        starsRootRect.pivot = new Vector2(1f, 0.5f);
+        starsRootRect.anchoredPosition = new Vector2(-RuntimeStarsRightInset, RuntimeStarsY);
+        starsRootRect.localScale = Vector3.one;
+        starsRootRect.localRotation = Quaternion.identity;
+    }
+
     private static void ApplyRuntimeCommentStyle(Text comment, RectTransform commentRect)
     {
         if (!Application.isPlaying || comment == null)
@@ -924,20 +1042,21 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
         }
 
         comment.fontSize = RuntimeCommentFontSize;
+        comment.fontStyle = FontStyle.Normal;
         comment.resizeTextForBestFit = false;
         comment.alignment = TextAnchor.MiddleLeft;
         comment.horizontalOverflow = HorizontalWrapMode.Wrap;
         comment.verticalOverflow = VerticalWrapMode.Truncate;
 
-        if (commentRect != null && commentRect.sizeDelta.y < RuntimeCommentMinHeight)
-        {
-            commentRect.sizeDelta = new Vector2(commentRect.sizeDelta.x, RuntimeCommentMinHeight);
-        }
-
         if (commentRect != null)
         {
-            commentRect.anchoredPosition = new Vector2(RuntimeCommentX, commentRect.anchoredPosition.y);
-            commentRect.sizeDelta = new Vector2(RuntimeCommentWidth, Mathf.Max(commentRect.sizeDelta.y, RuntimeCommentMinHeight));
+            commentRect.anchorMin = new Vector2(0f, 0.5f);
+            commentRect.anchorMax = new Vector2(0f, 0.5f);
+            commentRect.pivot = new Vector2(0f, 0.5f);
+            commentRect.anchoredPosition = new Vector2(RuntimeTextColumnLeft, RuntimeCommentY);
+            commentRect.sizeDelta = new Vector2(GetRuntimeTextColumnWidth(commentRect), RuntimeCommentHeight);
+            commentRect.localScale = Vector3.one;
+            commentRect.localRotation = Quaternion.identity;
         }
     }
 
@@ -948,18 +1067,42 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
             return;
         }
 
+        userName.fontSize = RuntimeUserNameFontSize;
+        userName.fontStyle = FontStyle.Bold;
         userName.alignment = TextAnchor.MiddleLeft;
         userName.resizeTextForBestFit = true;
-        userName.resizeTextMinSize = 18;
-        userName.resizeTextMaxSize = Mathf.Max(22, userName.fontSize);
+        userName.resizeTextMinSize = 20;
+        userName.resizeTextMaxSize = RuntimeUserNameFontSize;
         userName.horizontalOverflow = HorizontalWrapMode.Wrap;
         userName.verticalOverflow = VerticalWrapMode.Truncate;
 
         if (userNameRect != null)
         {
-            userNameRect.anchoredPosition = new Vector2(RuntimeUserNameX, userNameRect.anchoredPosition.y);
-            userNameRect.sizeDelta = new Vector2(RuntimeUserNameWidth, Mathf.Max(userNameRect.sizeDelta.y, 36f));
+            userNameRect.anchorMin = new Vector2(0f, 0.5f);
+            userNameRect.anchorMax = new Vector2(0f, 0.5f);
+            userNameRect.pivot = new Vector2(0f, 0.5f);
+            userNameRect.anchoredPosition = new Vector2(RuntimeTextColumnLeft, RuntimeUserNameY);
+            userNameRect.sizeDelta = new Vector2(GetRuntimeTextColumnWidth(userNameRect), RuntimeUserNameHeight);
+            userNameRect.localScale = Vector3.one;
+            userNameRect.localRotation = Quaternion.identity;
         }
+    }
+
+    private static float GetRuntimeTextColumnWidth(RectTransform textRect)
+    {
+        RectTransform rowRect = textRect != null ? textRect.parent as RectTransform : null;
+        float rowWidth = rowRect != null ? rowRect.rect.width : 0f;
+        if (rowWidth <= 0f && rowRect != null)
+        {
+            rowWidth = Mathf.Abs(rowRect.sizeDelta.x);
+        }
+
+        if (rowWidth <= 0f)
+        {
+            rowWidth = 960f;
+        }
+
+        return Mathf.Max(RuntimeMinimumTextColumnWidth, rowWidth - RuntimeTextColumnLeft - RuntimeStarsReservedWidth);
     }
 
     private static void SetMood(ReviewRow row, float stars)
@@ -1005,6 +1148,12 @@ public sealed class ReviewPanelDataBinder : MonoBehaviour
     {
         Transform child = FindDeepChild(root, childName);
         return child != null ? child.GetComponent<Image>() : null;
+    }
+
+    private static RectTransform GetRect(Transform root, string childName)
+    {
+        Transform child = FindDeepChild(root, childName);
+        return child as RectTransform;
     }
 
     private static Text GetText(Transform root, string childName)

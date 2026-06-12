@@ -9,6 +9,8 @@ using UnityEngine.UI;
 [CustomEditor(typeof(GameRuntimeUIController))]
 public sealed class GameRuntimeUIControllerEditor : Editor
 {
+    private static int installTutorialJumpStepIndex = 1;
+
     public override void OnInspectorGUI()
     {
         EditorGUI.BeginChangeCheck();
@@ -30,6 +32,15 @@ public sealed class GameRuntimeUIControllerEditor : Editor
 
         EditorGUILayout.Space(10f);
         EditorGUILayout.LabelField("Panel Preview", EditorStyles.boldLabel);
+
+        if (GUILayout.Button("Refresh Edit Preview"))
+        {
+            Undo.RegisterFullObjectHierarchyUndo(controller.gameObject, "Refresh Runtime UI Edit Preview");
+            controller.MaterializeForEditMode();
+            EditorUtility.SetDirty(controller);
+            EditorUtility.SetDirty(controller.gameObject);
+            EditorSceneManager.MarkSceneDirty(controller.gameObject.scene);
+        }
 
         using (new EditorGUILayout.HorizontalScope())
         {
@@ -105,7 +116,7 @@ public sealed class GameRuntimeUIControllerEditor : Editor
         {
             if (GUILayout.Button("Start Install Tutorial"))
             {
-                controller.StartInstallTutorialForDebug();
+                StartInstallTutorialFromInspector(controller);
             }
 
             if (GUILayout.Button("Reset Install Tutorial Flag"))
@@ -113,6 +124,8 @@ public sealed class GameRuntimeUIControllerEditor : Editor
                 controller.ResetInstallTutorial();
             }
         }
+
+        DrawInstallTutorialLiveTuning(controller);
 
         using (new EditorGUILayout.HorizontalScope())
         {
@@ -142,6 +155,77 @@ public sealed class GameRuntimeUIControllerEditor : Editor
         EditorGUILayout.HelpBox(
             "프리뷰 버튼 4개만 남겼습니다. 레이아웃을 덮어쓰는 Rebuild/Repair/Bind 버튼은 숨겼습니다.",
             MessageType.Info);
+    }
+
+    private static void DrawInstallTutorialLiveTuning(GameRuntimeUIController controller)
+    {
+        if (controller == null)
+        {
+            return;
+        }
+
+        EditorGUILayout.Space(6f);
+        EditorGUILayout.LabelField("Install Tutorial Focus Debug", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Active Tutorial Step", controller.GetInstallTutorialActiveStepNameForEditor());
+        installTutorialJumpStepIndex = EditorGUILayout.IntSlider("Jump Step Index", installTutorialJumpStepIndex, 1, 19);
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("Jump To Step"))
+            {
+                controller.JumpToTutorialStep(installTutorialJumpStepIndex);
+            }
+
+            if (GUILayout.Button("Rebuild Focus Now"))
+            {
+                controller.RebuildFocusNow();
+            }
+        }
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("Toggle Focus Debug Outline"))
+            {
+                controller.ToggleFocusDebugOutline();
+            }
+
+            if (GUILayout.Button("Log Focus Rect"))
+            {
+                controller.LogCurrentFocusRect();
+            }
+        }
+
+        EditorGUILayout.HelpBox(
+            "Play Mode only. This controls the new four-panel focus-hole dimmer. The old captured handle workflow is disabled.",
+            MessageType.Info);
+    }
+
+    private static void StartInstallTutorialFromInspector(GameRuntimeUIController controller)
+    {
+        if (controller == null)
+        {
+            return;
+        }
+
+        Debug.Log($"[InstallTutorialTrace] Inspector Start Install Tutorial button clicked. controller=\"{controller.gameObject.name}\" scene=\"{controller.gameObject.scene.name}\" route=StartInstallTutorialFromInspector -> {(Application.isPlaying ? "StartInstallTutorialForDebug" : "ResetInstallTutorial + EnterPlaymode")}", controller);
+        if (Application.isPlaying)
+        {
+            controller.StartInstallTutorialForDebug();
+            return;
+        }
+
+        controller.ResetInstallTutorial();
+        EditorUtility.SetDirty(controller);
+        EditorUtility.SetDirty(controller.gameObject);
+        if (controller.gameObject.scene.IsValid())
+        {
+            EditorSceneManager.MarkSceneDirty(controller.gameObject.scene);
+        }
+
+        if (!EditorApplication.isPlayingOrWillChangePlaymode)
+        {
+            EditorApplication.EnterPlaymode();
+        }
     }
 
     private static void PreviewPanel(GameRuntimeUIController controller, string targetPanelName, string title, string activeTabName, bool useComingSoonIfMissing)
@@ -855,6 +939,42 @@ internal static class ReviewPanelEditModeBuilder
     private static readonly Color Ink = new Color(0.12f, 0.08f, 0.03f, 1f);
     private static readonly Color Green = new Color(0.05f, 0.39f, 0.10f, 1f);
     private static readonly Color MutedInk = new Color(0.30f, 0.20f, 0.10f, 1f);
+    private const string ReviewIconBoxName = "IconBox";
+    private const float ReviewRowWidth = 960f;
+    private const float ReviewRowHeight = 94f;
+    private const float ReviewIconBoxCenterNormalizedX = 215f / 2172f;
+    private static readonly float ReviewIconBoxX = (ReviewIconBoxCenterNormalizedX - 0.5f) * ReviewRowWidth;
+    private const float ReviewIconBoxSize = 80f;
+    private const float ReviewMoodIconSize = 56f;
+    private const float ReviewTextLeftX = -356f;
+    private const float ReviewTextRightX = 280f;
+    private const float ReviewTextWidth = ReviewTextRightX - ReviewTextLeftX;
+    private const float ReviewTextCenterX = (ReviewTextLeftX + ReviewTextRightX) * 0.5f;
+    private const float ReviewNameY = 18f;
+    private const float ReviewCommentY = -18f;
+    private const float ReviewNameHeight = 32f;
+    private const float ReviewCommentHeight = 34f;
+    private const float ReviewStarsX = 380f;
+    private const float ReviewStarsWidth = 160f;
+    private const float ReviewStarSize = 30f;
+    private const float ReviewStarStep = 32f;
+
+    private static void ConfigureReviewRowText(Text text, bool isName)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        text.fontStyle = isName ? FontStyle.Bold : FontStyle.Normal;
+        text.resizeTextForBestFit = isName;
+        text.resizeTextMinSize = isName ? 20 : 10;
+        text.resizeTextMaxSize = isName ? Mathf.Max(20, text.fontSize) : text.fontSize;
+        text.horizontalOverflow = HorizontalWrapMode.Wrap;
+        text.verticalOverflow = VerticalWrapMode.Truncate;
+        text.lineSpacing = 0.92f;
+        EditorUtility.SetDirty(text);
+    }
 
     public static void PreviewExistingReviewPanel(GameRuntimeUIController controller)
     {
@@ -1083,12 +1203,48 @@ internal static class ReviewPanelEditModeBuilder
 
     private static void CreateReviewListItem(Transform parent, string name, float y, string userName, string comment, string moodIconPath, int stars)
     {
-        GameObject row = CreateImage(parent, name, Asset("review_list_item_base"), 0f, y, 960f, 94f, false);
+        GameObject row = CreateImage(parent, name, Asset("review_list_item_base"), 0f, y, ReviewRowWidth, ReviewRowHeight, false);
 
-        CreateImage(row.transform, "MoodIcon", moodIconPath, -426f, 0f, 56f, 56f, true);
-        CreateText(row.transform, "UserName", userName, 28, Ink, TextAnchor.MiddleLeft, -316f, 0f, 142f, 42f);
-        CreateText(row.transform, "Comment", comment, 26, Ink, TextAnchor.MiddleLeft, 20f, 0f, 500f, 42f);
-        CreateStarRow(row.transform, "Stars", 5, stars, 380f, 0f, 30f, 30f, 32f);
+        Transform iconBox = CreateReviewIconBox(row.transform);
+        CreateImage(iconBox, "MoodIcon", moodIconPath, 0f, 0f, ReviewMoodIconSize, ReviewMoodIconSize, true);
+        ConfigureReviewRowText(CreateText(row.transform, "UserName", userName, 28, Ink, TextAnchor.MiddleLeft, ReviewTextCenterX, ReviewNameY, ReviewTextWidth, ReviewNameHeight), true);
+        ConfigureReviewRowText(CreateText(row.transform, "Comment", comment, 24, MutedInk, TextAnchor.MiddleLeft, ReviewTextCenterX, ReviewCommentY, ReviewTextWidth, ReviewCommentHeight), false);
+        CreateStarRow(row.transform, "Stars", 5, stars, ReviewStarsX, 0f, ReviewStarSize, ReviewStarSize, ReviewStarStep);
+    }
+
+    private static Transform CreateReviewIconBox(Transform row)
+    {
+        GameObject iconBox = CreateNode(row, ReviewIconBoxName);
+        iconBox.transform.SetAsFirstSibling();
+        SetRect(iconBox.transform, ReviewIconBoxX, 0f, ReviewIconBoxSize, ReviewIconBoxSize);
+        return iconBox.transform;
+    }
+
+    private static Transform EnsureReviewIconBox(Transform row)
+    {
+        if (row == null)
+        {
+            return null;
+        }
+
+        Transform iconBox = GameRuntimeUIControllerEditor.FindDeepChild(row, ReviewIconBoxName);
+        if (iconBox == null)
+        {
+            iconBox = CreateReviewIconBox(row);
+        }
+        else
+        {
+            iconBox.SetAsFirstSibling();
+        }
+
+        Transform moodIcon = GameRuntimeUIControllerEditor.FindDeepChild(row, "MoodIcon");
+        if (moodIcon != null && moodIcon.parent != iconBox)
+        {
+            moodIcon.SetParent(iconBox, false);
+        }
+
+        SetRect(iconBox, ReviewIconBoxX, 0f, ReviewIconBoxSize, ReviewIconBoxSize);
+        return iconBox;
     }
 
     private static void CreateStarRow(Transform parent, string name, int max, int filled, float x, float y, float width, float height, float spacing)
@@ -1503,10 +1659,12 @@ internal static class ReviewPanelEditModeBuilder
                 continue;
             }
 
-            SetRect(row, 0f, rowY[i], 960f, 94f);
-            SetRect(GetRect(row, "MoodIcon"), -426f, 0f, 56f, 56f);
-            SetTextLayout(row, "UserName", null, 28, Ink, TextAnchor.MiddleLeft, FontStyle.Bold, -316f, 0f, 142f, 42f);
-            SetTextLayout(row, "Comment", null, 26, Ink, TextAnchor.MiddleLeft, FontStyle.Normal, 20f, 0f, 500f, 42f);
+            SetRect(row, 0f, rowY[i], ReviewRowWidth, ReviewRowHeight);
+            Transform iconBox = EnsureReviewIconBox(row);
+            SetRect(iconBox, ReviewIconBoxX, 0f, ReviewIconBoxSize, ReviewIconBoxSize);
+            SetRect(GetRect(iconBox, "MoodIcon"), 0f, 0f, ReviewMoodIconSize, ReviewMoodIconSize);
+            SetReviewRowTextLayout(row, "UserName", null, 28, Ink, TextAnchor.MiddleLeft, FontStyle.Bold, ReviewTextCenterX, ReviewNameY, ReviewTextWidth, ReviewNameHeight);
+            SetReviewRowTextLayout(row, "Comment", null, 24, MutedInk, TextAnchor.MiddleLeft, FontStyle.Normal, ReviewTextCenterX, ReviewCommentY, ReviewTextWidth, ReviewCommentHeight);
 
             Transform stars = GameRuntimeUIControllerEditor.FindDeepChild(row, "Stars");
             if (stars == null)
@@ -1514,12 +1672,12 @@ internal static class ReviewPanelEditModeBuilder
                 continue;
             }
 
-            SetRect(stars, 380f, 0f, 160f, 30f);
+            SetRect(stars, ReviewStarsX, 0f, ReviewStarsWidth, ReviewStarSize);
 
             for (int starIndex = 0; starIndex < 5; starIndex++)
             {
-                float x = -64f + (starIndex * 32f);
-                SetRect(GetRect(stars, "Star_" + starIndex), x, 0f, 30f, 30f);
+                float x = -((5 - 1) * ReviewStarStep) * 0.5f + (starIndex * ReviewStarStep);
+                SetRect(GetRect(stars, "Star_" + starIndex), x, 0f, ReviewStarSize, ReviewStarSize);
             }
         }
     }
@@ -1557,7 +1715,7 @@ internal static class ReviewPanelEditModeBuilder
                 continue;
             }
 
-            ok &= VerifyRectTransform(row.GetComponent<RectTransform>(), row.name, 0f, rowY[i], 960f, 94f, controller);
+            ok &= VerifyRectTransform(row.GetComponent<RectTransform>(), row.name, 0f, rowY[i], ReviewRowWidth, ReviewRowHeight, controller);
 
             Image rowImage = row.GetComponent<Image>();
             if (rowImage == null || rowImage.sprite == null)
@@ -1571,8 +1729,14 @@ internal static class ReviewPanelEditModeBuilder
                 ok = false;
             }
 
-            ok &= VerifyNoOverlap(row, "MoodIcon", "UserName", controller);
-            ok &= VerifyNoOverlap(row, "UserName", "Comment", controller);
+            ok &= VerifyRect(row, ReviewIconBoxName, ReviewIconBoxX, 0f, ReviewIconBoxSize, ReviewIconBoxSize, controller);
+            Transform iconBox = GameRuntimeUIControllerEditor.FindDeepChild(row, ReviewIconBoxName);
+            ok &= VerifyRect(iconBox, "MoodIcon", 0f, 0f, ReviewMoodIconSize, ReviewMoodIconSize, controller);
+            ok &= VerifyRect(row, "UserName", ReviewTextCenterX, ReviewNameY, ReviewTextWidth, ReviewNameHeight, controller);
+            ok &= VerifyRect(row, "Comment", ReviewTextCenterX, ReviewCommentY, ReviewTextWidth, ReviewCommentHeight, controller);
+            ok &= VerifyRect(row, "Stars", ReviewStarsX, 0f, ReviewStarsWidth, ReviewStarSize, controller);
+            ok &= VerifyNoOverlap(row, ReviewIconBoxName, "UserName", controller);
+            ok &= VerifyStackedReviewText(row, controller);
             ok &= VerifyNoOverlap(row, "Comment", "Stars", controller);
             ok &= VerifyStarSize(row, controller);
         }
@@ -1705,6 +1869,30 @@ internal static class ReviewPanelEditModeBuilder
         return true;
     }
 
+    private static bool VerifyStackedReviewText(Transform row, Object context)
+    {
+        RectTransform userName = GetRect(row, "UserName");
+        RectTransform comment = GetRect(row, "Comment");
+        if (userName == null || comment == null)
+        {
+            return false;
+        }
+
+        float userNameBottom = userName.anchoredPosition.y - (userName.sizeDelta.y * 0.5f);
+        float commentTop = comment.anchoredPosition.y + (comment.sizeDelta.y * 0.5f);
+        bool ok = userName.anchoredPosition.y > comment.anchoredPosition.y &&
+                  Mathf.Abs(userName.anchoredPosition.x - comment.anchoredPosition.x) <= 1.5f &&
+                  Mathf.Abs(userName.sizeDelta.x - comment.sizeDelta.x) <= 1.5f &&
+                  userNameBottom >= commentTop;
+
+        if (!ok)
+        {
+            Debug.LogError("[ReviewPanelEditModeBuilder] Verify failed: UserName and Comment are not stacked as two separate lines in " + row.name, context);
+        }
+
+        return ok;
+    }
+
     private static void AssignImage(Transform root, string objectName, string spritePath, bool preserveAspect)
     {
         Transform target = GameRuntimeUIControllerEditor.FindDeepChild(root, objectName);
@@ -1760,6 +1948,15 @@ internal static class ReviewPanelEditModeBuilder
         text.lineSpacing = 0.92f;
         SetRect(text.rectTransform, x, y, width, height);
         EditorUtility.SetDirty(text);
+    }
+
+    private static void SetReviewRowTextLayout(Transform root, string childName, string value, int fontSize, Color color, TextAnchor alignment, FontStyle style, float x, float y, float width, float height)
+    {
+        SetTextLayout(root, childName, value, fontSize, color, alignment, style, x, y, width, height);
+
+        Transform target = GameRuntimeUIControllerEditor.FindDeepChild(root, childName);
+        Text text = target != null ? target.GetComponent<Text>() : null;
+        ConfigureReviewRowText(text, style == FontStyle.Bold);
     }
 
     private static void SetRectIfOldOrBroken(Transform root, string childName, float x, float y, float width, float height, float oldX, float oldY, float oldWidth, float oldHeight)
@@ -2034,6 +2231,50 @@ public static class ReviewPanelRepairBatch
         EditorSceneManager.SaveScene(scene);
         AssetDatabase.SaveAssets();
         Debug.Log("[ReviewPanelRepairBatch] Review panel repair verification passed and TestSandbox was saved.");
+    }
+}
+
+public static class RuntimeGameUiEditPreviewRepairBatch
+{
+    private const string TestSandboxScenePath = "Assets/_Project/Scenes/TestSandbox.unity";
+
+    [MenuItem("_Project/UI/Repair TestSandbox Edit Preview")]
+    public static void RepairTestSandboxEditPreview()
+    {
+        UnityEngine.SceneManagement.Scene activeScene = EditorSceneManager.GetActiveScene();
+        UnityEngine.SceneManagement.Scene scene = activeScene.path == TestSandboxScenePath
+            ? activeScene
+            : EditorSceneManager.OpenScene(TestSandboxScenePath, OpenSceneMode.Single);
+
+        GameRuntimeUIController controller = Object.FindFirstObjectByType<GameRuntimeUIController>();
+        if (controller == null)
+        {
+            Debug.LogError("[RuntimeGameUiEditPreviewRepair] GameRuntimeUIController not found in TestSandbox.");
+            if (Application.isBatchMode)
+            {
+                EditorApplication.Exit(1);
+            }
+            return;
+        }
+
+        if (!Application.isBatchMode)
+        {
+            Undo.RegisterFullObjectHierarchyUndo(controller.gameObject, "Repair TestSandbox Edit Preview");
+        }
+
+        controller.RepairRuntimeEditPreviewForEditMode();
+        controller.PreviewInstallPanelForEditMode();
+        EditorUtility.SetDirty(controller);
+        EditorUtility.SetDirty(controller.gameObject);
+        EditorSceneManager.MarkSceneDirty(scene);
+
+        if (Application.isBatchMode)
+        {
+            EditorSceneManager.SaveScene(scene);
+            AssetDatabase.SaveAssets();
+        }
+
+        Debug.Log("[RuntimeGameUiEditPreviewRepair] TestSandbox edit preview repaired.");
     }
 }
 #endif

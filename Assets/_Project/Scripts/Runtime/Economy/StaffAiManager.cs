@@ -11,6 +11,9 @@ public class StaffAiManager : MonoBehaviour
         public GameObject gameObject;
         public SpriteRenderer renderer;
         public Vector3 targetPosition;
+        public Vector3 routedTargetPosition;
+        public readonly List<Vector3> routeWaypoints = new List<Vector3>();
+        public int routeWaypointIndex;
         public float idleTimer;
         public float actionTimer;
         public CustomerFlowManager.ActiveCustomer targetCustomer;
@@ -103,7 +106,7 @@ public class StaffAiManager : MonoBehaviour
         GameObject go = new GameObject($"Staff_{data.role}_{data.staffName}");
         go.transform.SetParent(staffRoot, false);
         
-        Vector3 spawnPos = GetEntryPosOrDefault();
+        Vector3 spawnPos = GetStaffSpawnPosOrDefault();
         go.transform.position = spawnPos;
         go.transform.localScale = scale;
 
@@ -120,7 +123,8 @@ public class StaffAiManager : MonoBehaviour
             data = data,
             gameObject = go,
             renderer = sr,
-            targetPosition = spawnPos
+            targetPosition = spawnPos,
+            routedTargetPosition = spawnPos
         };
 
         activeStaffList.Add(newStaff);
@@ -138,19 +142,14 @@ public class StaffAiManager : MonoBehaviour
 
             // Move smoothly towards target
             float currentSpeed = staff.data.role == StaffRole.Trainer ? moveSpeed * 1.6f : moveSpeed;
-            staff.gameObject.transform.position = Vector3.MoveTowards(
-                staff.gameObject.transform.position, 
-                staff.targetPosition, 
-                currentSpeed * dt
-            );
+            MoveStaffAlongRoute(staff, currentSpeed * dt);
         }
     }
 
     private void UpdateReceptionist(ActiveStaff staff, float dt)
     {
-        Vector3 entry = GetEntryPosOrDefault();
         // Stand near entrance desk area
-        staff.targetPosition = new Vector3(entry.x + 1.2f, entry.y + 0.5f, 0f); 
+        staff.targetPosition = GetReceptionistWorkPosOrDefault();
     }
 
     private void UpdateTrainer(ActiveStaff staff, float dt)
@@ -237,22 +236,210 @@ public class StaffAiManager : MonoBehaviour
 
     private float RandRange(float min, float max) => Random.Range(min, max);
 
-    private Vector3 GetEntryPosOrDefault()
-    {
-        if (gridManager == null) return Vector3.zero;
-        float hw = gridManager.Width * gridManager.CellSize * 0.5f;
-        float hh = gridManager.Height * gridManager.CellSize * 0.5f;
-        return new Vector3(-hw - 0.5f, -hh + (gridManager.Height * gridManager.CellSize * 0.25f), 0f);
-    }
-
     private Vector3 GetRandomFloorPos()
     {
         if (gridManager == null) return Vector3.zero;
-        float hw = gridManager.Width * gridManager.CellSize * 0.5f;
-        float hh = gridManager.Height * gridManager.CellSize * 0.5f;
-        float rX = Random.Range(-hw + 1f, hw - 1f);
-        float rY = Random.Range(-hh + 1f, hh - 1f);
-        return new Vector3(rX, rY, 0f);
+        for (int attempt = 0; attempt < 32; attempt++)
+        {
+            int x = Random.Range(0, gridManager.Width);
+            int y = Random.Range(0, gridManager.Height);
+            if (gridManager.IsAreaAvailable(x, y, 1, 1))
+            {
+                return gridManager.GetAreaCenterWorldPosition(x, y, 1, 1);
+            }
+        }
+
+        return GetStaffSpawnPosOrDefault();
+    }
+
+    private Vector3 GetStaffSpawnPosOrDefault()
+    {
+        if (gridManager != null && gridManager.TryGetDefaultStaffSpawnWorldPosition(out Vector3 spawnPosition))
+        {
+            return spawnPosition;
+        }
+
+        return Vector3.zero;
+    }
+
+    private Vector3 GetReceptionistWorkPosOrDefault()
+    {
+        if (gridManager != null && gridManager.TryGetDefaultEntrancePassCell(out int entranceX, out int entranceY))
+        {
+            int preferredX = Mathf.Clamp(entranceX + 2, 0, Mathf.Max(0, gridManager.Width - 1));
+            int preferredY = Mathf.Clamp(entranceY + 1, 0, Mathf.Max(0, gridManager.Height - 1));
+            Vector3 preferredWorld = gridManager.GetAreaCenterWorldPosition(preferredX, preferredY, 1, 1);
+            if (TryFindNearestAvailableCell(preferredWorld, out Vector2Int workCell))
+            {
+                return gridManager.GetAreaCenterWorldPosition(workCell.x, workCell.y, 1, 1);
+            }
+        }
+
+        return GetStaffSpawnPosOrDefault();
+    }
+
+    private void MoveStaffAlongRoute(ActiveStaff staff, float moveStep)
+    {
+        if (staff == null || staff.gameObject == null)
+        {
+            return;
+        }
+
+        if (ShouldRebuildStaffRoute(staff))
+        {
+            SetStaffRoute(staff, BuildStaffRoute(staff.gameObject.transform.position, staff.targetPosition));
+        }
+
+        if (staff.routeWaypoints.Count <= 0 || staff.routeWaypointIndex >= staff.routeWaypoints.Count)
+        {
+            if (gridManager != null)
+            {
+                return;
+            }
+
+            staff.gameObject.transform.position = Vector3.MoveTowards(
+                staff.gameObject.transform.position,
+                staff.targetPosition,
+                moveStep);
+            return;
+        }
+
+        Vector3 waypoint = staff.routeWaypoints[staff.routeWaypointIndex];
+        float distance = Vector3.Distance(staff.gameObject.transform.position, waypoint);
+        if (distance <= moveStep)
+        {
+            staff.gameObject.transform.position = waypoint;
+            staff.routeWaypointIndex += 1;
+        }
+        else
+        {
+            staff.gameObject.transform.position = Vector3.MoveTowards(
+                staff.gameObject.transform.position,
+                waypoint,
+                moveStep);
+        }
+    }
+
+    private bool ShouldRebuildStaffRoute(ActiveStaff staff)
+    {
+        if (staff == null)
+        {
+            return false;
+        }
+
+        if (staff.routeWaypoints.Count <= 0 || staff.routeWaypointIndex >= staff.routeWaypoints.Count)
+        {
+            return true;
+        }
+
+        float rebuildDistance = gridManager != null ? Mathf.Max(0.2f, gridManager.CellSize * 0.25f) : 0.2f;
+        return Vector3.Distance(staff.routedTargetPosition, staff.targetPosition) > rebuildDistance;
+    }
+
+    private void SetStaffRoute(ActiveStaff staff, List<Vector3> waypoints)
+    {
+        if (staff == null)
+        {
+            return;
+        }
+
+        staff.routeWaypoints.Clear();
+        staff.routeWaypointIndex = 0;
+        staff.routedTargetPosition = staff.targetPosition;
+
+        if (waypoints == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < waypoints.Count; i++)
+        {
+            AddStaffWaypointIfDistinct(staff.routeWaypoints, waypoints[i]);
+        }
+    }
+
+    private List<Vector3> BuildStaffRoute(Vector3 startWorld, Vector3 targetWorld)
+    {
+        List<Vector3> route = new List<Vector3>();
+        if (gridManager == null)
+        {
+            AddStaffWaypointIfDistinct(route, targetWorld);
+            return route;
+        }
+
+        if (gridManager.TryGetCellIndexFromWorldPosition(startWorld, out int startX, out int startY) &&
+            gridManager.TryGetCellIndexFromWorldPosition(targetWorld, out int targetX, out int targetY))
+        {
+            var pathCells = AStarPathfinder.FindPath(gridManager, new Vector2Int(startX, startY), new Vector2Int(targetX, targetY), true);
+            if (pathCells != null && pathCells.Count > 0)
+            {
+                foreach (var cell in pathCells)
+                {
+                    AddStaffWaypointIfDistinct(route, gridManager.GetAreaCenterWorldPosition(cell.x, cell.y, 1, 1));
+                }
+                if (route.Count > 0)
+                {
+                    route[route.Count - 1] = targetWorld;
+                }
+                return route;
+            }
+        }
+
+        AddStaffWaypointIfDistinct(route, targetWorld);
+        return route;
+    }
+
+
+
+    private bool TryFindNearestAvailableCell(Vector3 worldPosition, out Vector2Int cell)
+    {
+        cell = default;
+        if (gridManager == null)
+        {
+            return false;
+        }
+
+        float bestDistance = float.PositiveInfinity;
+        bool found = false;
+
+        for (int y = 0; y < gridManager.Height; y++)
+        {
+            for (int x = 0; x < gridManager.Width; x++)
+            {
+                if (!gridManager.IsAreaAvailable(x, y, 1, 1))
+                {
+                    continue;
+                }
+
+                Vector3 cellWorld = gridManager.GetAreaCenterWorldPosition(x, y, 1, 1);
+                float distance = (cellWorld - worldPosition).sqrMagnitude;
+                if (distance >= bestDistance)
+                {
+                    continue;
+                }
+
+                bestDistance = distance;
+                cell = new Vector2Int(x, y);
+                found = true;
+            }
+        }
+
+        return found;
+    }
+
+    private static void AddStaffWaypointIfDistinct(List<Vector3> route, Vector3 waypoint)
+    {
+        if (route == null)
+        {
+            return;
+        }
+
+        if (route.Count > 0 && Vector3.Distance(route[route.Count - 1], waypoint) <= 0.01f)
+        {
+            return;
+        }
+
+        route.Add(waypoint);
     }
 }
 

@@ -1,0 +1,504 @@
+========================================
+Desc: "Adding resource path and cache fields for layered customer running animation."
+========================================
+Desc: "Implementing run frames caching, run frame loading, and treadmill running animation logic with Y-offset in CustomerFlowManager."
+========================================
+Desc: "Adjusting customer running Y-offset on treadmill to 0.15f to match the shifted treadmill visual position."
+========================================
+Desc: "Adjusting customer running Y-offset on treadmill to 0.42f to match the 2.5x scaled treadmill visual."
+========================================
+Desc: "Adjusting customer running Y-offset on treadmill to 0.32f for the 2.0x scaled treadmill."
+========================================
+Desc: "Adjusting customer running local offset on treadmill to match the shifted treadmill visual position."
+========================================
+Desc: "Adjusting customer running local offset on treadmill to match the centered treadmill position."
+========================================
+Desc: "Hardcoding customer head offset to new Vector3(0f, 0.42f, 0f) to bypass inspector serialization issues and align the head cleanly on the neck stump."
+========================================
+Desc: "Restoring customer head Y-offset to its original 0.58f position in CustomerFlowManager to match the reverted head texture."
+========================================
+Desc: "Restoring the customer head offset logic to use the serialized field (layeredCustomerHeadLocalOffset) so the user can easily fine-tune the position in the Unity Inspector."
+========================================
+Desc: "Hardcode head position offset to 0.9f instead of using serialized field to fix attached stomach issue."
+========================================
+Desc: "Hardcode head position offset to 0.9f instead of using serialized field to fix attached stomach issue."
+========================================
+Desc: "Fix layered customer visual issues (detached head, small body, wrong direction on treadmill)"
+========================================
+Desc: "Update resource paths to point to the processed transparent sprite sheets and fix head sprite path"
+========================================
+Desc: "Revert paths back to original sprites that are already transparent"
+========================================
+Desc: "Stop rendering separate head for layered customers since user manually baked the head into the body sprite sheet"
+========================================
+Desc: 
+========================================
+Desc: 
+========================================
+Desc: 
+========================================
+Desc: 
+========================================
+Desc: 
+========================================
+Desc: 
+========================================
+Desc: 
+========================================
+Desc: 
+========================================
+Desc: 
+========================================
+Desc: "Marking the first task as in progress"
+--- Target ---
+- [ ] `CustomerFlowManager.cs`에 커스텀 스프라이트 렌더링 로직 추가 (Resources.LoadAll 사용)
+--- Replacement ---
+- [/] `CustomerFlowManager.cs`에 커스텀 스프라이트 렌더링 로직 추가 (Resources.LoadAll 사용)
+========================================
+Desc: "Adding layered sprite fields to ActiveCustomer class"
+--- Target ---
+    public GameObject visual;
+    public SpriteRenderer renderer;
+--- Replacement ---
+    public GameObject visual;
+    public SpriteRenderer renderer;
+    public bool usesLayeredCustomerSprites = true;
+    public GameObject headObject;
+    public SpriteRenderer headRenderer;
+    public SpriteRenderer bodyRenderer;
+    public float bodyIdleAnimationOffsetSeconds;
+    public Vector3 lastWorldPosition;
+========================================
+Desc: "Adding layeredCustomerHeadLocalOffset variable"
+--- Target ---
+    [SerializeField] private int customerSortingOrder = 30;
+--- Replacement ---
+    [SerializeField] private int customerSortingOrder = 30;
+    [SerializeField] private Vector3 layeredCustomerHeadLocalOffset = new Vector3(0f, 0.68f, 0f);
+========================================
+Desc: "Adding layered sprite logic methods"
+========================================
+Desc: "Attaching LayeredCustomerAnimator to spawned customers"
+--- Target ---
+        ActiveCustomer customer = new ActiveCustomer
+        {
+            visual = visual,
+            renderer = renderer,
+            state = CustomerState.MovingToMachine,
+            worldPosition = spawnWorldPosition,
+            leaveReason = CustomerLeaveReason.None,
+            waitSlotIndex = -1,
+        };
+
+        return customer;
+--- Replacement ---
+        ActiveCustomer customer = new ActiveCustomer
+        {
+            visual = visual,
+            renderer = renderer,
+            state = CustomerState.MovingToMachine,
+            worldPosition = spawnWorldPosition,
+            leaveReason = CustomerLeaveReason.None,
+            waitSlotIndex = -1,
+        };
+
+        // 새로 생성된 애니메이터 부착
+        LayeredCustomerAnimator animator = visual.AddComponent<LayeredCustomerAnimator>();
+        animator.Initialize(customer);
+
+        return customer;
+========================================
+Desc: 
+========================================
+Desc: "Fix pulsating and correct sprite selection logic"
+--- Target ---
+        switch (customer.state)
+        {
+            case CustomerState.UsingMachine:
+                scale += Mathf.Sin(Time.time * Mathf.Max(0.1f, usingPulseSpeed)) * Mathf.Max(0f, usingPulseAmplitude);
+                break;
+
+            case CustomerState.WaitingForMachine:
+                scale += Mathf.Sin(Time.time * Mathf.Max(0.1f, waitingPulseSpeed)) * Mathf.Max(0f, waitingPulseAmplitude);
+                break;
+        }
+
+        customer.visual.transform.localScale = new Vector3(scale, scale, 1f);
+--- Replacement ---
+        switch (customer.state)
+        {
+            case CustomerState.UsingMachine:
+                // scale += Mathf.Sin(Time.time * Mathf.Max(0.1f, usingPulseSpeed)) * Mathf.Max(0f, usingPulseAmplitude);
+                break;
+
+            case CustomerState.WaitingForMachine:
+                // scale += Mathf.Sin(Time.time * Mathf.Max(0.1f, waitingPulseSpeed)) * Mathf.Max(0f, waitingPulseAmplitude);
+                break;
+        }
+
+        // LayeredCustomerAnimator를 위해 크기가 펄럭이는 것을 중단
+        customer.visual.transform.localScale = new Vector3(scale, scale, 1f);
+========================================
+Desc: "Fix the exit position so customers leave through the left entrance, not the right wall"
+--- Target ---
+    private Vector3 GetExitWorldPosition()
+    {
+        float halfWidth = gridManager.Width * gridManager.CellSize * 0.5f;
+        float halfHeight = gridManager.Height * gridManager.CellSize * 0.5f;
+
+        return new Vector3(
+            halfWidth + Mathf.Max(0.8f, entryExitOffsetX),
+            -halfHeight + (gridManager.Height * gridManager.CellSize * Mathf.Clamp01(entryExitHeightRatio)),
+            0f
+        );
+    }
+--- Replacement ---
+    private Vector3 GetExitWorldPosition()
+    {
+        // 손님은 들어온 입구(왼쪽)로 다시 나가야 하므로, GetEntryWorldPosition과 동일한 위치를 반환합니다.
+        float halfWidth = gridManager.Width * gridManager.CellSize * 0.5f;
+        float halfHeight = gridManager.Height * gridManager.CellSize * 0.5f;
+
+        return new Vector3(
+            -halfWidth - Mathf.Max(0.8f, entryExitOffsetX),
+            -halfHeight + (gridManager.Height * gridManager.CellSize * Mathf.Clamp01(entryExitHeightRatio)),
+            0f
+        );
+    }
+========================================
+Desc: "Add simple door routing so customers don't walk diagonally through the outside walls"
+========================================
+Desc: 
+========================================
+Desc: "Fix the syntax error caused by an extra closing brace in the Leaving state logic"
+--- Target ---
+                    if (customer.visual != null)
+                        {
+                            customer.visual.transform.position = customer.worldPosition;
+                        }
+                    }
+
+                    break;
+                }
+--- Replacement ---
+                    if (customer.visual != null)
+                    {
+                        customer.visual.transform.position = customer.worldPosition;
+                    }
+                    break;
+                }
+========================================
+Desc: "Use GridManager's entrance position methods to fix the door alignment and prevent walking through walls."
+========================================
+Desc: "Fix the waypoint bouncing bug by introducing a waypointProgress state variable and using it to sequence the entrance and exit waypoints."
+========================================
+Desc: "Add currentPath to ActiveCustomer"
+--- Target ---
+        public float remainingWaitSeconds = 0f;
+        public float retrySearchCountdown = 0f;
+        
+        public int waypointProgress = 0;
+
+        public MachinePreferenceGroup primaryPreference = MachinePreferenceGroup.Other;
+--- Replacement ---
+        public float remainingWaitSeconds = 0f;
+        public float retrySearchCountdown = 0f;
+        
+        public int waypointProgress = 0;
+        public List<Vector3> currentPath = null;
+        public int currentPathIndex = 0;
+
+        public MachinePreferenceGroup primaryPreference = MachinePreferenceGroup.Other;
+========================================
+Desc: "Refactoring CustomerFlowManager movement logic to use A* pathfinding."
+========================================
+Desc: "Update Leaving logic with pathfinding and reset currentPath in TryAssignNextMachine"
+========================================
+Desc: "Reset currentPath in TryAssignNextMachine"
+--- Target ---
+        customer.waitSlotIndex = -1;
+        customer.remainingWaitSeconds = 0f;
+        customer.retrySearchCountdown = 0f;
+--- Replacement ---
+        customer.waitSlotIndex = -1;
+        customer.remainingWaitSeconds = 0f;
+        customer.retrySearchCountdown = 0f;
+        customer.currentPath = null;
+        customer.currentPathIndex = 0;
+========================================
+Desc: "Mark tasks as completed"
+--- Target ---
+- [ ] Add `TryGetCellIndexFromWorldPosition` to `GridManager.cs`
+- [ ] Create `AStarPathfinder.cs` utility script
+- [ ] Update `ActiveCustomer` to store `currentPath` and `currentPathIndex`
+- [ ] Update `CustomerFlowManager.cs` movement logic to use A* pathfinding
+- [ ] Update `StaffAiState` to store `currentPath` and `currentPathIndex`
+- [ ] Update `StaffAiManager.cs` movement logic to use A* pathfinding
+--- Replacement ---
+- [x] Add `TryGetCellIndexFromWorldPosition` to `GridManager.cs`
+- [x] Create `AStarPathfinder.cs` utility script
+- [x] Update `ActiveCustomer` to store `currentPath` and `currentPathIndex`
+- [x] Update `CustomerFlowManager.cs` movement logic to use A* pathfinding
+- [x] Update `StaffAiState` to store `currentPath` and `currentPathIndex`
+- [x] Update `StaffAiManager.cs` movement logic to use A* pathfinding
+========================================
+Desc: "Add missing GetPathfindingImmediateTarget method to fix compiler errors"
+--- Target ---
+        return cachedWhiteSprite;
+    }
+}
+--- Replacement ---
+        return cachedWhiteSprite;
+    }
+
+    private Vector3 GetPathfindingImmediateTarget(ActiveCustomer customer, Vector3 finalTarget, bool allowTargetOccupied)
+    {
+        Vector3 immediateTarget = finalTarget;
+        
+        if (customer.currentPath == null)
+        {
+            if (gridManager.TryGetCellIndexFromWorldPosition(customer.worldPosition, out int startX, out int startY) &&
+                gridManager.TryGetCellIndexFromWorldPosition(finalTarget, out int targetX, out int targetY))
+            {
+                var cellPath = AStarPathfinder.FindPath(gridManager, new Vector2Int(startX, startY), new Vector2Int(targetX, targetY), allowTargetOccupied);
+                if (cellPath != null && cellPath.Count > 0)
+                {
+                    customer.currentPath = new List<Vector3>();
+                    foreach (var cellPos in cellPath)
+                    {
+                        customer.currentPath.Add(gridManager.GetAreaCenterWorldPosition(cellPos.x, cellPos.y, 1, 1));
+                    }
+                    if (customer.currentPath.Count > 0)
+                    {
+                        customer.currentPath[customer.currentPath.Count - 1] = finalTarget;
+                    }
+                    customer.currentPathIndex = 0;
+                }
+            }
+            
+            if (customer.currentPath == null)
+            {
+                customer.currentPath = new List<Vector3> { finalTarget };
+                customer.currentPathIndex = 0;
+            }
+        }
+
+        if (customer.currentPathIndex < customer.currentPath.Count)
+        {
+            immediateTarget = customer.currentPath[customer.currentPathIndex];
+        }
+        else
+        {
+            immediateTarget = finalTarget;
+        }
+
+        return immediateTarget;
+    }
+}
+========================================
+Desc: "Add use offset to customer target position"
+========================================
+Desc: "Add IsMachineInUse to CustomerFlowManager"
+--- Target ---
+}
+--- Replacement ---
+    public bool IsMachineInUse(string machineKey)
+    {
+        for (int i = 0; i < activeCustomers.Count; i++)
+        {
+            var customer = activeCustomers[i];
+            if (customer.state == CustomerState.UsingMachine && customer.targetMachineKey == machineKey)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+========================================
+Desc: "Add IsMachineInUse to CustomerFlowManager"
+--- Target ---
+        return immediateTarget;
+    }
+}
+--- Replacement ---
+        return immediateTarget;
+    }
+
+    public bool IsMachineInUse(string machineKey)
+    {
+        for (int i = 0; i < activeCustomers.Count; i++)
+        {
+            var customer = activeCustomers[i];
+            if (customer.state == CustomerState.UsingMachine && customer.targetMachineKey == machineKey)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+========================================
+Desc: "Make BuildMachineKey public and fix GymPlacedObjectVisual"
+--- Target ---
+    private static string BuildMachineKey(PlacedObjectSaveData data)
+--- Replacement ---
+    public static string BuildMachineKey(PlacedObjectSaveData data)
+========================================
+Desc: "Change targetWidth multiplier to make the sprite fit exactly within the grid without spilling over, and disable the machine state overlay."
+--- Target ---
+        if (hasCustomSprite)
+        {
+            float targetWidth = Mathf.Max(0.55f, footprintSize.x) * 1.2f;
+            float currentWidth = baseRenderer.sprite != null ? baseRenderer.sprite.bounds.size.x : 1f;
+--- Replacement ---
+        if (hasCustomSprite)
+        {
+            float targetWidth = Mathf.Max(0.55f, footprintSize.x);
+            float currentWidth = baseRenderer.sprite != null ? baseRenderer.sprite.bounds.size.x : 1f;
+--- Target ---
+            if (loadedSprite != null)
+            {
+                float targetWidth = Mathf.Max(0.55f, footprintSize.x) * 1.2f;
+                float currentWidth = loadedSprite != null ? loadedSprite.bounds.size.x : 1f;
+--- Replacement ---
+            if (loadedSprite != null)
+            {
+                float targetWidth = Mathf.Max(0.55f, footprintSize.x);
+                float currentWidth = loadedSprite != null ? loadedSprite.bounds.size.x : 1f;
+========================================
+Desc: "Disable the machine state overlay logic."
+--- Target ---
+    [Header("Machine Overlay")]
+    [SerializeField] private bool showMachineStateOverlay = true;
+    [SerializeField] private Color reservedOverlayColor = new Color(0.45f, 0.75f, 1f, 0.30f);
+--- Replacement ---
+    [Header("Machine Overlay")]
+    [SerializeField] private bool showMachineStateOverlay = false;
+    [SerializeField] private Color reservedOverlayColor = new Color(0.45f, 0.75f, 1f, 0.30f);
+========================================
+Desc: "Disable the debug white sprite renderer for customers so the green box doesn't show up."
+--- Target ---
+        SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
+        renderer.sprite = GetWhiteSprite();
+        renderer.drawMode = SpriteDrawMode.Sliced;
+        renderer.size = customerVisualSize;
+        renderer.color = movingCustomerColor;
+        renderer.sortingOrder = customerSortingOrder;
+--- Replacement ---
+        SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
+        renderer.sprite = GetWhiteSprite();
+        renderer.drawMode = SpriteDrawMode.Sliced;
+        renderer.size = customerVisualSize;
+        renderer.color = movingCustomerColor;
+        renderer.sortingOrder = customerSortingOrder;
+        renderer.enabled = false; // Disable debug visual as we use LayeredCustomerAnimator now
+========================================
+Desc: "Ensure machine state overlays are never shown."
+--- Target ---
+    private void RebuildMachineOverlays(List<MachineRuntimeInfo> machines)
+    {
+        if (!showMachineStateOverlay)
+        {
+            HideAllMachineOverlays();
+            return;
+        }
+--- Replacement ---
+    private void RebuildMachineOverlays(List<MachineRuntimeInfo> machines)
+    {
+        HideAllMachineOverlays();
+        return;
+========================================
+Desc: "Call UpdateMachineInUseVisuals in CustomerFlowManager"
+--- Target ---
+    private void RebuildMachineOverlays(List<MachineRuntimeInfo> machines)
+    {
+        HideAllMachineOverlays();
+        return;
+    }
+--- Replacement ---
+    private void RebuildMachineOverlays(List<MachineRuntimeInfo> machines)
+    {
+        if (placementManager == null || machines == null) return;
+        
+        HashSet<string> inUseKeys = new HashSet<string>();
+        for (int i = 0; i < activeCustomers.Count; i++)
+        {
+            if (activeCustomers[i].state == CustomerState.UsingMachine && !string.IsNullOrEmpty(activeCustomers[i].targetMachineKey))
+            {
+                inUseKeys.Add(activeCustomers[i].targetMachineKey);
+            }
+        }
+
+        placementManager.UpdateMachineInUseVisuals(inUseKeys);
+    }
+========================================
+Desc: "Call UpdateMachineInUseVisuals in CustomerFlowManager"
+========================================
+Desc: "Update CustomerFlowManager"
+--- Target ---
+    private static string BuildMachineKey(PlacedObjectSaveData data)
+    {
+        if (data == null)
+--- Replacement ---
+    public static string BuildMachineKey(PlacedObjectSaveData data)
+    {
+        if (data == null)
+--- Target ---
+    private MachinePreferenceGroup GetPreferenceGroupForPlacedObject(PlacedObjectSaveData data)
+--- Replacement ---
+    public bool IsMachineInUse(string machineKey)
+    {
+        if (string.IsNullOrEmpty(machineKey)) return false;
+        for (int i = 0; i < activeCustomers.Count; i++)
+        {
+            var customer = activeCustomers[i];
+            if (customer != null && customer.state == CustomerState.UsingMachine && customer.targetMachineKey == machineKey)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private MachinePreferenceGroup GetPreferenceGroupForPlacedObject(PlacedObjectSaveData data)
+========================================
+Desc: "Restore LayeredCustomerAnimator instantiation in CreateCustomer"
+--- Target ---
+        renderer.color = movingCustomerColor;
+        renderer.sortingOrder = customerSortingOrder;
+
+        ActiveCustomer customer = new ActiveCustomer
+        {
+            visual = visual,
+            renderer = renderer,
+            state = CustomerState.MovingToMachine,
+            worldPosition = spawnWorldPosition,
+            leaveReason = CustomerLeaveReason.None,
+            waitSlotIndex = -1,
+        };
+
+        return customer;
+    }
+--- Replacement ---
+        renderer.color = movingCustomerColor;
+        renderer.sortingOrder = customerSortingOrder;
+        renderer.enabled = false; // Disable debug visual as we use LayeredCustomerAnimator now
+
+        ActiveCustomer customer = new ActiveCustomer
+        {
+            visual = visual,
+            renderer = renderer,
+            state = CustomerState.MovingToMachine,
+            worldPosition = spawnWorldPosition,
+            leaveReason = CustomerLeaveReason.None,
+            waitSlotIndex = -1,
+        };
+
+        LayeredCustomerAnimator animator = visual.AddComponent<LayeredCustomerAnimator>();
+        animator.Initialize(customer);
+
+        return customer;
+    }
+========================================
+Desc: 

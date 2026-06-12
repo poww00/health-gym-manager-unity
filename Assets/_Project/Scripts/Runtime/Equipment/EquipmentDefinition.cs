@@ -14,7 +14,14 @@ public enum EquipmentCategory
     [InspectorName("회복")]
     Recovery,
     [InspectorName("기타")]
-    Other
+    Other,
+
+    // New type/grade separated equipment data categories.
+    StrengthFreeWeight,
+    StrengthMachine,
+    Flexibility,
+    Convenience,
+    Service
 }
 
 public enum EquipmentBrandTier
@@ -149,6 +156,9 @@ public sealed class EquipmentDefinition : ScriptableObject
     [Header("Visual / UI (비주얼 설정)")]
     [SerializeField] private AssetReferenceT<Sprite> iconReference;
     [SerializeField] private Color debugColor = new Color(1f, 0.65f, 0.2f, 1f);
+    [SerializeField] private Vector2 customerUseOffset = Vector2.zero;
+    [SerializeField] private bool useForegroundSprite = false;
+    [SerializeField] private Vector2 foregroundOffset = Vector2.zero;
 
     [Header("Unlock")]
     [SerializeField] private bool unlockedByDefault = true;
@@ -188,6 +198,9 @@ public sealed class EquipmentDefinition : ScriptableObject
 
     public AssetReferenceT<Sprite> IconReference => iconReference;
     public Color DebugColor => debugColor;
+    public Vector2 CustomerUseOffset => customerUseOffset;
+    public bool UseForegroundSprite => useForegroundSprite;
+    public Vector2 ForegroundOffset => foregroundOffset;
     public bool UnlockedByDefault => unlockedByDefault;
 
     private static int ScaleRounded(int baseValue, float multiplier)
