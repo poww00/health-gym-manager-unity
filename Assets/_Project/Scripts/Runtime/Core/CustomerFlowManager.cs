@@ -1330,7 +1330,16 @@ public sealed class CustomerFlowManager : MonoBehaviour
             return false;
         }
 
-        customer.targetMachineWorldPosition = machine.centerWorldPosition;
+        Vector3 targetPosition = machine.centerWorldPosition;
+        if (machine.data != null && machine.data.runtimeDefinition != null)
+        {
+            targetPosition += new Vector3(
+                machine.data.runtimeDefinition.CustomerUseOffset.x,
+                machine.data.runtimeDefinition.CustomerUseOffset.y,
+                0f);
+        }
+
+        customer.targetMachineWorldPosition = targetPosition;
         return true;
     }
 

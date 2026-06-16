@@ -5,6 +5,12 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 {
     private const int MachineDepthSortRange = 19;
     private const int MachineDepthSortStep = 64;
+    private const float CustomSpriteBaseLocalY = 0.42f;
+    private const float ExerciseBikeVisualWidthFactor = 0.65f;
+    private const float ExerciseBikeVisualYOffset = 0.18f;
+    private const float ExerciseBikePedalOffsetX = 0f;
+    private const float ExerciseBikePedalOffsetY = -0.1f;
+    private const float ExerciseBikePedalScale = 0.6f;
 
     public const int CustomerBodyLayerOffset = 30;
     public const int CustomerHeadLayerOffset = 31;
@@ -35,10 +41,29 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 
     private Sprite[] baseAnimationFrames;
     private Sprite[] beltAnimationFrames;
-    private float animationTimer;
     private int currentFrameIndex;
     private EquipmentDefinition currentDefinition;
     private int sortingDepthOffset;
+
+    private static bool IsExerciseBikeSpriteName(string spriteName)
+    {
+        return !string.IsNullOrEmpty(spriteName) &&
+            (spriteName.Equals("exercise_bike", System.StringComparison.OrdinalIgnoreCase) ||
+             spriteName.StartsWith("exercise_bike_", System.StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string ResolveMotionLayerResourcePath(string spriteName)
+    {
+        string layerSuffix = IsExerciseBikeSpriteName(spriteName) ? "_pedal" : "_belt";
+        return $"GeneratedRuntimeUI/objects/{spriteName}{layerSuffix}";
+    }
+
+    private static int CompareSpritesByName(Sprite left, Sprite right)
+    {
+        string leftName = left != null ? left.name : string.Empty;
+        string rightName = right != null ? right.name : string.Empty;
+        return string.CompareOrdinal(leftName, rightName);
+    }
 
     public void Initialize(PlacedObjectSaveData data, EquipmentDefinition definition, Vector2 size)
     {
@@ -68,11 +93,10 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 
         if (isMachineInUse && activeFrames != null && activeFrames.Length > 0 && activeRenderer != null)
         {
-            animationTimer += Time.deltaTime;
-            if (animationTimer >= 0.1f) // 10 FPS
+            int synchronizedFrameIndex = Mathf.FloorToInt(Time.time * 10f) % activeFrames.Length;
+            if (currentFrameIndex != synchronizedFrameIndex)
             {
-                animationTimer = 0f;
-                currentFrameIndex = (currentFrameIndex + 1) % activeFrames.Length;
+                currentFrameIndex = synchronizedFrameIndex;
                 activeRenderer.sprite = activeFrames[currentFrameIndex];
 
                 // Keep outlines synchronized only when the base sprite itself is animating.
@@ -266,8 +290,13 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
                 }
             }
             loadedSprites = Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{spriteName}");
+            if (loadedSprites != null && loadedSprites.Length > 1)
+            {
+                System.Array.Sort(loadedSprites, CompareSpritesByName);
+            }
         }
 
+        bool useExerciseBikeVisualScale = IsExerciseBikeSpriteName(spriteName);
         hasCustomSprite = loadedSprites != null && loadedSprites.Length > 0;
 
         if (hasCustomSprite)
@@ -280,21 +309,34 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 
             // BUG FIX: Prevent scale bouncing by ONLY using first frame width!
             float currentWidth = baseAnimationFrames[0] != null ? baseAnimationFrames[0].bounds.size.x : 1f;
-            float scale = targetWidth / currentWidth;
+            float visualTargetWidth = useExerciseBikeVisualScale
+                ? targetWidth * ExerciseBikeVisualWidthFactor
+                : targetWidth;
+            float defaultScale = targetWidth / currentWidth;
+            float scale = visualTargetWidth / currentWidth;
             scale = Mathf.Clamp(scale, 0.1f, 5f); // Prevent ridiculous scale
 
-            baseRenderer.transform.localPosition = new Vector3(0f, 0.42f, 0f);
+            Vector3 baseLocalPosition = new Vector3(0f, CustomSpriteBaseLocalY, 0f);
+            if (useExerciseBikeVisualScale && baseAnimationFrames[0] != null)
+            {
+                float heightCompensation = baseAnimationFrames[0].bounds.size.y * (defaultScale - scale) * 0.5f;
+                baseLocalPosition.y -= heightCompensation;
+                baseLocalPosition.y += ExerciseBikeVisualYOffset;
+            }
+
+            baseRenderer.transform.localPosition = baseLocalPosition;
             baseRenderer.transform.localScale = new Vector3(scale, scale, 1f);
 
-            Sprite[] beltSprites = Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{spriteName}_belt");
+            Sprite[] beltSprites = Resources.LoadAll<Sprite>(ResolveMotionLayerResourcePath(spriteName));
             if (beltSprites != null && beltSprites.Length > 0)
             {
+                System.Array.Sort(beltSprites, CompareSpritesByName);
                 beltAnimationFrames = beltSprites;
                 beltRenderer.sprite = beltAnimationFrames[0];
                 beltRenderer.drawMode = SpriteDrawMode.Simple;
-                beltRenderer.transform.localPosition = baseRenderer.transform.localPosition;
-                beltRenderer.transform.localScale = baseRenderer.transform.localScale;
-                beltRenderer.gameObject.SetActive(false);
+                beltRenderer.transform.localPosition = baseRenderer.transform.localPosition + new Vector3(ExerciseBikePedalOffsetX, ExerciseBikePedalOffsetY, 0f);
+                beltRenderer.transform.localScale = baseRenderer.transform.localScale * ExerciseBikePedalScale;
+                beltRenderer.gameObject.SetActive(true);
             }
             else if (beltRenderer != null)
             {
@@ -437,7 +479,6 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
         if (stateChanged)
         {
             currentFrameIndex = 0;
-            animationTimer = 0f;
         }
 
         if (beltRenderer != null && beltAnimationFrames != null && beltAnimationFrames.Length > 0)
@@ -446,7 +487,7 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
             {
                 beltRenderer.sprite = beltAnimationFrames[0];
             }
-            beltRenderer.gameObject.SetActive(isActive);
+            beltRenderer.gameObject.SetActive(true);
         }
 
         if (rearForegroundRenderer != null && rearForegroundRenderer.sprite != null)

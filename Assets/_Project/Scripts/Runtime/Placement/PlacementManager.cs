@@ -983,6 +983,10 @@ public class PlacementManager : MonoBehaviour
         RefreshAllPlacedVisualStates();
         ObjectPlaced?.Invoke(placedDefinition);
         PlayerPlacedObject?.Invoke();
+        if (Application.isPlaying)
+        {
+            BuildPlayModeManager.EnterPlayMode();
+        }
         return true;
     }
 
@@ -1066,6 +1070,10 @@ public class PlacementManager : MonoBehaviour
         UpdatePreview();
         RefreshAllPlacedVisualStates();
         PlayerPlacedObject?.Invoke();
+        if (Application.isPlaying)
+        {
+            BuildPlayModeManager.EnterPlayMode();
+        }
     }
 
     private void CancelRelocation()

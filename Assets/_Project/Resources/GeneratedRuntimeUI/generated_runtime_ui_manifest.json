@@ -16,8 +16,13 @@
   },
   {
     "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/exercise_bike.png",
-    "sha12": "f483e76294e5",
-    "bytes": 34351
+    "sha12": "bfa9c5b36429",
+    "bytes": 247740
+  },
+  {
+    "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/exercise_bike_pedal.png",
+    "sha12": "7e179b0e8371",
+    "bytes": 55808
   },
   {
     "path": "Assets/_Project/Resources/GeneratedRuntimeUI/objects/floor_tile.png",

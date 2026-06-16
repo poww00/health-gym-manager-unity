@@ -13,6 +13,7 @@ public class LayeredCustomerAnimator : MonoBehaviour
     private Sprite[] walkHorizontalFrames;
     private Sprite[] walkVerticalFrames;
     private Sprite[] runFrames;
+    private Sprite[] exerciseBikeFrames;
     private Sprite[] headFrames;
 
     private Vector3 lastWorldPosition;
@@ -21,6 +22,8 @@ public class LayeredCustomerAnimator : MonoBehaviour
     private const float FallbackHeadAnchorInsetY = 0.12f;
     private const float RunHeadAttachmentYOffset = -0.05f;
     private const float RunHeadAttachmentPostFlipXOffset = 0.015f;
+    private static readonly Vector3 ExerciseBikeBodyLocalOffset = new Vector3(-0.2f, 0.33f, 0f);
+    private const float ExerciseBikeCustomerVisualScale = 0.90f;
     private const int DefaultBodySortingOrder = 30;
     private const int DefaultHeadSortingOrder = 31;
 
@@ -46,6 +49,11 @@ public class LayeredCustomerAnimator : MonoBehaviour
         { "body_male_chubby_walk_up_32x48_4x1_1", new Vector2(-0.0017f, 0.6337f) },
         { "body_male_chubby_walk_up_32x48_4x1_2", new Vector2(-0.0009f, 0.6319f) },
         { "body_male_chubby_walk_up_32x48_4x1_3", new Vector2(-0.0104f, 0.6363f) },
+        { "body_male_chubby_exercise_bike_4x2_0", new Vector2(-0.037f, 0.625f) },
+        { "body_male_chubby_exercise_bike_4x2_1", new Vector2(-0.052f, 0.625f) },
+        { "body_male_chubby_exercise_bike_4x2_2", new Vector2(-0.098f, 0.625f) },
+        { "body_male_chubby_exercise_bike_4x2_3", new Vector2(-0.153f, 0.625f) },
+        { "body_male_chubby_exercise_bike_4x2_4", new Vector2(-0.055f, 0.655f) },
     };
 
     public void Initialize(CustomerFlowManager.ActiveCustomer activeCustomer)
@@ -77,6 +85,7 @@ public class LayeredCustomerAnimator : MonoBehaviour
         walkHorizontalFrames = LoadBodyAnimationFrames("GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_walk_front_32x48_4x2");
         walkVerticalFrames = LoadBodyAnimationFrames("GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_walk_up_32x48_4x1");
         runFrames = LoadBodyAnimationFrames("GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_run_32x48_4x2");
+        exerciseBikeFrames = LoadBodyAnimationFrames("GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_exercise_bike_4x2");
         headFrames = Resources.LoadAll<Sprite>("GeneratedRuntimeUI/characters/customer/head/male_chubby/head_male_chubby_3dir_32x48_3x1");
 
         animationOffset = Random.Range(0f, 1f);
@@ -139,6 +148,13 @@ public class LayeredCustomerAnimator : MonoBehaviour
             bodySprite.name.StartsWith("body_male_chubby_run_32x48_4x2", System.StringComparison.Ordinal);
     }
 
+    private static bool IsExerciseBikeMachineKey(string machineKey)
+    {
+        return !string.IsNullOrWhiteSpace(machineKey) &&
+            (machineKey.Equals("exercise_bike", System.StringComparison.OrdinalIgnoreCase) ||
+             machineKey.StartsWith("exercise_bike_", System.StringComparison.OrdinalIgnoreCase));
+    }
+
     private static Vector2 GetBodyPivotCompensation(Sprite bodySprite, bool bodyFlipX)
     {
         if (!IsRunBodySprite(bodySprite))
@@ -183,6 +199,10 @@ public class LayeredCustomerAnimator : MonoBehaviour
         int headIndex = 0; // 0=정면, 1=측면, 2=후면
         bool flipX = false;
         bool headFlipX = false;
+        bool hideDetachedHead = false;
+        bool syncMachineAnimation = false;
+        bool reverseBodyAnimation = false;
+        float customerVisualScale = 1f;
         Vector3 visualOffset = Vector3.zero;
 
         Sprite[] currentBodyFrames = idleFrames;
@@ -197,6 +217,20 @@ public class LayeredCustomerAnimator : MonoBehaviour
                 headIndex = 1;
                 headFlipX = true;
                 visualOffset = Vector3.zero;
+            }
+            else if (IsExerciseBikeMachineKey(customer.targetMachineKey))
+            {
+                currentBodyFrames = exerciseBikeFrames != null && exerciseBikeFrames.Length > 0
+                    ? exerciseBikeFrames
+                    : idleFrames;
+                fps = 10f;
+                flipX = false;
+                headIndex = 1;
+                headFlipX = true;
+                syncMachineAnimation = true;
+                reverseBodyAnimation = true;
+                customerVisualScale = ExerciseBikeCustomerVisualScale;
+                visualOffset = ExerciseBikeBodyLocalOffset;
             }
             else
             {
@@ -234,7 +268,12 @@ public class LayeredCustomerAnimator : MonoBehaviour
         // 몸통 위치 및 애니메이션 업데이트
         if (currentBodyFrames != null && currentBodyFrames.Length > 0)
         {
-            int frame = Mathf.FloorToInt((Time.time + animationOffset) * fps) % currentBodyFrames.Length;
+            float frameTime = syncMachineAnimation ? Time.time : Time.time + animationOffset;
+            int frame = Mathf.FloorToInt(frameTime * fps) % currentBodyFrames.Length;
+            if (reverseBodyAnimation && currentBodyFrames.Length > 1)
+            {
+                frame = currentBodyFrames.Length - 1 - frame;
+            }
             bodyRenderer.sprite = currentBodyFrames[frame];
             bodyRenderer.flipX = flipX;
         }
@@ -245,18 +284,23 @@ public class LayeredCustomerAnimator : MonoBehaviour
             visualOffset.y + bodyPivotCompensation.y,
             0f);
         bodyRenderer.gameObject.transform.localPosition = bodyLocalPosition;
+        bodyRenderer.gameObject.transform.localScale = new Vector3(customerVisualScale, customerVisualScale, 1f);
+        headRenderer.gameObject.transform.localScale = new Vector3(customerVisualScale, customerVisualScale, 1f);
 
         // 머리 애니메이션 업데이트
-        if (headFrames != null && headFrames.Length > headIndex)
+        headRenderer.enabled = !hideDetachedHead;
+
+        if (!hideDetachedHead && headFrames != null && headFrames.Length > headIndex)
         {
             headRenderer.sprite = headFrames[headIndex];
             headRenderer.flipX = headFlipX;
         }
 
         // --- 동적 머리 위치 (바운싱) ---
-        if (bodyRenderer.sprite != null)
+        if (!hideDetachedHead && bodyRenderer.sprite != null)
         {
             Vector2 headAnchor = GetHeadAnchorForBodySprite(bodyRenderer.sprite, bodyRenderer.flipX);
+            headAnchor *= customerVisualScale;
             // Keep the head attached to the current body frame's attachment point.
             headObject.transform.localPosition = new Vector3(
                 bodyLocalPosition.x + headAnchor.x,
