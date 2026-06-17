@@ -4,7 +4,7 @@ using UnityEngine;
 public static class ExerciseBikeAssetReimporter
 {
     private const string PedalPath = "Assets/_Project/Resources/GeneratedRuntimeUI/objects/exercise_bike_pedal.png";
-    private const string SessionKey = "ExerciseBikePedalReimported_20260617_0425_scaled080";
+    private const string SessionKey = "ExerciseBikePedalReimported_20260617_hublock_runtime_compensation";
 
     [InitializeOnLoadMethod]
     private static void AutoReimportAfterScriptReload()

@@ -6,11 +6,24 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
     private const int MachineDepthSortRange = 19;
     private const int MachineDepthSortStep = 64;
     private const float CustomSpriteBaseLocalY = 0.42f;
-    private const float ExerciseBikeVisualWidthFactor = 0.65f;
+    private const float ExerciseBikeVisualWidthFactor = 0.55f;
     private const float ExerciseBikeVisualYOffset = 0.18f;
-    private const float ExerciseBikePedalOffsetX = 0f;
-    private const float ExerciseBikePedalOffsetY = -0.1f;
-    private const float ExerciseBikePedalScale = 0.6f;
+    private const float ExerciseBikePedalOffsetX = 0.1f;
+    private const float ExerciseBikePedalOffsetY = -0.2f;
+    private const float ExerciseBikePedalScale = 0.5f;
+    private const float MotionAnimationFps = 10f;
+    private const float ExerciseBikePedalAnimationFps = 16f;
+    private static readonly Vector2[] ExerciseBikePedalHubPixels =
+    {
+        new Vector2(164f, 95f),
+        new Vector2(149f, 94f),
+        new Vector2(155f, 91f),
+        new Vector2(142f, 87f),
+        new Vector2(162f, 106f),
+        new Vector2(137f, 105f),
+        new Vector2(125f, 108f),
+        new Vector2(135f, 108f),
+    };
 
     public const int CustomerBodyLayerOffset = 30;
     public const int CustomerHeadLayerOffset = 31;
@@ -44,6 +57,7 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
     private int currentFrameIndex;
     private EquipmentDefinition currentDefinition;
     private int sortingDepthOffset;
+    private bool reverseMotionAnimation;
 
     private static bool IsExerciseBikeSpriteName(string spriteName)
     {
@@ -56,6 +70,51 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
     {
         string layerSuffix = IsExerciseBikeSpriteName(spriteName) ? "_pedal" : "_belt";
         return $"GeneratedRuntimeUI/objects/{spriteName}{layerSuffix}";
+    }
+
+    private static string StripEquipmentGradeSuffix(string spriteName)
+    {
+        string normalized = string.IsNullOrWhiteSpace(spriteName)
+            ? string.Empty
+            : spriteName.ToLowerInvariant().Trim();
+
+        if (normalized.EndsWith("_basic", System.StringComparison.Ordinal)) return normalized.Substring(0, normalized.Length - 6);
+        if (normalized.EndsWith("_ss", System.StringComparison.Ordinal)) return normalized.Substring(0, normalized.Length - 3);
+        if (normalized.EndsWith("_a", System.StringComparison.Ordinal) ||
+            normalized.EndsWith("_b", System.StringComparison.Ordinal) ||
+            normalized.EndsWith("_s", System.StringComparison.Ordinal))
+        {
+            return normalized.Substring(0, normalized.Length - 2);
+        }
+
+        return normalized;
+    }
+
+    private static Sprite[] LoadObjectSprites(string spriteName, out string resolvedSpriteName)
+    {
+        resolvedSpriteName = string.IsNullOrWhiteSpace(spriteName)
+            ? string.Empty
+            : spriteName.ToLowerInvariant().Trim();
+
+        if (string.IsNullOrEmpty(resolvedSpriteName))
+        {
+            return null;
+        }
+
+        Sprite[] sprites = Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{resolvedSpriteName}");
+        if (sprites != null && sprites.Length > 0)
+        {
+            return sprites;
+        }
+
+        string fallbackSpriteName = StripEquipmentGradeSuffix(resolvedSpriteName);
+        if (!string.Equals(fallbackSpriteName, resolvedSpriteName, System.StringComparison.Ordinal))
+        {
+            resolvedSpriteName = fallbackSpriteName;
+            return Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{resolvedSpriteName}");
+        }
+
+        return sprites;
     }
 
     private static int CompareSpritesByName(Sprite left, Sprite right)
@@ -93,11 +152,19 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 
         if (isMachineInUse && activeFrames != null && activeFrames.Length > 0 && activeRenderer != null)
         {
-            int synchronizedFrameIndex = Mathf.FloorToInt(Time.time * 10f) % activeFrames.Length;
+            float animationFps = reverseMotionAnimation ? ExerciseBikePedalAnimationFps : MotionAnimationFps;
+            int rawFrameIndex = Mathf.FloorToInt(Time.time * animationFps) % activeFrames.Length;
+            int synchronizedFrameIndex = reverseMotionAnimation && activeFrames.Length > 1
+                ? (activeFrames.Length - rawFrameIndex) % activeFrames.Length
+                : rawFrameIndex;
             if (currentFrameIndex != synchronizedFrameIndex)
             {
                 currentFrameIndex = synchronizedFrameIndex;
                 activeRenderer.sprite = activeFrames[currentFrameIndex];
+                if (activeRenderer == beltRenderer)
+                {
+                    ApplyBeltRendererTransform(activeFrames[currentFrameIndex]);
+                }
 
                 // Keep outlines synchronized only when the base sprite itself is animating.
                 if ((beltAnimationFrames == null || beltAnimationFrames.Length == 0)
@@ -281,15 +348,7 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 
         if (!string.IsNullOrEmpty(spriteName))
         {
-            if (spriteName.EndsWith("_a") || spriteName.EndsWith("_b") || spriteName.EndsWith("_s") || spriteName.EndsWith("_ss"))
-            {
-                int lastIndex = spriteName.LastIndexOf('_');
-                if (lastIndex > 0)
-                {
-                    spriteName = spriteName.Substring(0, lastIndex);
-                }
-            }
-            loadedSprites = Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{spriteName}");
+            loadedSprites = LoadObjectSprites(spriteName, out spriteName);
             if (loadedSprites != null && loadedSprites.Length > 1)
             {
                 System.Array.Sort(loadedSprites, CompareSpritesByName);
@@ -303,6 +362,7 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
         {
             baseAnimationFrames = loadedSprites;
             beltAnimationFrames = null;
+            reverseMotionAnimation = useExerciseBikeVisualScale;
             currentFrameIndex = 0;
             baseRenderer.sprite = baseAnimationFrames[0];
             baseRenderer.drawMode = SpriteDrawMode.Simple;
@@ -334,8 +394,7 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
                 beltAnimationFrames = beltSprites;
                 beltRenderer.sprite = beltAnimationFrames[0];
                 beltRenderer.drawMode = SpriteDrawMode.Simple;
-                beltRenderer.transform.localPosition = baseRenderer.transform.localPosition + new Vector3(ExerciseBikePedalOffsetX, ExerciseBikePedalOffsetY, 0f);
-                beltRenderer.transform.localScale = baseRenderer.transform.localScale * ExerciseBikePedalScale;
+                ApplyBeltRendererTransform(beltAnimationFrames[0]);
                 beltRenderer.gameObject.SetActive(true);
             }
             else if (beltRenderer != null)
@@ -424,6 +483,7 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
         }
         else
         {
+            reverseMotionAnimation = false;
             float width = targetWidth;
             float height = Mathf.Max(0.55f, footprintSize.y);
 
@@ -487,6 +547,7 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
             {
                 beltRenderer.sprite = beltAnimationFrames[0];
             }
+            ApplyBeltRendererTransform(beltRenderer.sprite);
             beltRenderer.gameObject.SetActive(true);
         }
 
@@ -592,6 +653,46 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 
         renderer.transform.localPosition = localPosition;
         renderer.size = size;
+    }
+
+    private void ApplyBeltRendererTransform(Sprite sprite)
+    {
+        if (beltRenderer == null || baseRenderer == null)
+        {
+            return;
+        }
+
+        Vector3 scale = baseRenderer.transform.localScale * ExerciseBikePedalScale;
+        Vector3 targetHubLocalPosition = baseRenderer.transform.localPosition + new Vector3(ExerciseBikePedalOffsetX, ExerciseBikePedalOffsetY, 0f);
+        beltRenderer.transform.localScale = scale;
+
+        if (sprite != null && TryGetExerciseBikePedalFrameIndex(sprite.name, out int frameIndex))
+        {
+            Vector2 hubPixel = ExerciseBikePedalHubPixels[frameIndex];
+            Vector2 hubOffset = (hubPixel - sprite.pivot) / sprite.pixelsPerUnit;
+            beltRenderer.transform.localPosition = targetHubLocalPosition - new Vector3(hubOffset.x * scale.x, hubOffset.y * scale.y, 0f);
+            return;
+        }
+
+        beltRenderer.transform.localPosition = targetHubLocalPosition;
+    }
+
+    private static bool TryGetExerciseBikePedalFrameIndex(string spriteName, out int frameIndex)
+    {
+        frameIndex = -1;
+        const string Prefix = "exercise_bike_pedal_";
+        if (string.IsNullOrEmpty(spriteName) || !spriteName.StartsWith(Prefix, System.StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        string suffix = spriteName.Substring(Prefix.Length);
+        if (!int.TryParse(suffix, out frameIndex))
+        {
+            return false;
+        }
+
+        return frameIndex >= 0 && frameIndex < ExerciseBikePedalHubPixels.Length;
     }
 
     private static string ResolveToken(EquipmentDefinition definition, PlacedObjectSaveData data)

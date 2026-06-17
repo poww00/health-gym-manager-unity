@@ -1,0 +1,125 @@
+{
+  "source_frame": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_anim\\barbell-offset-1.png",
+  "source_bbox": [
+    11,
+    4,
+    115,
+    123
+  ],
+  "cell_size": 128,
+  "object_size": [
+    91,
+    104
+  ],
+  "method": "single_barbell_frame_replicated_with_explicit_pixel_offsets",
+  "placements": [
+    {
+      "name": "neutral",
+      "dx": 0,
+      "dy": 0
+    },
+    {
+      "name": "right_up",
+      "dx": 10,
+      "dy": -6
+    },
+    {
+      "name": "right_down",
+      "dx": 14,
+      "dy": 7
+    },
+    {
+      "name": "right_return",
+      "dx": 5,
+      "dy": 1
+    }
+  ],
+  "edge_touch_frames": [],
+  "frames": [
+    {
+      "frame": 1,
+      "pose": "neutral",
+      "offset_px": [
+        0,
+        0
+      ],
+      "paste_position": [
+        16,
+        12
+      ],
+      "bbox": [
+        16,
+        12,
+        107,
+        116
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_anim\\barbell-motion-v2-1.png"
+    },
+    {
+      "frame": 2,
+      "pose": "right_up",
+      "offset_px": [
+        10,
+        -6
+      ],
+      "paste_position": [
+        26,
+        6
+      ],
+      "bbox": [
+        26,
+        6,
+        117,
+        110
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_anim\\barbell-motion-v2-2.png"
+    },
+    {
+      "frame": 3,
+      "pose": "right_down",
+      "offset_px": [
+        14,
+        7
+      ],
+      "paste_position": [
+        30,
+        19
+      ],
+      "bbox": [
+        30,
+        19,
+        121,
+        123
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_anim\\barbell-motion-v2-3.png"
+    },
+    {
+      "frame": 4,
+      "pose": "right_return",
+      "offset_px": [
+        5,
+        1
+      ],
+      "paste_position": [
+        21,
+        13
+      ],
+      "bbox": [
+        21,
+        13,
+        112,
+        117
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_anim\\barbell-motion-v2-4.png"
+    }
+  ],
+  "outputs": {
+    "sheet": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_anim\\sheet-transparent-motion-v2.png",
+    "gif": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_anim\\animation-motion-v2.gif",
+    "debug_preview_gif": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_anim\\animation-motion-v2-debug-preview.gif"
+  }
+}

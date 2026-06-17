@@ -1,0 +1,21 @@
+{
+  "source": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_base_no_barbell\\bench_press_base_no_barbell_1024.png",
+  "output": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_base_no_barbell\\bench_press_base_no_hooks_1024.png",
+  "clean_output": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_base_no_barbell\\bench_press_base_no_hooks_clean_1024.png",
+  "preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_base_no_barbell\\bench_press_base_no_hooks_preview.png",
+  "comparison": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_base_no_barbell\\bench_press_base_no_hooks_comparison.png",
+  "edit": "removed rack hook/catch assemblies; restored upright bodies from lower clean column samples; cleared protrusions",
+  "tool_mode": "imagegen skill with deterministic raster cleanup to preserve existing sprite pixels",
+  "alpha_corners": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "bbox": [
+    88,
+    124,
+    930,
+    857
+  ]
+}

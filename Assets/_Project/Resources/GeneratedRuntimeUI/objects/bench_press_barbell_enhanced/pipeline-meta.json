@@ -1,0 +1,41 @@
+{
+  "raw_alpha": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_enhanced\\bench_press_barbell_enhanced_alpha.png",
+  "tight": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_enhanced\\bench_press_barbell_enhanced_tight.png",
+  "overlay_1024": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_enhanced\\bench_press_barbell_enhanced_overlay_1024.png",
+  "preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_enhanced\\bench_press_barbell_enhanced_preview.png",
+  "composite_preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_enhanced\\bench_press_barbell_enhanced_on_base_preview.png",
+  "generated_bbox": [
+    170,
+    265,
+    1084,
+    960
+  ],
+  "tight_source_box": [
+    152,
+    247,
+    1102,
+    978
+  ],
+  "original_reference_bbox": [
+    95,
+    192,
+    481,
+    546
+  ],
+  "overlay_paste_position": [
+    45,
+    182
+  ],
+  "overlay_resized_size": [
+    486,
+    374
+  ],
+  "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "tool_mode": "built-in image_gen plus local chroma-key removal",
+  "prompt_summary": "enhanced barbell-only layer; no rack posts, no bench, no vertical supports"
+}

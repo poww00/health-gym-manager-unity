@@ -1,0 +1,205 @@
+{
+  "source": "C:\\Users\\kki02\\Downloads\\제목 없음-1 - 18-06-2026 01-32-07.png",
+  "skill": "generate2dsprite",
+  "method": "deterministic_layer_split_from_source_sprite",
+  "cell_size": [
+    1024,
+    512
+  ],
+  "sheet_grid": [
+    2,
+    3
+  ],
+  "crop_box_original": [
+    0,
+    117,
+    1024,
+    907
+  ],
+  "full_union_bbox_original": [
+    95,
+    159,
+    945,
+    865
+  ],
+  "barbell_union_bbox_original": [
+    95,
+    202,
+    481,
+    645
+  ],
+  "moving_mask_note": "Mask uses only plate/bar/hub regions; tall rack uprights are excluded and remain fixed in the base layer.",
+  "placements": [
+    {
+      "name": "low",
+      "dx": 0,
+      "dy": 70
+    },
+    {
+      "name": "mid_up",
+      "dx": 0,
+      "dy": 25
+    },
+    {
+      "name": "high",
+      "dx": 0,
+      "dy": -34
+    },
+    {
+      "name": "high_hold",
+      "dx": 0,
+      "dy": -50
+    },
+    {
+      "name": "mid_down",
+      "dx": 0,
+      "dy": 20
+    },
+    {
+      "name": "low_return",
+      "dx": 0,
+      "dy": 70
+    }
+  ],
+  "frames": [
+    {
+      "frame": 1,
+      "pose": "low",
+      "offset_original_px": [
+        0,
+        70
+      ],
+      "full_bbox_cell": [
+        95,
+        27,
+        945,
+        485
+      ],
+      "barbell_bbox_cell": [
+        95,
+        133,
+        481,
+        342
+      ],
+      "full_file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\bench_press_motion_v3_1.png",
+      "barbell_file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\barbell_only_motion_v3_1.png"
+    },
+    {
+      "frame": 2,
+      "pose": "mid_up",
+      "offset_original_px": [
+        0,
+        25
+      ],
+      "full_bbox_cell": [
+        95,
+        27,
+        945,
+        485
+      ],
+      "barbell_bbox_cell": [
+        95,
+        104,
+        481,
+        313
+      ],
+      "full_file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\bench_press_motion_v3_2.png",
+      "barbell_file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\barbell_only_motion_v3_2.png"
+    },
+    {
+      "frame": 3,
+      "pose": "high",
+      "offset_original_px": [
+        0,
+        -34
+      ],
+      "full_bbox_cell": [
+        95,
+        27,
+        945,
+        485
+      ],
+      "barbell_bbox_cell": [
+        95,
+        65,
+        481,
+        275
+      ],
+      "full_file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\bench_press_motion_v3_3.png",
+      "barbell_file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\barbell_only_motion_v3_3.png"
+    },
+    {
+      "frame": 4,
+      "pose": "high_hold",
+      "offset_original_px": [
+        0,
+        -50
+      ],
+      "full_bbox_cell": [
+        95,
+        27,
+        945,
+        485
+      ],
+      "barbell_bbox_cell": [
+        95,
+        55,
+        481,
+        264
+      ],
+      "full_file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\bench_press_motion_v3_4.png",
+      "barbell_file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\barbell_only_motion_v3_4.png"
+    },
+    {
+      "frame": 5,
+      "pose": "mid_down",
+      "offset_original_px": [
+        0,
+        20
+      ],
+      "full_bbox_cell": [
+        95,
+        27,
+        945,
+        485
+      ],
+      "barbell_bbox_cell": [
+        95,
+        100,
+        481,
+        310
+      ],
+      "full_file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\bench_press_motion_v3_5.png",
+      "barbell_file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\barbell_only_motion_v3_5.png"
+    },
+    {
+      "frame": 6,
+      "pose": "low_return",
+      "offset_original_px": [
+        0,
+        70
+      ],
+      "full_bbox_cell": [
+        95,
+        27,
+        945,
+        485
+      ],
+      "barbell_bbox_cell": [
+        95,
+        133,
+        481,
+        342
+      ],
+      "full_file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\bench_press_motion_v3_6.png",
+      "barbell_file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\barbell_only_motion_v3_6.png"
+    }
+  ],
+  "outputs": {
+    "full_sheet": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\bench_press_motion_v3_sheet.png",
+    "barbell_only_sheet": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\barbell_only_motion_v3_sheet.png",
+    "static_base": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\bench_press_static_no_barbell_v3.png",
+    "preview_gif": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\bench_press_motion_v3_preview.gif",
+    "contact_preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_press_anim_v3\\bench_press_motion_v3_contact_preview.png"
+  }
+}

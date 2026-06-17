@@ -17,6 +17,15 @@ TextureImporter:
   - first:
       213: -3214861451004070201
     second: exercise_bike_pedal_4
+  - first:
+      213: 4475862377290281142
+    second: exercise_bike_pedal_5
+  - first:
+      213: -884027902876159146
+    second: exercise_bike_pedal_6
+  - first:
+      213: 5813477505143024829
+    second: exercise_bike_pedal_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -133,7 +142,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.640625, y: 0.371094}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData:
       outline: []
@@ -155,7 +164,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.582031, y: 0.367188}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData:
       outline: []
@@ -177,7 +186,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.605469, y: 0.355469}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData:
       outline: []
@@ -199,7 +208,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.554688, y: 0.339844}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData:
       outline: []
@@ -221,7 +230,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.632812, y: 0.414062}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData:
       outline: []
@@ -230,6 +239,72 @@ TextureImporter:
       bones: []
       spriteID: a96733f2bce44c95887eb02d9eb2d7af
       internalID: -3214861451004070201
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exercise_bike_pedal_5
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.535156, y: 0.410156}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e03e7b03fe024ddba8e727f0679105b2
+      internalID: 4475862377290281142
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exercise_bike_pedal_6
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.488281, y: 0.421875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ab71b75d54b4d75a2f0db6ffcbf6781
+      internalID: -884027902876159146
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exercise_bike_pedal_7
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.527344, y: 0.421875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 929e9d0a46084e4ea3b8e2e359dc6f6d
+      internalID: 5813477505143024829
       vertices: []
       indices:
       edges: []
@@ -253,6 +328,9 @@ TextureImporter:
       exercise_bike_pedal_2: 2647309855125804438
       exercise_bike_pedal_3: 7062143089124570351
       exercise_bike_pedal_4: -3214861451004070201
+      exercise_bike_pedal_5: 4475862377290281142
+      exercise_bike_pedal_6: -884027902876159146
+      exercise_bike_pedal_7: 5813477505143024829
   mipmapLimitGroupName:
   pSDRemoveMatte: 0
   userData:

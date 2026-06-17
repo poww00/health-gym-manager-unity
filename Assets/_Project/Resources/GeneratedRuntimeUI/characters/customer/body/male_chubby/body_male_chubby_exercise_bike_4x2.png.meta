@@ -133,7 +133,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 9
-      pivot: {x: 0.6484375, y: 0.40625}
+      pivot: {x: 0.61286294, y: 0.87109053}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -155,7 +155,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 9
-      pivot: {x: 0.6484375, y: 0.40625}
+      pivot: {x: 0.5725452, y: 0.8663472}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -177,7 +177,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 9
-      pivot: {x: 0.6484375, y: 0.40625}
+      pivot: {x: 0.5369706, y: 0.861604}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -199,7 +199,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 9
-      pivot: {x: 0.6484375, y: 0.40625}
+      pivot: {x: 0.5583155, y: 0.861604}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -221,7 +221,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 9
-      pivot: {x: 0.6484375, y: 0.40625}
+      pivot: {x: 0.5749168, y: 0.8687188}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -238,13 +238,15 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 939cb9222036fd645a369e6c4f1c22f8
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
     nameFileIdTable:
       body_male_chubby_exercise_bike_4x2_0: -6213475023711284301
       body_male_chubby_exercise_bike_4x2_1: 3948012554138067012

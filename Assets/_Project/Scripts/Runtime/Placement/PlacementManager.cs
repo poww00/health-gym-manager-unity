@@ -892,17 +892,44 @@ public class PlacementManager : MonoBehaviour
 
     private static string GetRuntimeObjectSpriteId(string equipmentId)
     {
-        string id = string.IsNullOrWhiteSpace(equipmentId)
+        return string.IsNullOrWhiteSpace(equipmentId)
             ? string.Empty
             : equipmentId.ToLowerInvariant().Trim();
+    }
 
-        if (id.EndsWith("_basic")) return id.Substring(0, id.Length - 6);
-        if (id.EndsWith("_ss")) return id.Substring(0, id.Length - 3);
-        if (id.EndsWith("_a") || id.EndsWith("_b") || id.EndsWith("_s")) return id.Substring(0, id.Length - 2);
-        return id;
+    private static string StripEquipmentGradeSuffix(string spriteId)
+    {
+        string normalized = string.IsNullOrWhiteSpace(spriteId)
+            ? string.Empty
+            : spriteId.ToLowerInvariant().Trim();
+
+        if (normalized.EndsWith("_basic", System.StringComparison.Ordinal)) return normalized.Substring(0, normalized.Length - 6);
+        if (normalized.EndsWith("_ss", System.StringComparison.Ordinal)) return normalized.Substring(0, normalized.Length - 3);
+        if (normalized.EndsWith("_a", System.StringComparison.Ordinal) ||
+            normalized.EndsWith("_b", System.StringComparison.Ordinal) ||
+            normalized.EndsWith("_s", System.StringComparison.Ordinal))
+        {
+            return normalized.Substring(0, normalized.Length - 2);
+        }
+
+        return normalized;
     }
 
     private static Sprite LoadPreviewSprite(string spriteId)
+    {
+        Sprite sprite = LoadPreviewSpriteExact(spriteId);
+        if (sprite != null)
+        {
+            return sprite;
+        }
+
+        string fallbackSpriteId = StripEquipmentGradeSuffix(spriteId);
+        return string.Equals(fallbackSpriteId, spriteId, System.StringComparison.Ordinal)
+            ? null
+            : LoadPreviewSpriteExact(fallbackSpriteId);
+    }
+
+    private static Sprite LoadPreviewSpriteExact(string spriteId)
     {
         if (string.IsNullOrWhiteSpace(spriteId))
         {

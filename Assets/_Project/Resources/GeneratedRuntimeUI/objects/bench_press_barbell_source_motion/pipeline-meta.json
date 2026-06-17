@@ -1,0 +1,156 @@
+{
+  "source": "C:\\Users\\kki02\\AppData\\Local\\Temp\\codex-clipboard-2cbe5428-2ac4-4481-b260-48af53d7db08.png",
+  "method": "white_background_removed_then_exact_source_pixels_translated_vertically",
+  "cell_size": [
+    1024,
+    1024
+  ],
+  "sheet_grid": [
+    2,
+    3
+  ],
+  "source_bbox": [
+    95,
+    192,
+    481,
+    546
+  ],
+  "placements": [
+    {
+      "name": "low",
+      "dx": 0,
+      "dy": 70
+    },
+    {
+      "name": "mid_up",
+      "dx": 0,
+      "dy": 25
+    },
+    {
+      "name": "high",
+      "dx": 0,
+      "dy": -35
+    },
+    {
+      "name": "high_hold",
+      "dx": 0,
+      "dy": -55
+    },
+    {
+      "name": "mid_down",
+      "dx": 0,
+      "dy": 25
+    },
+    {
+      "name": "low_return",
+      "dx": 0,
+      "dy": 70
+    }
+  ],
+  "edge_touch_frames": [],
+  "frames": [
+    {
+      "frame": 1,
+      "pose": "low",
+      "offset_px": [
+        0,
+        70
+      ],
+      "bbox": [
+        95,
+        262,
+        481,
+        616
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_source_motion\\barbell_source_motion_1.png"
+    },
+    {
+      "frame": 2,
+      "pose": "mid_up",
+      "offset_px": [
+        0,
+        25
+      ],
+      "bbox": [
+        95,
+        217,
+        481,
+        571
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_source_motion\\barbell_source_motion_2.png"
+    },
+    {
+      "frame": 3,
+      "pose": "high",
+      "offset_px": [
+        0,
+        -35
+      ],
+      "bbox": [
+        95,
+        157,
+        481,
+        511
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_source_motion\\barbell_source_motion_3.png"
+    },
+    {
+      "frame": 4,
+      "pose": "high_hold",
+      "offset_px": [
+        0,
+        -55
+      ],
+      "bbox": [
+        95,
+        137,
+        481,
+        491
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_source_motion\\barbell_source_motion_4.png"
+    },
+    {
+      "frame": 5,
+      "pose": "mid_down",
+      "offset_px": [
+        0,
+        25
+      ],
+      "bbox": [
+        95,
+        217,
+        481,
+        571
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_source_motion\\barbell_source_motion_5.png"
+    },
+    {
+      "frame": 6,
+      "pose": "low_return",
+      "offset_px": [
+        0,
+        70
+      ],
+      "bbox": [
+        95,
+        262,
+        481,
+        616
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_source_motion\\barbell_source_motion_6.png"
+    }
+  ],
+  "outputs": {
+    "sheet_2x3": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_source_motion\\barbell_source_motion_sheet_2x3.png",
+    "strip_1x6": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_source_motion\\barbell_source_motion_strip_1x6.png",
+    "preview_gif": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_source_motion\\barbell_source_motion_preview.gif",
+    "on_base_preview_gif": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_source_motion\\barbell_source_motion_on_base_preview.gif",
+    "contact_preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_source_motion\\barbell_source_motion_contact_preview.png"
+  }
+}

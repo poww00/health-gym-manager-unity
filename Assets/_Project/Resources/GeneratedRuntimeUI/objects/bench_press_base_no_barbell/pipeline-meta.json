@@ -1,0 +1,29 @@
+{
+  "source_raw": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_base_no_barbell\\bench_press_base_no_barbell_raw_green.png",
+  "alpha_source": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_base_no_barbell\\bench_press_base_no_barbell_alpha.png",
+  "final_1024": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_base_no_barbell\\bench_press_base_no_barbell_1024.png",
+  "preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_base_no_barbell\\bench_press_base_no_barbell_preview.png",
+  "size": [
+    1024,
+    1024
+  ],
+  "bbox": [
+    88,
+    124,
+    930,
+    857
+  ],
+  "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "alpha_counts": {
+    "opaque": 218632,
+    "partial": 4652,
+    "transparent": 825292
+  },
+  "prompt_summary": "bench press base with rack uprights and bench pad only; no barbell, no plates, no horizontal lifting bar",
+  "tool_mode": "built-in image_gen plus local chroma-key removal"
+}

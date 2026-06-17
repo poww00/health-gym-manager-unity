@@ -22,8 +22,9 @@ public class LayeredCustomerAnimator : MonoBehaviour
     private const float FallbackHeadAnchorInsetY = 0.12f;
     private const float RunHeadAttachmentYOffset = -0.05f;
     private const float RunHeadAttachmentPostFlipXOffset = 0.015f;
-    private static readonly Vector3 ExerciseBikeBodyLocalOffset = new Vector3(-0.2f, 0.33f, 0f);
-    private const float ExerciseBikeCustomerVisualScale = 0.90f;
+    private static readonly Vector3 ExerciseBikeBodyLocalOffset = new Vector3(-0.17f, 0.16f, 0f);
+    private const float ExerciseBikeCustomerVisualScale = 0.75f;
+    private static readonly Vector2 ExerciseBikeBodyPlacementPivotPixels = new Vector2(83f, 52f);
     private const int DefaultBodySortingOrder = 30;
     private const int DefaultHeadSortingOrder = 31;
 
@@ -49,11 +50,6 @@ public class LayeredCustomerAnimator : MonoBehaviour
         { "body_male_chubby_walk_up_32x48_4x1_1", new Vector2(-0.0017f, 0.6337f) },
         { "body_male_chubby_walk_up_32x48_4x1_2", new Vector2(-0.0009f, 0.6319f) },
         { "body_male_chubby_walk_up_32x48_4x1_3", new Vector2(-0.0104f, 0.6363f) },
-        { "body_male_chubby_exercise_bike_4x2_0", new Vector2(-0.037f, 0.625f) },
-        { "body_male_chubby_exercise_bike_4x2_1", new Vector2(-0.052f, 0.625f) },
-        { "body_male_chubby_exercise_bike_4x2_2", new Vector2(-0.098f, 0.625f) },
-        { "body_male_chubby_exercise_bike_4x2_3", new Vector2(-0.153f, 0.625f) },
-        { "body_male_chubby_exercise_bike_4x2_4", new Vector2(-0.055f, 0.655f) },
     };
 
     public void Initialize(CustomerFlowManager.ActiveCustomer activeCustomer)
@@ -123,6 +119,11 @@ public class LayeredCustomerAnimator : MonoBehaviour
 
         bool usesRunHeadAttachment = TryGetRunHeadAttachmentAnchor(bodySprite, out Vector2 anchor);
 
+        if (IsExerciseBikeBodySprite(bodySprite))
+        {
+            return Vector2.zero;
+        }
+
         if (!usesRunHeadAttachment &&
             !BodyHeadAnchorsBySpriteName.TryGetValue(bodySprite.name, out anchor))
         {
@@ -148,6 +149,12 @@ public class LayeredCustomerAnimator : MonoBehaviour
             bodySprite.name.StartsWith("body_male_chubby_run_32x48_4x2", System.StringComparison.Ordinal);
     }
 
+    private static bool IsExerciseBikeBodySprite(Sprite bodySprite)
+    {
+        return bodySprite != null &&
+            bodySprite.name.StartsWith("body_male_chubby_exercise_bike_4x2", System.StringComparison.Ordinal);
+    }
+
     private static bool IsExerciseBikeMachineKey(string machineKey)
     {
         return !string.IsNullOrWhiteSpace(machineKey) &&
@@ -155,23 +162,36 @@ public class LayeredCustomerAnimator : MonoBehaviour
              machineKey.StartsWith("exercise_bike_", System.StringComparison.OrdinalIgnoreCase));
     }
 
-    private static Vector2 GetBodyPivotCompensation(Sprite bodySprite, bool bodyFlipX)
+    private static Vector2 GetBodyPivotCompensation(Sprite bodySprite, bool bodyFlipX, float visualScale)
     {
-        if (!IsRunBodySprite(bodySprite))
+        if (bodySprite == null)
         {
             return Vector2.zero;
         }
 
         Rect rect = bodySprite.rect;
-        Vector2 oldBottomCenterPivot = new Vector2(rect.width * 0.5f, 0f);
-        Vector2 compensation = (bodySprite.pivot - oldBottomCenterPivot) / bodySprite.pixelsPerUnit;
+        Vector2 placementPivot;
+        if (IsRunBodySprite(bodySprite))
+        {
+            placementPivot = new Vector2(rect.width * 0.5f, 0f);
+        }
+        else if (IsExerciseBikeBodySprite(bodySprite))
+        {
+            placementPivot = ExerciseBikeBodyPlacementPivotPixels;
+        }
+        else
+        {
+            return Vector2.zero;
+        }
+
+        Vector2 compensation = (bodySprite.pivot - placementPivot) / bodySprite.pixelsPerUnit;
 
         if (bodyFlipX)
         {
             compensation.x = -compensation.x;
         }
 
-        return compensation;
+        return compensation * visualScale;
     }
 
     private static bool TryGetRunHeadAttachmentAnchor(Sprite bodySprite, out Vector2 anchor)
@@ -278,14 +298,14 @@ public class LayeredCustomerAnimator : MonoBehaviour
             bodyRenderer.flipX = flipX;
         }
 
-        Vector2 bodyPivotCompensation = GetBodyPivotCompensation(bodyRenderer.sprite, bodyRenderer.flipX);
+        Vector2 bodyPivotCompensation = GetBodyPivotCompensation(bodyRenderer.sprite, bodyRenderer.flipX, customerVisualScale);
         Vector3 bodyLocalPosition = new Vector3(
             visualOffset.x + bodyPivotCompensation.x,
             visualOffset.y + bodyPivotCompensation.y,
             0f);
         bodyRenderer.gameObject.transform.localPosition = bodyLocalPosition;
         bodyRenderer.gameObject.transform.localScale = new Vector3(customerVisualScale, customerVisualScale, 1f);
-        headRenderer.gameObject.transform.localScale = new Vector3(customerVisualScale, customerVisualScale, 1f);
+        headRenderer.gameObject.transform.localScale = Vector3.one;
 
         // 머리 애니메이션 업데이트
         headRenderer.enabled = !hideDetachedHead;

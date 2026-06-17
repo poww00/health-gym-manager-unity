@@ -1,0 +1,108 @@
+{
+  "source_raw": "C:\\Users\\kki02\\.codex\\generated_images\\019ed662-5d94-71c0-baac-81d140dab27b\\ig_04f409bb3fc51e07016a32cf59b94c8191a24019e2cd780e88.png",
+  "rows": 2,
+  "cols": 2,
+  "cell_size": 128,
+  "method": "magenta_key_common_square_crop_preserve_offset",
+  "common_crop_box": [
+    94,
+    77,
+    556,
+    539
+  ],
+  "edge_touch_frames": [],
+  "frames": [
+    {
+      "frame": 1,
+      "source_bbox": [
+        143,
+        101,
+        498,
+        513
+      ],
+      "common_crop_box": [
+        94,
+        77,
+        556,
+        539
+      ],
+      "output_bbox": [
+        11,
+        4,
+        115,
+        123
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_anim\\barbell-offset-1.png"
+    },
+    {
+      "frame": 2,
+      "source_bbox": [
+        142,
+        95,
+        506,
+        513
+      ],
+      "common_crop_box": [
+        94,
+        77,
+        556,
+        539
+      ],
+      "output_bbox": [
+        11,
+        2,
+        117,
+        123
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_anim\\barbell-offset-2.png"
+    },
+    {
+      "frame": 3,
+      "source_bbox": [
+        155,
+        110,
+        508,
+        521
+      ],
+      "common_crop_box": [
+        94,
+        77,
+        556,
+        539
+      ],
+      "output_bbox": [
+        14,
+        9,
+        117,
+        126
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_anim\\barbell-offset-3.png"
+    },
+    {
+      "frame": 4,
+      "source_bbox": [
+        155,
+        110,
+        502,
+        515
+      ],
+      "common_crop_box": [
+        94,
+        77,
+        556,
+        539
+      ],
+      "output_bbox": [
+        14,
+        9,
+        116,
+        124
+      ],
+      "edge_touch": false,
+      "file": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\bench_press_barbell_anim\\barbell-offset-4.png"
+    }
+  ]
+}

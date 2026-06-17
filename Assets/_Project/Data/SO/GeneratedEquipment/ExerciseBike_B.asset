@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: ExerciseBike_B
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentDefinition
   equipmentId: exercise_bike_b
-  displayName: "\uc911\uace0 \uc2e4\ub0b4 \uc790\uc804\uac70"
+  displayName: "\uC911\uACE0 \uC2E4\uB0B4 \uC790\uC804\uAC70"
   category: 0
   brandTier: 0
-  width: 2
+  width: 1
   height: 1
   installCost: 540
   prestigeBonus: 2
