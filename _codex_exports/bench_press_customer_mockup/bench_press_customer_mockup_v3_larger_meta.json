@@ -1,0 +1,21 @@
+{
+  "layer_order": [
+    "bench_press_base_no_barbell",
+    "customer_body_bench_press_2x3",
+    "barbell_source_motion"
+  ],
+  "selected_variant": "L scale5.1 x135 y100",
+  "previous_variant": "I scale3.4 x210 y300",
+  "customer_scale": 5.1,
+  "scale_relative_to_previous": 1.5,
+  "customer_cell_position_xy": [
+    135,
+    100
+  ],
+  "frames": 6,
+  "outputs": [
+    "bench_press_customer_mockup_v3_larger.gif",
+    "bench_press_customer_mockup_v3_larger_contact.png",
+    "bench_press_customer_mockup_variants_v3_larger.png"
+  ]
+}

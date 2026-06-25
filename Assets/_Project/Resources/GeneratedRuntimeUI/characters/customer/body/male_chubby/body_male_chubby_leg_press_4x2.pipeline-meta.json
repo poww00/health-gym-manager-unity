@@ -1,0 +1,214 @@
+{
+  "sheet": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\characters\\customer\\body\\male_chubby\\body_male_chubby_leg_press_4x2.png",
+  "meta": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\characters\\customer\\body\\male_chubby\\body_male_chubby_leg_press_4x2.png.meta",
+  "preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\characters\\customer\\body\\male_chubby\\body_male_chubby_leg_press_4x2_preview.gif",
+  "contact": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\characters\\customer\\body\\male_chubby\\body_male_chubby_leg_press_4x2_contact_preview.png",
+  "frames": 8,
+  "grid": [
+    4,
+    2
+  ],
+  "frame_size": [
+    128,
+    128
+  ],
+  "ppu": 96,
+  "reference_body": "C:\\Users\\kki02\\Downloads\\??? ?? ?? (1).png",
+  "motion": "headless side-view customer body reclined on the leg press backrest; hips stay on the cushion while both legs push the moving footplate up-left and return in sync with the leg_press 8-frame cycle",
+  "head_anchors_pixels": [
+    {
+      "frame": 0,
+      "headAnchorPixels": [
+        102,
+        22
+      ],
+      "footContactPixels": [
+        47,
+        40
+      ]
+    },
+    {
+      "frame": 1,
+      "headAnchorPixels": [
+        102,
+        22
+      ],
+      "footContactPixels": [
+        40,
+        35
+      ]
+    },
+    {
+      "frame": 2,
+      "headAnchorPixels": [
+        102,
+        22
+      ],
+      "footContactPixels": [
+        33,
+        29
+      ]
+    },
+    {
+      "frame": 3,
+      "headAnchorPixels": [
+        102,
+        22
+      ],
+      "footContactPixels": [
+        25,
+        23
+      ]
+    },
+    {
+      "frame": 4,
+      "headAnchorPixels": [
+        102,
+        22
+      ],
+      "footContactPixels": [
+        17,
+        17
+      ]
+    },
+    {
+      "frame": 5,
+      "headAnchorPixels": [
+        102,
+        22
+      ],
+      "footContactPixels": [
+        25,
+        23
+      ]
+    },
+    {
+      "frame": 6,
+      "headAnchorPixels": [
+        102,
+        22
+      ],
+      "footContactPixels": [
+        33,
+        29
+      ]
+    },
+    {
+      "frame": 7,
+      "headAnchorPixels": [
+        102,
+        22
+      ],
+      "footContactPixels": [
+        40,
+        35
+      ]
+    }
+  ],
+  "guid": "6fba60d3a5e44ac2a5878aceb58ef19f",
+  "machine_overlay_preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\characters\\customer\\body\\male_chubby\\body_male_chubby_leg_press_4x2_machine_overlay_preview.png",
+  "note": "Corrected sneaker sole direction from vertical | to diagonal /, parallel to the slanted leg-press footplate in the specified machine sprite; full sole is intended to press the plate rather than toe-only contact.",
+  "raw_generated_sheet": "C:\\Users\\kki02\\.codex\\generated_images\\019ee5d0-c1f8-75d0-aaef-a8ba77abcf23\\ig_0dc3964c6eb0dd67016a3c220c8df8819196bfc6b092f9c913.png",
+  "generation_method": "image_gen edit from visible sheet and visible leg press machine reference, generate2dsprite chroma-key cleanup, shared-scale fit to 128x128 cells",
+  "processed_source_dir": "D:\\unity\\My project\\Temp\\leg_press_body_sprite_work\\sole_slash_20260625_0331",
+  "qc": {
+    "sheet_size": [
+      512,
+      256
+    ],
+    "cell_bboxes": [
+      [
+        12,
+        33,
+        104,
+        95
+      ],
+      [
+        5,
+        32,
+        111,
+        95
+      ],
+      [
+        2,
+        30,
+        113,
+        98
+      ],
+      [
+        3,
+        26,
+        112,
+        101
+      ],
+      [
+        4,
+        24,
+        113,
+        104
+      ],
+      [
+        3,
+        27,
+        112,
+        100
+      ],
+      [
+        6,
+        33,
+        109,
+        94
+      ],
+      [
+        13,
+        33,
+        102,
+        95
+      ]
+    ],
+    "magenta_residue_pixels": 0,
+    "neighbor_mean_abs_diffs": [
+      24.72,
+      42.8,
+      16.82,
+      12.4,
+      17.43,
+      48.27,
+      35.43,
+      13.91
+    ],
+    "closest_pair_mean_abs_diff": [
+      3,
+      5,
+      7.8
+    ],
+    "duplicate_pair_threshold": 3.0,
+    "duplicate_like_pairs_found": []
+  },
+  "cleaned_raw_sheet": "D:\\unity\\My project\\Temp\\leg_press_body_sprite_work\\footplate_contact_20260625_0211_clean2\\raw-guide-and-outline-removed.png",
+  "cell_position_adjustment_pixels": [
+    -6,
+    0
+  ],
+  "machine_reference_used": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\leg_press.png",
+  "attached_machine_reference": "C:\\Users\\kki02\\AppData\\Local\\Temp\\codex-clipboard-d59d7ece-914d-49c8-9ea1-0eba1c431824.png",
+  "runtime_body_frame_map": [
+    0,
+    1,
+    2,
+    6,
+    7
+  ],
+  "runtime_machine_frame_map": [
+    0,
+    1,
+    2,
+    1,
+    0
+  ],
+  "runtime_sequence_note": "Runtime leg press sync uses body frames 1,2,3,7,8 and machine frames 1,2,3,2,1; body frames 3-6 from the original sheet are collapsed to the single third pose.",
+  "mapped_sequence_preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\characters\\customer\\body\\male_chubby\\body_male_chubby_leg_press_5step_contact_preview.png",
+  "mapped_overlay_preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\characters\\customer\\body\\male_chubby\\body_male_chubby_leg_press_5step_machine_overlay_preview.png",
+  "mapped_preview_gif": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\characters\\customer\\body\\male_chubby\\body_male_chubby_leg_press_5step_preview.gif",
+  "runtime_machine_frame_adjustment": "Machine frame 3 rebuilt from recovered base plus one moved footplate layer; no duplicate footplate remains."
+}

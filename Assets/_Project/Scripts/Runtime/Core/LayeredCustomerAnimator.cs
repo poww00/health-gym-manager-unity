@@ -14,6 +14,9 @@ public class LayeredCustomerAnimator : MonoBehaviour
     private Sprite[] walkVerticalFrames;
     private Sprite[] runFrames;
     private Sprite[] exerciseBikeFrames;
+    private Sprite[] benchPressFrames;
+    private Sprite[] latPulldownFrames;
+    private Sprite[] legPressFrames;
     private Sprite[] headFrames;
 
     private Vector3 lastWorldPosition;
@@ -25,8 +28,32 @@ public class LayeredCustomerAnimator : MonoBehaviour
     private static readonly Vector3 ExerciseBikeBodyLocalOffset = new Vector3(-0.17f, 0.16f, 0f);
     private const float ExerciseBikeCustomerVisualScale = 0.75f;
     private static readonly Vector2 ExerciseBikeBodyPlacementPivotPixels = new Vector2(83f, 52f);
+    private static readonly Vector3 BenchPressBodyLocalOffset = new Vector3(-0.07f, 0.64f, 0f);
+    private const float BenchPressCustomerVisualScale = 0.75f;
+    private const float BenchPressHeadVisualScale = 0.85f;
+    private const float BenchPressHeadRotationZ = 90f;
+    private const float BenchPressAnimationFps = 9f;
+    private static readonly Vector3 LatPulldownBodyLocalOffset = new Vector3(0.28f, -0.24f, 0f);
+    private const float LatPulldownCustomerVisualScale = 0.75f;
+    private static readonly Vector3 LegPressBodyLocalOffset = Vector3.zero;
+    private const float LegPressCustomerVisualScale = 0.75f;
     private const int DefaultBodySortingOrder = 30;
     private const int DefaultHeadSortingOrder = 31;
+    private static readonly int[] BenchPressBodyFrameMap = { 2, 1, 0, 4, 1, 2 };
+    private static readonly int[] LatPulldownBodyFrameMap = { 0, 1, 5, 2, 3, 2, 5, 1 };
+    private static readonly int[] LegPressBodyFrameMap = { 0, 1, 2, 6, 7 };
+    private static readonly Dictionary<string, Vector2> BenchPressHeadAnchorPixelsBySpriteName = new Dictionary<string, Vector2>
+    {
+        { "body_male_chubby_bench_press_2x3_0", new Vector2(21f, 98f) },
+        { "body_male_chubby_bench_press_2x3_1", new Vector2(19f, 97f) },
+        { "body_male_chubby_bench_press_2x3_2", new Vector2(20f, 94f) },
+        { "body_male_chubby_bench_press_2x3_3", new Vector2(22f, 90f) },
+        { "body_male_chubby_bench_press_2x3_4", new Vector2(19f, 97f) },
+        { "body_male_chubby_bench_press_2x3_5", new Vector2(22f, 99f) },
+    };
+
+    private static readonly Vector2 LatPulldownHeadAnchorPixels = new Vector2(78f, 52f);
+    private static readonly Vector2 LegPressHeadAnchorPixels = new Vector2(100f, 44f);
 
     private static readonly Dictionary<string, Vector2> BodyHeadAnchorsBySpriteName = new Dictionary<string, Vector2>
     {
@@ -82,6 +109,9 @@ public class LayeredCustomerAnimator : MonoBehaviour
         walkVerticalFrames = LoadBodyAnimationFrames("GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_walk_up_32x48_4x1");
         runFrames = LoadBodyAnimationFrames("GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_run_32x48_4x2");
         exerciseBikeFrames = LoadBodyAnimationFrames("GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_exercise_bike_4x2");
+        benchPressFrames = LoadBodyAnimationFrames("GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_bench_press_2x3");
+        latPulldownFrames = LoadBodyAnimationFrames("GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_lat_pulldown_4x2");
+        legPressFrames = LoadBodyAnimationFrames("GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_leg_press_4x2");
         headFrames = Resources.LoadAll<Sprite>("GeneratedRuntimeUI/characters/customer/head/male_chubby/head_male_chubby_3dir_32x48_3x1");
 
         animationOffset = Random.Range(0f, 1f);
@@ -124,6 +154,39 @@ public class LayeredCustomerAnimator : MonoBehaviour
             return Vector2.zero;
         }
 
+        if (IsBenchPressBodySprite(bodySprite))
+        {
+            anchor = GetBenchPressHeadAnchor(bodySprite);
+            if (bodyFlipX)
+            {
+                anchor.x = -anchor.x;
+            }
+
+            return anchor;
+        }
+
+        if (IsLatPulldownBodySprite(bodySprite))
+        {
+            anchor = GetLatPulldownHeadAnchor(bodySprite);
+            if (bodyFlipX)
+            {
+                anchor.x = -anchor.x;
+            }
+
+            return anchor;
+        }
+
+        if (IsLegPressBodySprite(bodySprite))
+        {
+            anchor = GetLegPressHeadAnchor(bodySprite);
+            if (bodyFlipX)
+            {
+                anchor.x = -anchor.x;
+            }
+
+            return anchor;
+        }
+
         if (!usesRunHeadAttachment &&
             !BodyHeadAnchorsBySpriteName.TryGetValue(bodySprite.name, out anchor))
         {
@@ -155,11 +218,110 @@ public class LayeredCustomerAnimator : MonoBehaviour
             bodySprite.name.StartsWith("body_male_chubby_exercise_bike_4x2", System.StringComparison.Ordinal);
     }
 
+    private static bool IsBenchPressBodySprite(Sprite bodySprite)
+    {
+        return bodySprite != null &&
+            bodySprite.name.StartsWith("body_male_chubby_bench_press_2x3", System.StringComparison.Ordinal);
+    }
+
+    private static bool IsLatPulldownBodySprite(Sprite bodySprite)
+    {
+        return bodySprite != null &&
+            bodySprite.name.StartsWith("body_male_chubby_lat_pulldown_4x2", System.StringComparison.Ordinal);
+    }
+
+    private static bool IsLegPressBodySprite(Sprite bodySprite)
+    {
+        return bodySprite != null &&
+            bodySprite.name.StartsWith("body_male_chubby_leg_press_4x2", System.StringComparison.Ordinal);
+    }
+
+    private static Vector2 GetBenchPressHeadAnchor(Sprite bodySprite)
+    {
+        if (bodySprite != null &&
+            BenchPressHeadAnchorPixelsBySpriteName.TryGetValue(bodySprite.name, out Vector2 topLeftPixels))
+        {
+            return SpriteTopLeftPixelsToLocal(bodySprite, topLeftPixels);
+        }
+
+        return bodySprite != null
+            ? SpriteTopLeftPixelsToLocal(bodySprite, new Vector2(20f, 97f))
+            : Vector2.zero;
+    }
+
+    private static Vector2 GetLatPulldownHeadAnchor(Sprite bodySprite)
+    {
+        return bodySprite != null
+            ? SpriteTopLeftPixelsToLocal(bodySprite, LatPulldownHeadAnchorPixels)
+            : Vector2.zero;
+    }
+
+    private static Vector2 GetLegPressHeadAnchor(Sprite bodySprite)
+    {
+        return bodySprite != null
+            ? SpriteTopLeftPixelsToLocal(bodySprite, LegPressHeadAnchorPixels)
+            : Vector2.zero;
+    }
+
+    private static int GetLatPulldownCustomerFrameIndex(int frameCount)
+    {
+        if (frameCount <= 0)
+        {
+            return 0;
+        }
+
+        int machineFrame = GymPlacedObjectVisual.GetLatPulldownAnimationFrameIndex(LatPulldownBodyFrameMap.Length);
+        if (frameCount < LatPulldownBodyFrameMap.Length)
+        {
+            return machineFrame % frameCount;
+        }
+
+        return Mathf.Clamp(LatPulldownBodyFrameMap[machineFrame], 0, frameCount - 1);
+    }
+
+    private static int GetLegPressCustomerFrameIndex(int frameCount)
+    {
+        if (frameCount <= 0)
+        {
+            return 0;
+        }
+
+        int stepIndex = GymPlacedObjectVisual.GetLegPressAnimationStepIndex() % LegPressBodyFrameMap.Length;
+        return Mathf.Clamp(LegPressBodyFrameMap[stepIndex], 0, frameCount - 1);
+    }
+
+    private static Vector2 SpriteTopLeftPixelsToLocal(Sprite sprite, Vector2 topLeftPixels)
+    {
+        Vector2 bottomLeftPixels = new Vector2(topLeftPixels.x, sprite.rect.height - topLeftPixels.y);
+        return (bottomLeftPixels - sprite.pivot) / sprite.pixelsPerUnit;
+    }
+
     private static bool IsExerciseBikeMachineKey(string machineKey)
     {
         return !string.IsNullOrWhiteSpace(machineKey) &&
             (machineKey.Equals("exercise_bike", System.StringComparison.OrdinalIgnoreCase) ||
              machineKey.StartsWith("exercise_bike_", System.StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsBenchPressMachineKey(string machineKey)
+    {
+        return !string.IsNullOrWhiteSpace(machineKey) &&
+            (machineKey.Equals("bench_press", System.StringComparison.OrdinalIgnoreCase) ||
+             machineKey.StartsWith("bench_press_", System.StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsLatPulldownMachineKey(string machineKey)
+    {
+        return !string.IsNullOrWhiteSpace(machineKey) &&
+            (machineKey.Equals("lat_pulldown", System.StringComparison.OrdinalIgnoreCase) ||
+             machineKey.StartsWith("lat_pulldown_", System.StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsLegPressMachineKey(string machineKey)
+    {
+        return !string.IsNullOrWhiteSpace(machineKey) &&
+            (machineKey.Equals("leg_press", System.StringComparison.OrdinalIgnoreCase) ||
+             machineKey.StartsWith("leg_press_", System.StringComparison.OrdinalIgnoreCase));
     }
 
     private static Vector2 GetBodyPivotCompensation(Sprite bodySprite, bool bodyFlipX, float visualScale)
@@ -222,7 +384,14 @@ public class LayeredCustomerAnimator : MonoBehaviour
         bool hideDetachedHead = false;
         bool syncMachineAnimation = false;
         bool reverseBodyAnimation = false;
+        bool useBenchPressBodyFrameMap = false;
+        bool useLatPulldownFrameSync = false;
+        bool useLegPressFrameSync = false;
         float customerVisualScale = 1f;
+        float headVisualScale = 1f;
+        float headRotationZ = 0f;
+        bool useSpecialHeadTransform = false;
+        bool renderHeadBehindBody = false;
         Vector3 visualOffset = Vector3.zero;
 
         Sprite[] currentBodyFrames = idleFrames;
@@ -251,6 +420,52 @@ public class LayeredCustomerAnimator : MonoBehaviour
                 reverseBodyAnimation = true;
                 customerVisualScale = ExerciseBikeCustomerVisualScale;
                 visualOffset = ExerciseBikeBodyLocalOffset;
+            }
+            else if (IsBenchPressMachineKey(customer.targetMachineKey))
+            {
+                currentBodyFrames = benchPressFrames != null && benchPressFrames.Length > 0
+                    ? benchPressFrames
+                    : idleFrames;
+                fps = BenchPressAnimationFps;
+                flipX = false;
+                headIndex = 1;
+                headFlipX = false;
+                syncMachineAnimation = true;
+                useBenchPressBodyFrameMap = true;
+                customerVisualScale = BenchPressCustomerVisualScale;
+                headVisualScale = BenchPressHeadVisualScale;
+                headRotationZ = BenchPressHeadRotationZ;
+                useSpecialHeadTransform = true;
+                visualOffset = BenchPressBodyLocalOffset;
+            }
+            else if (IsLatPulldownMachineKey(customer.targetMachineKey))
+            {
+                currentBodyFrames = latPulldownFrames != null && latPulldownFrames.Length > 0
+                    ? latPulldownFrames
+                    : idleFrames;
+                fps = GymPlacedObjectVisual.LatPulldownAnimationFps;
+                flipX = false;
+                headIndex = 1;
+                headFlipX = true;
+                syncMachineAnimation = true;
+                useLatPulldownFrameSync = true;
+                customerVisualScale = LatPulldownCustomerVisualScale;
+                renderHeadBehindBody = true;
+                visualOffset = LatPulldownBodyLocalOffset;
+            }
+            else if (IsLegPressMachineKey(customer.targetMachineKey))
+            {
+                currentBodyFrames = legPressFrames != null && legPressFrames.Length > 0
+                    ? legPressFrames
+                    : idleFrames;
+                fps = GymPlacedObjectVisual.LegPressAnimationFps;
+                flipX = false;
+                headIndex = 1;
+                headFlipX = true;
+                syncMachineAnimation = true;
+                useLegPressFrameSync = true;
+                customerVisualScale = LegPressCustomerVisualScale;
+                visualOffset = LegPressBodyLocalOffset;
             }
             else
             {
@@ -290,9 +505,21 @@ public class LayeredCustomerAnimator : MonoBehaviour
         {
             float frameTime = syncMachineAnimation ? Time.time : Time.time + animationOffset;
             int frame = Mathf.FloorToInt(frameTime * fps) % currentBodyFrames.Length;
+            if (useLatPulldownFrameSync)
+            {
+                frame = GetLatPulldownCustomerFrameIndex(currentBodyFrames.Length);
+            }
+            if (useLegPressFrameSync)
+            {
+                frame = GetLegPressCustomerFrameIndex(currentBodyFrames.Length);
+            }
             if (reverseBodyAnimation && currentBodyFrames.Length > 1)
             {
                 frame = currentBodyFrames.Length - 1 - frame;
+            }
+            if (useBenchPressBodyFrameMap && currentBodyFrames.Length >= BenchPressBodyFrameMap.Length)
+            {
+                frame = BenchPressBodyFrameMap[frame % BenchPressBodyFrameMap.Length];
             }
             bodyRenderer.sprite = currentBodyFrames[frame];
             bodyRenderer.flipX = flipX;
@@ -305,7 +532,21 @@ public class LayeredCustomerAnimator : MonoBehaviour
             0f);
         bodyRenderer.gameObject.transform.localPosition = bodyLocalPosition;
         bodyRenderer.gameObject.transform.localScale = new Vector3(customerVisualScale, customerVisualScale, 1f);
-        headRenderer.gameObject.transform.localScale = Vector3.one;
+        if (renderHeadBehindBody)
+        {
+            headRenderer.sortingOrder = bodyRenderer.sortingOrder - 2;
+        }
+
+        if (useSpecialHeadTransform)
+        {
+            headRenderer.gameObject.transform.localScale = new Vector3(headVisualScale, headVisualScale, 1f);
+            headRenderer.gameObject.transform.localRotation = Quaternion.Euler(0f, 0f, headRotationZ);
+        }
+        else
+        {
+            headRenderer.gameObject.transform.localScale = Vector3.one;
+            headRenderer.gameObject.transform.localRotation = Quaternion.identity;
+        }
 
         // 머리 애니메이션 업데이트
         headRenderer.enabled = !hideDetachedHead;

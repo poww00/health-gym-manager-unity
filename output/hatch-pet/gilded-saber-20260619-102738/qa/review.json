@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "checks": [
+    "Detected exact requested frame counts: attack=6, parry=4, run=6, tired=4.",
+    "Final PNG/WebP spritesheets have alpha transparency.",
+    "Green chroma background removed and residual edge spill clamped.",
+    "Unused cells in four-frame rows are transparent.",
+    "No labels, UI, extra characters, background props, or floor shadows were added during deterministic processing."
+  ],
+  "dimensions": {
+    "spritesheet": [
+      1152,
+      832
+    ],
+    "cell": [
+      192,
+      208
+    ]
+  }
+}

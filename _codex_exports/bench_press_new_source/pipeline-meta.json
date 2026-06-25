@@ -1,0 +1,45 @@
+{
+  "source_combined": "C:\\Users\\kki02\\Downloads\\제목 없음-1 - 18-06-2026 01-32-07 - 19-06-2026 13-32-35.png",
+  "source_base": "C:\\Users\\kki02\\Downloads\\반체 프레스.png",
+  "source_barbell": "C:\\Users\\kki02\\Downloads\\바벨231.png",
+  "cell_size": 1024,
+  "sheet": {
+    "cols": 3,
+    "rows": 2,
+    "frames": 6
+  },
+  "scale": 1.28,
+  "top_pad": 120,
+  "barbell_origin_source_canvas": {
+    "x": 4,
+    "y": 100
+  },
+  "barbell_origin_cell": {
+    "x": 5,
+    "y": 248
+  },
+  "motion_y_source_pixels": [
+    0,
+    26,
+    53,
+    80,
+    53,
+    26
+  ],
+  "motion_y_cell_pixels": [
+    0,
+    33,
+    68,
+    102,
+    68,
+    33
+  ],
+  "motion_profile": "smooth_ping_pong_no_duplicate_endpoint",
+  "preview_crop_cell_pixels": [
+    0,
+    201,
+    1008,
+    1024
+  ],
+  "white_fringe_removed": true
+}

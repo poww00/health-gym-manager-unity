@@ -1,0 +1,254 @@
+{
+  "sheet": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\leg_press.png",
+  "meta": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\leg_press.png.meta",
+  "preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\leg_press_preview.gif",
+  "contact": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\leg_press_contact_preview.png",
+  "frames": 8,
+  "grid": [
+    4,
+    2
+  ],
+  "frame_size": [
+    512,
+    384
+  ],
+  "sheet_size": [
+    2048,
+    768
+  ],
+  "ppu": 128,
+  "source_base": "C:\\Users\\kki02\\AppData\\Local\\Temp\\codex-clipboard-75c17468-f118-4614-bfd5-a91323e34da1.png",
+  "source_footplate": "C:\\Users\\kki02\\AppData\\Local\\Temp\\codex-clipboard-00b6b588-f502-4602-8b03-451cece4df7e.png",
+  "background_cleanup": "edge-connected bright neutral checkerboard removed to alpha",
+  "source_crop": [
+    0,
+    0,
+    1074,
+    709
+  ],
+  "footplate_size_in_source_comp": [
+    124,
+    255
+  ],
+  "footplate_motion": [
+    {
+      "frame": 0,
+      "progress": 0.0,
+      "plateTopLeft": [
+        594,
+        210
+      ],
+      "railContact": [
+        650,
+        455
+      ]
+    },
+    {
+      "frame": 1,
+      "progress": 0.22,
+      "plateTopLeft": [
+        563,
+        179
+      ],
+      "railContact": [
+        619,
+        424
+      ]
+    },
+    {
+      "frame": 2,
+      "progress": 0.48,
+      "plateTopLeft": [
+        571,
+        187
+      ],
+      "railContact": [
+        627,
+        432
+      ]
+    },
+    {
+      "frame": 3,
+      "progress": 0.74,
+      "plateTopLeft": [
+        491,
+        106
+      ],
+      "railContact": [
+        546,
+        351
+      ]
+    },
+    {
+      "frame": 4,
+      "progress": 1.0,
+      "plateTopLeft": [
+        454,
+        70
+      ],
+      "railContact": [
+        510,
+        315
+      ]
+    },
+    {
+      "frame": 5,
+      "progress": 0.74,
+      "plateTopLeft": [
+        491,
+        106
+      ],
+      "railContact": [
+        546,
+        351
+      ]
+    },
+    {
+      "frame": 6,
+      "progress": 0.48,
+      "plateTopLeft": [
+        527,
+        143
+      ],
+      "railContact": [
+        583,
+        388
+      ]
+    },
+    {
+      "frame": 7,
+      "progress": 0.22,
+      "plateTopLeft": [
+        563,
+        179
+      ],
+      "railContact": [
+        619,
+        424
+      ]
+    }
+  ],
+  "guid": "eadff47fe91b4108b6015a4bd75c572c",
+  "adjustment_note": "Rebuilt frame 3 with a single moved footplate layer from the clean source sheet, replacing the whole frame cell to remove the accidental duplicate footplate.",
+  "moving_weight_plate_source": "C:\\Users\\kki02\\AppData\\Local\\Temp\\codex-clipboard-755e2246-56ee-46e3-b8d9-8c9ed272ab30.png",
+  "moving_weight_plate_clean": "D:\\unity\\My project\\Temp\\leg_press_sprite_work\\moving_weight_plate_clean2.png",
+  "moving_weight_plate_size_in_source_comp": [
+    190,
+    197
+  ],
+  "moving_weight_plate_layering": "base -> moving weight plate -> moving support bracket -> moving footplate",
+  "moving_weight_plate_motion": [
+    {
+      "frame": 0,
+      "plateTopLeft": [
+        426,
+        244
+      ],
+      "supportTopLeft": [
+        568,
+        292
+      ]
+    },
+    {
+      "frame": 1,
+      "plateTopLeft": [
+        395,
+        213
+      ],
+      "supportTopLeft": [
+        537,
+        261
+      ]
+    },
+    {
+      "frame": 2,
+      "plateTopLeft": [
+        403,
+        221
+      ],
+      "supportTopLeft": [
+        545,
+        269
+      ]
+    },
+    {
+      "frame": 3,
+      "plateTopLeft": [
+        323,
+        140
+      ],
+      "supportTopLeft": [
+        465,
+        188
+      ]
+    },
+    {
+      "frame": 4,
+      "plateTopLeft": [
+        286,
+        104
+      ],
+      "supportTopLeft": [
+        428,
+        152
+      ]
+    },
+    {
+      "frame": 5,
+      "plateTopLeft": [
+        323,
+        140
+      ],
+      "supportTopLeft": [
+        465,
+        188
+      ]
+    },
+    {
+      "frame": 6,
+      "plateTopLeft": [
+        359,
+        177
+      ],
+      "supportTopLeft": [
+        501,
+        225
+      ]
+    },
+    {
+      "frame": 7,
+      "plateTopLeft": [
+        395,
+        213
+      ],
+      "supportTopLeft": [
+        537,
+        261
+      ]
+    }
+  ],
+  "moving_weight_plate_overlap_policy": "weight plate is enlarged and tucked tightly behind the footplate; a reused-metal support bracket fills the visible empty gap without changing frame dimensions",
+  "moving_support_bracket_size_in_source_comp": [
+    34,
+    118
+  ],
+  "runtime_machine_frame_map": [
+    0,
+    1,
+    2,
+    1,
+    0
+  ],
+  "runtime_sequence_note": "Runtime leg press animation uses only machine frames 1,2,3,2,1 so the footplate returns after the third position and stays synced to the customer body 5-step sequence.",
+  "mapped_contact_preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\leg_press_5step_contact_preview.png",
+  "mapped_preview_gif": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\leg_press_5step_preview.gif",
+  "frame3_moving_layer_adjustment_pixels": [
+    20,
+    20
+  ],
+  "frame3_moving_layer_adjustment_source_pixels": [
+    44,
+    44
+  ],
+  "frame3_cell_replacement_note": "Frame 3 is rebuilt from recovered no-footplate base plus one moved dynamic footplate layer; duplicate old footplate pixels are not preserved."
+}

@@ -1,0 +1,21 @@
+{
+  "layer_order": [
+    "bench_press_base_no_barbell",
+    "customer_body_bench_press_2x3",
+    "barbell_source_motion"
+  ],
+  "selected_variant": "R scale5.1 x150 y-55",
+  "previous_variant": "L scale5.1 x135 y100",
+  "customer_scale": 5.1,
+  "customer_cell_position_xy": [
+    150,
+    -55
+  ],
+  "note": "customer moved upward so back overlaps the brown cushion area",
+  "frames": 6,
+  "outputs": [
+    "bench_press_customer_mockup_v4_on_pad.gif",
+    "bench_press_customer_mockup_v4_on_pad_contact.png",
+    "bench_press_customer_mockup_variants_v4_on_pad.png"
+  ]
+}

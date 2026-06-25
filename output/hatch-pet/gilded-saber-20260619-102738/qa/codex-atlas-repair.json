@@ -1,0 +1,76 @@
+{
+  "ok": true,
+  "operation": "codex-app-atlas-repair",
+  "source_run": "D:\\unity\\My project\\output\\hatch-pet\\gilded-saber-20260619-102738",
+  "no_image_generation": true,
+  "atlas": {
+    "columns": 8,
+    "rows": 9,
+    "cell_width": 192,
+    "cell_height": 208,
+    "width": 1536,
+    "height": 1872
+  },
+  "rows": [
+    {
+      "row": 0,
+      "state": "idle",
+      "used_columns": 6,
+      "source": "neutral standing frames from parry/attack with tiny deterministic vertical offsets"
+    },
+    {
+      "row": 1,
+      "state": "running-right",
+      "used_columns": 8,
+      "source": "run 6-frame source extended to 8 by deterministic frame reuse"
+    },
+    {
+      "row": 2,
+      "state": "running-left",
+      "used_columns": 8,
+      "source": "horizontal mirror of running-right"
+    },
+    {
+      "row": 3,
+      "state": "waving",
+      "used_columns": 4,
+      "source": "parry/guard substitute"
+    },
+    {
+      "row": 4,
+      "state": "jumping",
+      "used_columns": 5,
+      "source": "parry/idle frames with deterministic vertical offsets"
+    },
+    {
+      "row": 5,
+      "state": "failed",
+      "used_columns": 8,
+      "source": "tired 4-frame source extended to 8 by ping-pong reuse"
+    },
+    {
+      "row": 6,
+      "state": "waiting",
+      "used_columns": 6,
+      "source": "idle/parry-ready frames with calm deterministic motion"
+    },
+    {
+      "row": 7,
+      "state": "running",
+      "used_columns": 6,
+      "source": "original run animation directly"
+    },
+    {
+      "row": 8,
+      "state": "review",
+      "used_columns": 6,
+      "source": "parry active/review substitute with sword visible"
+    }
+  ],
+  "outputs": {
+    "spritesheet_png": "D:\\unity\\My project\\output\\hatch-pet\\gilded-saber-20260619-102738\\final\\spritesheet.png",
+    "spritesheet_webp": "D:\\unity\\My project\\output\\hatch-pet\\gilded-saber-20260619-102738\\final\\spritesheet.webp",
+    "pet_json": "D:\\unity\\My project\\output\\hatch-pet\\gilded-saber-20260619-102738\\final\\pet.json",
+    "contact_sheet": "D:\\unity\\My project\\output\\hatch-pet\\gilded-saber-20260619-102738\\qa\\codex-atlas-contact-sheet.png"
+  }
+}

@@ -121,6 +121,9 @@ public static class EquipmentSoAssetGenerator
         SetInt(serialized, "ptDemandBonus", ToRawValue(type.BaseIncomePerUse, grade.IncomeMultiplier, EquipmentBrandTierRules.GetPtDemandMultiplier(grade.BrandTier)));
         ClearIconReference(serialized);
         SetColor(serialized, "debugColor", grade.DebugColor);
+        SetVector2(serialized, "customerUseOffset", GetLegacyCustomerUseOffset(type.Id));
+        SetBool(serialized, "useForegroundSprite", UsesLegacyForegroundSprite(type.Id));
+        SetVector2(serialized, "foregroundOffset", Vector2.zero);
         SetBool(serialized, "unlockedByDefault", true);
 
         serialized.ApplyModifiedPropertiesWithoutUndo();
@@ -220,12 +223,47 @@ public static class EquipmentSoAssetGenerator
         }
     }
 
+    private static void SetVector2(SerializedObject serialized, string propertyName, Vector2 value)
+    {
+        SerializedProperty property = serialized.FindProperty(propertyName);
+        if (property != null)
+        {
+            property.vector2Value = value;
+        }
+    }
+
     private static void SetColor(SerializedObject serialized, string propertyName, Color value)
     {
         SerializedProperty property = serialized.FindProperty(propertyName);
         if (property != null)
         {
             property.colorValue = value;
+        }
+    }
+
+    private static Vector2 GetLegacyCustomerUseOffset(string typeId)
+    {
+        switch (typeId)
+        {
+            case "treadmill":
+            case "exercise_bike":
+                return new Vector2(0.35f, 0f);
+            case "leg_press":
+                return new Vector2(0.55f, 0.55f);
+            default:
+                return Vector2.zero;
+        }
+    }
+
+    private static bool UsesLegacyForegroundSprite(string typeId)
+    {
+        switch (typeId)
+        {
+            case "treadmill":
+            case "bench_press":
+                return true;
+            default:
+                return false;
         }
     }
 

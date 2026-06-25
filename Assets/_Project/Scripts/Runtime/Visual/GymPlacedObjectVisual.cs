@@ -6,13 +6,23 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
     private const int MachineDepthSortRange = 19;
     private const int MachineDepthSortStep = 64;
     private const float CustomSpriteBaseLocalY = 0.42f;
+    private const float ExerciseBikeVisualReferenceWidth = 2f;
     private const float ExerciseBikeVisualWidthFactor = 0.55f;
     private const float ExerciseBikeVisualYOffset = 0.18f;
+    private const float BenchPressVisualWidthFactor = 0.8f;
+    private const float BenchPressVisualYOffset = 0.2f;
+    private const float LatPulldownVisualWidthFactor = 0.8f;
+    private const float LatPulldownVisualYOffset = -0.1f;
+    private const float LegPressVisualYOffset = 0.28f;
     private const float ExerciseBikePedalOffsetX = 0.1f;
     private const float ExerciseBikePedalOffsetY = -0.2f;
     private const float ExerciseBikePedalScale = 0.5f;
     private const float MotionAnimationFps = 10f;
+    private const float BenchPressMotionAnimationFps = 9f;
     private const float ExerciseBikePedalAnimationFps = 16f;
+    private const int DefaultForegroundLayerOffset = 35;
+    private const int LatPulldownHandleLayerOffset = CustomerBodyLayerOffset - 1;
+    private static readonly int[] LegPressMachineFrameMap = { 0, 1, 2, 6, 7 };
     private static readonly Vector2[] ExerciseBikePedalHubPixels =
     {
         new Vector2(164f, 95f),
@@ -27,6 +37,34 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 
     public const int CustomerBodyLayerOffset = 30;
     public const int CustomerHeadLayerOffset = 31;
+    public const float LatPulldownAnimationFps = 8f;
+    public const float LegPressAnimationFps = 10f;
+
+    public static int GetLatPulldownAnimationFrameIndex(int frameCount)
+    {
+        if (frameCount <= 0)
+        {
+            return 0;
+        }
+
+        return Mathf.FloorToInt(Time.time * LatPulldownAnimationFps) % frameCount;
+    }
+
+    public static int GetLegPressAnimationStepIndex()
+    {
+        return Mathf.FloorToInt(Time.time * LegPressAnimationFps) % LegPressMachineFrameMap.Length;
+    }
+
+    public static int GetLegPressAnimationFrameIndex(int frameCount)
+    {
+        if (frameCount <= 0)
+        {
+            return 0;
+        }
+
+        int stepIndex = GetLegPressAnimationStepIndex();
+        return Mathf.Clamp(LegPressMachineFrameMap[stepIndex], 0, frameCount - 1);
+    }
 
     private static Sprite cachedWhiteSprite;
     private static Font cachedFont;
@@ -54,16 +92,43 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 
     private Sprite[] baseAnimationFrames;
     private Sprite[] beltAnimationFrames;
+    private Sprite[] foregroundAnimationFrames;
     private int currentFrameIndex;
+    private int currentForegroundFrameIndex;
     private EquipmentDefinition currentDefinition;
     private int sortingDepthOffset;
     private bool reverseMotionAnimation;
+    private bool foregroundVisibleWhenIdle;
+    private bool useBenchPressMotionAnimation;
+    private bool useLatPulldownMotionAnimation;
+    private bool useLegPressMotionAnimation;
 
     private static bool IsExerciseBikeSpriteName(string spriteName)
     {
         return !string.IsNullOrEmpty(spriteName) &&
             (spriteName.Equals("exercise_bike", System.StringComparison.OrdinalIgnoreCase) ||
              spriteName.StartsWith("exercise_bike_", System.StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsBenchPressSpriteName(string spriteName)
+    {
+        return !string.IsNullOrEmpty(spriteName) &&
+            (spriteName.Equals("bench_press", System.StringComparison.OrdinalIgnoreCase) ||
+             spriteName.StartsWith("bench_press_", System.StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsLatPulldownSpriteName(string spriteName)
+    {
+        return !string.IsNullOrEmpty(spriteName) &&
+            (spriteName.Equals("lat_pulldown", System.StringComparison.OrdinalIgnoreCase) ||
+             spriteName.StartsWith("lat_pulldown_", System.StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsLegPressSpriteName(string spriteName)
+    {
+        return !string.IsNullOrEmpty(spriteName) &&
+            (spriteName.Equals("leg_press", System.StringComparison.OrdinalIgnoreCase) ||
+             spriteName.StartsWith("leg_press_", System.StringComparison.OrdinalIgnoreCase));
     }
 
     private static string ResolveMotionLayerResourcePath(string spriteName)
@@ -99,6 +164,16 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
         if (string.IsNullOrEmpty(resolvedSpriteName))
         {
             return null;
+        }
+
+        if (IsBenchPressSpriteName(resolvedSpriteName))
+        {
+            Sprite[] benchPressBaseSprites = Resources.LoadAll<Sprite>("GeneratedRuntimeUI/objects/bench_press");
+            if (benchPressBaseSprites != null && benchPressBaseSprites.Length > 0)
+            {
+                resolvedSpriteName = "bench_press";
+                return benchPressBaseSprites;
+            }
         }
 
         Sprite[] sprites = Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{resolvedSpriteName}");
@@ -152,11 +227,24 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
 
         if (isMachineInUse && activeFrames != null && activeFrames.Length > 0 && activeRenderer != null)
         {
-            float animationFps = reverseMotionAnimation ? ExerciseBikePedalAnimationFps : MotionAnimationFps;
-            int rawFrameIndex = Mathf.FloorToInt(Time.time * animationFps) % activeFrames.Length;
-            int synchronizedFrameIndex = reverseMotionAnimation && activeFrames.Length > 1
-                ? (activeFrames.Length - rawFrameIndex) % activeFrames.Length
-                : rawFrameIndex;
+            int synchronizedFrameIndex;
+            if (useLatPulldownMotionAnimation)
+            {
+                synchronizedFrameIndex = GetLatPulldownAnimationFrameIndex(activeFrames.Length);
+            }
+            else if (useLegPressMotionAnimation)
+            {
+                synchronizedFrameIndex = GetLegPressAnimationFrameIndex(activeFrames.Length);
+            }
+            else
+            {
+                float animationFps = reverseMotionAnimation ? ExerciseBikePedalAnimationFps : MotionAnimationFps;
+                int rawFrameIndex = Mathf.FloorToInt(Time.time * animationFps) % activeFrames.Length;
+                synchronizedFrameIndex = reverseMotionAnimation && activeFrames.Length > 1
+                    ? (activeFrames.Length - rawFrameIndex) % activeFrames.Length
+                    : rawFrameIndex;
+            }
+
             if (currentFrameIndex != synchronizedFrameIndex)
             {
                 currentFrameIndex = synchronizedFrameIndex;
@@ -175,6 +263,18 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
                         if (outlineRenderers[i] != null) outlineRenderers[i].sprite = activeFrames[currentFrameIndex];
                     }
                 }
+            }
+        }
+
+        if (isMachineInUse && foregroundAnimationFrames != null && foregroundAnimationFrames.Length > 0 && foregroundRenderer != null)
+        {
+            int foregroundFrameIndex = useLatPulldownMotionAnimation
+                ? GetLatPulldownAnimationFrameIndex(foregroundAnimationFrames.Length)
+                : Mathf.FloorToInt(Time.time * (useBenchPressMotionAnimation ? BenchPressMotionAnimationFps : MotionAnimationFps)) % foregroundAnimationFrames.Length;
+            if (currentForegroundFrameIndex != foregroundFrameIndex)
+            {
+                currentForegroundFrameIndex = foregroundFrameIndex;
+                foregroundRenderer.sprite = foregroundAnimationFrames[currentForegroundFrameIndex];
             }
         }
     }
@@ -325,7 +425,7 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
         rearForegroundRenderer = EnsureSpriteRenderer("RearForeground", 10);
         plateRenderer = EnsureSpriteRenderer("Plate", 9);
         accentRenderer = EnsureSpriteRenderer("Accent", 10);
-        foregroundRenderer = EnsureSpriteRenderer("Foreground", 35);
+        foregroundRenderer = EnsureSpriteRenderer("Foreground", DefaultForegroundLayerOffset);
 
         if (outlineRenderers == null || outlineRenderers.Length != 4) {
             outlineRenderers = new SpriteRenderer[4];
@@ -356,32 +456,74 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
         }
 
         bool useExerciseBikeVisualScale = IsExerciseBikeSpriteName(spriteName);
+        bool useBenchPressVisualScale = IsBenchPressSpriteName(spriteName);
+        bool useLatPulldownVisualScale = IsLatPulldownSpriteName(spriteName);
+        bool useLegPressVisualScale = IsLegPressSpriteName(spriteName);
         hasCustomSprite = loadedSprites != null && loadedSprites.Length > 0;
+
+        if (foregroundRenderer != null)
+        {
+            foregroundRenderer.sortingOrder = sortingDepthOffset + (useLatPulldownVisualScale
+                ? LatPulldownHandleLayerOffset
+                : DefaultForegroundLayerOffset);
+        }
 
         if (hasCustomSprite)
         {
             baseAnimationFrames = loadedSprites;
             beltAnimationFrames = null;
+            foregroundAnimationFrames = null;
             reverseMotionAnimation = useExerciseBikeVisualScale;
+            foregroundVisibleWhenIdle = IsBenchPressSpriteName(spriteName);
+            useBenchPressMotionAnimation = IsBenchPressSpriteName(spriteName);
+            useLatPulldownMotionAnimation = useLatPulldownVisualScale;
+            useLegPressMotionAnimation = useLegPressVisualScale;
             currentFrameIndex = 0;
+            currentForegroundFrameIndex = 0;
             baseRenderer.sprite = baseAnimationFrames[0];
             baseRenderer.drawMode = SpriteDrawMode.Simple;
 
             // BUG FIX: Prevent scale bouncing by ONLY using first frame width!
             float currentWidth = baseAnimationFrames[0] != null ? baseAnimationFrames[0].bounds.size.x : 1f;
-            float visualTargetWidth = useExerciseBikeVisualScale
-                ? targetWidth * ExerciseBikeVisualWidthFactor
+            float visualReferenceWidth = useExerciseBikeVisualScale
+                ? Mathf.Max(targetWidth, ExerciseBikeVisualReferenceWidth)
                 : targetWidth;
-            float defaultScale = targetWidth / currentWidth;
+            float visualTargetWidth = useExerciseBikeVisualScale
+                ? visualReferenceWidth * ExerciseBikeVisualWidthFactor
+                : useBenchPressVisualScale
+                    ? targetWidth * BenchPressVisualWidthFactor
+                    : useLatPulldownVisualScale
+                        ? targetWidth * LatPulldownVisualWidthFactor
+                        : targetWidth;
+            float defaultScale = visualReferenceWidth / currentWidth;
             float scale = visualTargetWidth / currentWidth;
             scale = Mathf.Clamp(scale, 0.1f, 5f); // Prevent ridiculous scale
 
             Vector3 baseLocalPosition = new Vector3(0f, CustomSpriteBaseLocalY, 0f);
-            if (useExerciseBikeVisualScale && baseAnimationFrames[0] != null)
+            if ((useExerciseBikeVisualScale || useBenchPressVisualScale || useLatPulldownVisualScale) && baseAnimationFrames[0] != null)
             {
                 float heightCompensation = baseAnimationFrames[0].bounds.size.y * (defaultScale - scale) * 0.5f;
                 baseLocalPosition.y -= heightCompensation;
+            }
+
+            if (useExerciseBikeVisualScale && baseAnimationFrames[0] != null)
+            {
                 baseLocalPosition.y += ExerciseBikeVisualYOffset;
+            }
+
+            if (useBenchPressVisualScale && baseAnimationFrames[0] != null)
+            {
+                baseLocalPosition.y += BenchPressVisualYOffset;
+            }
+
+            if (useLatPulldownVisualScale && baseAnimationFrames[0] != null)
+            {
+                baseLocalPosition.y += LatPulldownVisualYOffset;
+            }
+
+            if (useLegPressVisualScale && baseAnimationFrames[0] != null)
+            {
+                baseLocalPosition.y += LegPressVisualYOffset;
             }
 
             baseRenderer.transform.localPosition = baseLocalPosition;
@@ -410,16 +552,21 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
             if (tokenRenderer != null) tokenRenderer.gameObject.SetActive(false);
             if (tierRenderer != null) tierRenderer.gameObject.SetActive(false);
 
-            if (currentDefinition != null && currentDefinition.UseForegroundSprite)
+            bool useForegroundSpriteLayer = (currentDefinition != null && currentDefinition.UseForegroundSprite)
+                || IsBenchPressSpriteName(spriteName)
+                || IsLatPulldownSpriteName(spriteName);
+
+            if (useForegroundSpriteLayer)
             {
                 Sprite[] backSprites = Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{spriteName}_back");
                 if (backSprites != null && backSprites.Length > 0)
                 {
+                    System.Array.Sort(backSprites, CompareSpritesByName);
                     rearForegroundRenderer.sprite = backSprites[0];
                     rearForegroundRenderer.drawMode = SpriteDrawMode.Simple;
                     rearForegroundRenderer.transform.localPosition = baseRenderer.transform.localPosition;
                     rearForegroundRenderer.transform.localScale = baseRenderer.transform.localScale;
-                    rearForegroundRenderer.gameObject.SetActive(false);
+                    rearForegroundRenderer.gameObject.SetActive(foregroundVisibleWhenIdle);
                 }
                 else if (rearForegroundRenderer != null)
                 {
@@ -430,11 +577,13 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
                 Sprite[] frontSprites = Resources.LoadAll<Sprite>($"GeneratedRuntimeUI/objects/{spriteName}_front");
                 if (frontSprites != null && frontSprites.Length > 0)
                 {
+                    System.Array.Sort(frontSprites, CompareSpritesByName);
+                    foregroundAnimationFrames = frontSprites;
                     foregroundRenderer.sprite = frontSprites[0];
                     foregroundRenderer.drawMode = SpriteDrawMode.Simple;
 
                     Vector3 foregroundPos = baseRenderer.transform.localPosition;
-                    if (currentDefinition.ForegroundOffset != Vector2.zero)
+                    if (currentDefinition != null && currentDefinition.ForegroundOffset != Vector2.zero)
                     {
                         // BUG FIX: Scale the offset visually so it perfectly overlaps the downscaled machine!
                         foregroundPos += new Vector3(currentDefinition.ForegroundOffset.x * scale, currentDefinition.ForegroundOffset.y * scale, 0f);
@@ -443,11 +592,12 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
                     foregroundRenderer.transform.localPosition = foregroundPos;
                     foregroundRenderer.transform.localScale = baseRenderer.transform.localScale;
 
-                    // Controlled externally by SetForegroundActive
-                    foregroundRenderer.gameObject.SetActive(false);
+                    // Controlled externally by SetForegroundActive; bench press keeps the racked bar visible while idle.
+                    foregroundRenderer.gameObject.SetActive(foregroundVisibleWhenIdle);
                 }
                 else
                 {
+                    foregroundAnimationFrames = null;
                     if (foregroundRenderer != null) foregroundRenderer.sprite = null;
                     foregroundRenderer.gameObject.SetActive(false);
                 }
@@ -461,6 +611,7 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
                 }
                 if (foregroundRenderer != null)
                 {
+                    foregroundAnimationFrames = null;
                     foregroundRenderer.sprite = null;
                     foregroundRenderer.gameObject.SetActive(false);
                 }
@@ -483,7 +634,16 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
         }
         else
         {
+            baseAnimationFrames = null;
+            beltAnimationFrames = null;
+            foregroundAnimationFrames = null;
+            foregroundVisibleWhenIdle = false;
+            useBenchPressMotionAnimation = false;
+            useLatPulldownMotionAnimation = false;
+            useLegPressMotionAnimation = false;
             reverseMotionAnimation = false;
+            currentFrameIndex = 0;
+            currentForegroundFrameIndex = 0;
             float width = targetWidth;
             float height = Mathf.Max(0.55f, footprintSize.y);
 
@@ -539,6 +699,7 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
         if (stateChanged)
         {
             currentFrameIndex = 0;
+            currentForegroundFrameIndex = 0;
         }
 
         if (beltRenderer != null && beltAnimationFrames != null && beltAnimationFrames.Length > 0)
@@ -551,14 +712,21 @@ public sealed class GymPlacedObjectVisual : MonoBehaviour
             beltRenderer.gameObject.SetActive(true);
         }
 
+        bool showForeground = isActive || foregroundVisibleWhenIdle;
+
         if (rearForegroundRenderer != null && rearForegroundRenderer.sprite != null)
         {
-            rearForegroundRenderer.gameObject.SetActive(isActive);
+            rearForegroundRenderer.gameObject.SetActive(showForeground);
         }
 
         if (foregroundRenderer != null && foregroundRenderer.sprite != null)
         {
-            foregroundRenderer.gameObject.SetActive(isActive);
+            if (!isActive && foregroundAnimationFrames != null && foregroundAnimationFrames.Length > 0)
+            {
+                foregroundRenderer.sprite = foregroundAnimationFrames[0];
+            }
+
+            foregroundRenderer.gameObject.SetActive(showForeground);
         }
 
         if (!isActive && baseAnimationFrames != null && baseAnimationFrames.Length > 0 && baseRenderer != null)

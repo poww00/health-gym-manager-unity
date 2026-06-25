@@ -1,0 +1,13 @@
+Use the image just shown as the visual reference for the customer body identity and pixel-art style. Create a raw 2D pixel-art animation sprite sheet on a 100% solid flat magenta #FF00FF background.
+
+Sheet layout: exactly 3 columns by 2 rows, 6 equal invisible cells, no borders, no labels, no text, no UI, no checkerboard. Read frames left to right across the first row, then left to right across the second row.
+
+Subject: the same headless male chubby customer body from the reference, side-view, lying horizontally on his back as if on a bench press bench. Do not draw the bench. Do not draw a barbell. Do not draw weights, dumbbells, rods, handles, metal bars, collars, plates, or any equipment in the customer sprite. The hands are empty, as if gripping an invisible bar that will be provided by a separate machine layer.
+
+Preserve the reference costume and palette: white tank top with blue trim, dark shorts, blue sneakers, peach skin, crisp dark outline, readable pixel-art shading. Body-only customer sprite with the neck stump visible and no head.
+
+Critical animation rule: the torso, hips, legs, feet, neck stump, and shoulder positions are completely locked in exactly the same place in all 6 frames. The body must not slide, bob, stretch, shrink, rotate, or reveal extra torso. Only the two bare arms move.
+
+Arm motion: both shoulders are fixed hinge points. Upper arms rotate from the shoulder. Forearms rotate from the elbows. Arm length is identical in every frame; no stretching. Low position has elbows bent at a clean 90-degree angle near the chest. High position has both arms fully straight and vertical above the chest, elbows locked, hands empty. The shoulders must rotate up to a proper 90-degree pressing position. The arm movement is a bench-press press path: frame 1 low elbows bent 90 degrees, frame 2 rising, frame 3 arms fully straight high, frame 4 high hold, frame 5 lowering, frame 6 back to low elbows bent 90 degrees.
+
+Keep the lying body in the same horizontal position in every cell. Same character identity, same silhouette scale, same bounding box, same pixel scale across all frames. The entire body and both arms must fit fully inside each cell, centered in the central 60% to 70% safe area, with magenta margin on all four sides. No body part may cross a cell edge. No detached effects, no motion trails, no shadows, no bench, no equipment, no barbell, no weights.
