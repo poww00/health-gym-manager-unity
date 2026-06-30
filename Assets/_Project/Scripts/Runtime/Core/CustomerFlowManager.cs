@@ -85,6 +85,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
         public string targetMachineKey;
         public Vector3 targetMachineWorldPosition;
+        public Vector3 targetMachineApproachWorldPosition;
         public Vector3 machineDismountWorldPosition;
         public Vector3 worldPosition;
         public Vector3 exitSafeHidePoint;
@@ -112,6 +113,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
         public List<Vector3> currentPath;
         public int currentPathIndex;
+        public bool pendingMachineMount;
     }
 
     private sealed class MachineRuntimeInfo
@@ -644,8 +646,8 @@ public sealed class CustomerFlowManager : MonoBehaviour
             {
                 case CustomerState.MovingToMachine:
                 {
-                    Vector3 finalTarget = customer.targetMachineWorldPosition;
-                    Vector3 immediateTarget = GetPathfindingImmediateTarget(customer, finalTarget, true);
+                    Vector3 finalTarget = customer.targetMachineApproachWorldPosition;
+                    Vector3 immediateTarget = GetPathfindingImmediateTarget(customer, finalTarget, false);
                     float dist = Vector3.Distance(customer.worldPosition, immediateTarget);
 
                     if (dist <= moveStep)
@@ -658,6 +660,9 @@ public sealed class CustomerFlowManager : MonoBehaviour
                             customer.worldPosition = finalTarget;
                             customer.state = CustomerState.UsingMachine;
                             customer.currentPath = null;
+                            customer.currentPathIndex = 0;
+                            customer.pendingMachineMount =
+                                (customer.targetMachineWorldPosition - finalTarget).sqrMagnitude > 0.000001f;
                             ApplyCustomerVisualForState(customer);
                         }
                     }
@@ -676,6 +681,19 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
                 case CustomerState.UsingMachine:
                 {
+                    if (customer.pendingMachineMount)
+                    {
+                        customer.pendingMachineMount = false;
+                        customer.worldPosition = customer.targetMachineWorldPosition;
+                        if (customer.visual != null)
+                        {
+                            customer.visual.transform.position = customer.worldPosition;
+                        }
+
+                        UpdateCustomerVisualAnimation(customer);
+                        break;
+                    }
+
                     customer.remainingUseSeconds -= simulationDeltaTime;
                     UpdateCustomerVisualAnimation(customer);
 
@@ -710,6 +728,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
                             break;
                         }
 
+                        MoveCustomerToMachineApproachPosition(customer);
                         CompletePostUseDecision(customer, machines);
                     }
 
@@ -836,10 +855,216 @@ public sealed class CustomerFlowManager : MonoBehaviour
         return true;
     }
 
+    private static void MoveCustomerToMachineApproachPosition(ActiveCustomer customer)
+    {
+        if (customer == null)
+        {
+            return;
+        }
+
+        customer.pendingMachineMount = false;
+        customer.worldPosition = customer.targetMachineApproachWorldPosition;
+        customer.currentPath = null;
+        customer.currentPathIndex = 0;
+        if (customer.visual != null)
+        {
+            customer.visual.transform.position = customer.worldPosition;
+        }
+    }
+
     private static bool IsTreadmillMachineKey(string machineKey)
     {
         return !string.IsNullOrWhiteSpace(machineKey) &&
             machineKey.StartsWith("treadmill_", System.StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsDumbbellRackMachineKey(string machineKey)
+    {
+        return !string.IsNullOrWhiteSpace(machineKey) &&
+            (machineKey.Equals("dumbbell_rack", System.StringComparison.OrdinalIgnoreCase) ||
+             machineKey.StartsWith("dumbbell_rack_", System.StringComparison.OrdinalIgnoreCase));
+    }
+
+    private Vector3 ResolveCustomerUseWorldPosition(MachineRuntimeInfo machine, bool randomizeDumbbellSlot)
+    {
+        if (machine == null)
+        {
+            return Vector3.zero;
+        }
+
+        if (IsDumbbellRackMachineKey(machine.key) &&
+            TryGetDumbbellRackUseWorldPosition(machine, randomizeDumbbellSlot, out Vector3 dumbbellUsePosition))
+        {
+            return dumbbellUsePosition;
+        }
+
+        Vector3 targetPosition = machine.centerWorldPosition;
+        if (machine.data != null && machine.data.runtimeDefinition != null)
+        {
+            targetPosition += new Vector3(
+                machine.data.runtimeDefinition.CustomerUseOffset.x,
+                machine.data.runtimeDefinition.CustomerUseOffset.y,
+                0f);
+        }
+
+        return targetPosition;
+    }
+
+    private bool TryResolveCustomerApproachWorldPosition(
+        MachineRuntimeInfo machine,
+        Vector3 customerWorldPosition,
+        Vector3 useWorldPosition,
+        out Vector3 approachWorldPosition)
+    {
+        approachWorldPosition = useWorldPosition;
+        if (machine == null || machine.data == null || gridManager == null ||
+            !TryResolvePathStartCell(customerWorldPosition, out int startX, out int startY))
+        {
+            return false;
+        }
+
+        if (gridManager.TryGetCellIndexFromWorldPosition(useWorldPosition, out int useX, out int useY))
+        {
+            GridCell useCell = gridManager.GetCell(useX, useY);
+            if (useCell != null && !useCell.IsOccupied)
+            {
+                List<Vector2Int> usePath = AStarPathfinder.FindPath(
+                    gridManager,
+                    new Vector2Int(startX, startY),
+                    new Vector2Int(useX, useY),
+                    false);
+                return usePath != null;
+            }
+        }
+
+        int anchorX = machine.data.anchorX;
+        int anchorY = machine.data.anchorY;
+        int width = Mathf.Max(1, machine.data.width);
+        int height = Mathf.Max(1, machine.data.height);
+        List<Vector2Int> candidates = new List<Vector2Int>();
+
+        for (int y = anchorY; y < anchorY + height; y++)
+        {
+            AddMachineApproachCellIfAvailable(anchorX - 1, y, candidates);
+            AddMachineApproachCellIfAvailable(anchorX + width, y, candidates);
+        }
+
+        for (int x = anchorX; x < anchorX + width; x++)
+        {
+            AddMachineApproachCellIfAvailable(x, anchorY - 1, candidates);
+            AddMachineApproachCellIfAvailable(x, anchorY + height, candidates);
+        }
+
+        bool found = false;
+        float bestScore = float.MaxValue;
+        Vector2Int start = new Vector2Int(startX, startY);
+        for (int i = 0; i < candidates.Count; i++)
+        {
+            Vector2Int candidate = candidates[i];
+            List<Vector2Int> path = AStarPathfinder.FindPath(gridManager, start, candidate, false);
+            if (path == null)
+            {
+                continue;
+            }
+
+            Vector3 candidateWorld = gridManager.GetAreaCenterWorldPosition(candidate.x, candidate.y, 1, 1);
+            float useDistanceScore = (candidateWorld - useWorldPosition).sqrMagnitude * 1000f;
+            float score = useDistanceScore + path.Count;
+            if (score >= bestScore)
+            {
+                continue;
+            }
+
+            found = true;
+            bestScore = score;
+            approachWorldPosition = candidateWorld;
+        }
+
+        return found;
+    }
+
+    private void AddMachineApproachCellIfAvailable(int x, int y, List<Vector2Int> candidates)
+    {
+        if (candidates == null || gridManager == null)
+        {
+            return;
+        }
+
+        GridCell cell = gridManager.GetCell(x, y);
+        Vector2Int candidate = new Vector2Int(x, y);
+        if (cell == null || cell.IsOccupied || candidates.Contains(candidate))
+        {
+            return;
+        }
+
+        candidates.Add(candidate);
+    }
+
+    private bool TryGetDumbbellRackUseWorldPosition(
+        MachineRuntimeInfo machine,
+        bool randomize,
+        out Vector3 usePosition)
+    {
+        usePosition = Vector3.zero;
+
+        if (machine == null || machine.data == null || gridManager == null)
+        {
+            return false;
+        }
+
+        int anchorX = machine.data.anchorX;
+        int anchorY = machine.data.anchorY;
+        int width = Mathf.Max(1, machine.data.width);
+        int height = Mathf.Max(1, machine.data.height);
+        List<Vector3> availableSlots = new List<Vector3>();
+
+        for (int y = anchorY; y < anchorY + height; y++)
+        {
+            AddDumbbellRackUseSlotIfAvailable(anchorX - 1, y, availableSlots);
+            AddDumbbellRackUseSlotIfAvailable(anchorX + width, y, availableSlots);
+        }
+
+        for (int x = anchorX; x < anchorX + width; x++)
+        {
+            AddDumbbellRackUseSlotIfAvailable(x, anchorY - 1, availableSlots);
+            AddDumbbellRackUseSlotIfAvailable(x, anchorY + height, availableSlots);
+        }
+
+        if (availableSlots.Count <= 0)
+        {
+            return false;
+        }
+
+        int selectedIndex = randomize && availableSlots.Count > 1
+            ? Random.Range(0, availableSlots.Count)
+            : 0;
+        usePosition = availableSlots[selectedIndex];
+        return true;
+    }
+
+    private void AddDumbbellRackUseSlotIfAvailable(int x, int y, List<Vector3> availableSlots)
+    {
+        if (availableSlots == null || gridManager == null)
+        {
+            return;
+        }
+
+        GridCell cell = gridManager.GetCell(x, y);
+        if (cell == null || cell.IsOccupied)
+        {
+            return;
+        }
+
+        Vector3 center = gridManager.GetAreaCenterWorldPosition(x, y, 1, 1);
+        for (int i = 0; i < availableSlots.Count; i++)
+        {
+            if ((availableSlots[i] - center).sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+        }
+
+        availableSlots.Add(center);
     }
 
     private void CompletePostUseDecision(ActiveCustomer customer, List<MachineRuntimeInfo> machines)
@@ -876,14 +1101,27 @@ public sealed class CustomerFlowManager : MonoBehaviour
 
         bool wasWaiting = customer.state == CustomerState.WaitingForMachine;
 
-        customer.targetMachineKey = targetMachine.key;
-
-        Vector3 finalPos = targetMachine.centerWorldPosition;
-        if (targetMachine.data != null && targetMachine.data.runtimeDefinition != null)
+        Vector3 finalPos = ResolveCustomerUseWorldPosition(targetMachine, true);
+        if (!TryResolveCustomerApproachWorldPosition(
+                targetMachine,
+                customer.worldPosition,
+                finalPos,
+                out Vector3 approachPos))
         {
-            finalPos += new Vector3(targetMachine.data.runtimeDefinition.CustomerUseOffset.x, targetMachine.data.runtimeDefinition.CustomerUseOffset.y, 0f);
+            finalPos = ResolveCustomerUseWorldPosition(targetMachine, false);
+            if (!TryResolveCustomerApproachWorldPosition(
+                    targetMachine,
+                    customer.worldPosition,
+                    finalPos,
+                    out approachPos))
+            {
+                return false;
+            }
         }
+
+        customer.targetMachineKey = targetMachine.key;
         customer.targetMachineWorldPosition = finalPos;
+        customer.targetMachineApproachWorldPosition = approachPos;
         customer.bodySortingOrder = GymPlacedObjectVisual.GetCustomerBodySortingOrder(targetMachine.data);
         customer.headSortingOrder = GymPlacedObjectVisual.GetCustomerHeadSortingOrder(targetMachine.data);
 
@@ -896,6 +1134,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
         customer.retrySearchCountdown = 0f;
         customer.currentPath = null;
         customer.currentPathIndex = 0;
+        customer.pendingMachineMount = false;
 
         if (wasWaiting)
         {
@@ -947,6 +1186,22 @@ public sealed class CustomerFlowManager : MonoBehaviour
             }
 
             if (customer != null && customer.visitedMachineKeys.Contains(machine.key))
+            {
+                continue;
+            }
+
+            if (IsDumbbellRackMachineKey(machine.key) &&
+                !TryGetDumbbellRackUseWorldPosition(machine, false, out _))
+            {
+                continue;
+            }
+
+            Vector3 candidateUsePosition = ResolveCustomerUseWorldPosition(machine, false);
+            if (!TryResolveCustomerApproachWorldPosition(
+                    machine,
+                    customer.worldPosition,
+                    candidateUsePosition,
+                    out _))
             {
                 continue;
             }
@@ -1051,6 +1306,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
         customer.remainingWaitSeconds = Mathf.Max(0.5f, maximumWaitingSeconds);
         customer.retrySearchCountdown = Mathf.Max(0.15f, waitingRetryIntervalSeconds);
         customer.experiencedWaitCount += 1;
+        customer.pendingMachineMount = false;
         dailyWaitingEvents += 1;
 
         ApplyCustomerVisualForState(customer);
@@ -1108,6 +1364,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
         customer.waitSlotIndex = -1;
         customer.remainingWaitSeconds = 0f;
         customer.retrySearchCountdown = 0f;
+        customer.pendingMachineMount = false;
         customer.leaveReason = reason;
         ApplyCustomerVisualForState(customer);
     }
@@ -1330,16 +1587,23 @@ public sealed class CustomerFlowManager : MonoBehaviour
             return false;
         }
 
-        Vector3 targetPosition = machine.centerWorldPosition;
-        if (machine.data != null && machine.data.runtimeDefinition != null)
+        Vector3 usePosition = ResolveCustomerUseWorldPosition(machine, false);
+        if (!TryResolveCustomerApproachWorldPosition(
+                machine,
+                customer.worldPosition,
+                usePosition,
+                out Vector3 approachPosition))
         {
-            targetPosition += new Vector3(
-                machine.data.runtimeDefinition.CustomerUseOffset.x,
-                machine.data.runtimeDefinition.CustomerUseOffset.y,
-                0f);
+            return false;
         }
 
-        customer.targetMachineWorldPosition = targetPosition;
+        customer.targetMachineWorldPosition = usePosition;
+        customer.targetMachineApproachWorldPosition = approachPosition;
+        if (customer.state == CustomerState.MovingToMachine)
+        {
+            customer.currentPath = null;
+            customer.currentPathIndex = 0;
+        }
         return true;
     }
 
@@ -2334,6 +2598,74 @@ public sealed class CustomerFlowManager : MonoBehaviour
         return $"({value.x:0.###}, {value.y:0.###}, {value.z:0.###})";
     }
 
+    private bool TryResolvePathStartCell(Vector3 worldPosition, out int startX, out int startY)
+    {
+        startX = 0;
+        startY = 0;
+        if (gridManager == null || gridManager.Width <= 0 || gridManager.Height <= 0)
+        {
+            return false;
+        }
+
+        if (!gridManager.TryGetCellIndexFromWorldPosition(worldPosition, out startX, out startY))
+        {
+            Vector2 originOffset = new Vector2(
+                -(gridManager.Width * gridManager.CellSize) / 2f + gridManager.CellSize / 2f,
+                -(gridManager.Height * gridManager.CellSize) / 2f + gridManager.CellSize / 2f);
+            startX = Mathf.Clamp(
+                Mathf.RoundToInt((worldPosition.x - originOffset.x) / gridManager.CellSize),
+                0,
+                gridManager.Width - 1);
+            startY = Mathf.Clamp(
+                Mathf.RoundToInt((worldPosition.y - originOffset.y) / gridManager.CellSize),
+                0,
+                gridManager.Height - 1);
+        }
+
+        GridCell startCell = gridManager.GetCell(startX, startY);
+        if (startCell == null)
+        {
+            return false;
+        }
+
+        if (!startCell.IsOccupied)
+        {
+            return true;
+        }
+
+        int bestX = startX;
+        int bestY = startY;
+        float bestDistance = float.MaxValue;
+        bool found = false;
+        for (int nx = startX - 1; nx <= startX + 1; nx++)
+        {
+            for (int ny = startY - 1; ny <= startY + 1; ny++)
+            {
+                GridCell neighbor = gridManager.GetCell(nx, ny);
+                if (neighbor == null || neighbor.IsOccupied)
+                {
+                    continue;
+                }
+
+                Vector3 neighborCenter = gridManager.GetAreaCenterWorldPosition(nx, ny, 1, 1);
+                float distance = Vector3.Distance(worldPosition, neighborCenter);
+                if (distance >= bestDistance)
+                {
+                    continue;
+                }
+
+                found = true;
+                bestDistance = distance;
+                bestX = nx;
+                bestY = ny;
+            }
+        }
+
+        startX = bestX;
+        startY = bestY;
+        return found;
+    }
+
     private Vector3 GetPathfindingImmediateTarget(ActiveCustomer customer, Vector3 finalTarget, bool allowTargetOccupied)
     {
         Vector3 immediateTarget = finalTarget;
@@ -2406,7 +2738,7 @@ public sealed class CustomerFlowManager : MonoBehaviour
                 if (targetInsideGrid)
                 {
                     customer.currentPathIndex = 0;
-                    if (allowTargetOccupied && customer.state == CustomerState.MovingToMachine)
+                    if (customer.state == CustomerState.MovingToMachine)
                     {
                         EnterWaitingState(customer);
                     }

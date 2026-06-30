@@ -828,15 +828,19 @@ public class PlacementManager : MonoBehaviour
             Sprite loadedSprite = LoadPreviewSprite(id);
             if (loadedSprite != null)
             {
-                float targetWidth = Mathf.Max(0.55f, footprintSize.x);
-                float currentWidth = loadedSprite != null ? loadedSprite.bounds.size.x : 1f;
-                float scale = targetWidth / currentWidth;
-                scale = Mathf.Clamp(scale, 0.2f, 2.5f);
+                float cellSize = gridManager != null ? gridManager.CellSize : 1f;
+                GymPlacedObjectVisual.CalculateCustomSpriteLayout(
+                    id,
+                    loadedSprite,
+                    footprintSize,
+                    cellSize,
+                    out Vector3 customPreviewLocalPosition,
+                    out float scale);
 
                 customPreviewRenderer.sprite = loadedSprite;
                 customPreviewRenderer.drawMode = SpriteDrawMode.Simple;
                 customPreviewRenderer.sortingOrder = previewDepthOffset + 8;
-                customPreviewRenderer.transform.localPosition = new Vector3(0f, 0.42f, 0f);
+                customPreviewRenderer.transform.localPosition = customPreviewLocalPosition;
                 customPreviewRenderer.transform.localScale = new Vector3(scale, scale, 1f);
                 customPreviewRenderer.color = canPlaceCurrent ? new Color(1f, 1f, 1f, 0.6f) : new Color(1f, 0.4f, 0.4f, 0.6f);
                 customPreviewRenderer.enabled = true;
@@ -847,7 +851,7 @@ public class PlacementManager : MonoBehaviour
                     customPreviewOutlineRenderers[i].sprite = loadedSprite;
                     customPreviewOutlineRenderers[i].drawMode = SpriteDrawMode.Simple;
                     customPreviewOutlineRenderers[i].sortingOrder = previewDepthOffset + 7;
-                    customPreviewOutlineRenderers[i].transform.localPosition = customPreviewRenderer.transform.localPosition + offsets[i];
+                    customPreviewOutlineRenderers[i].transform.localPosition = customPreviewLocalPosition + offsets[i];
                     customPreviewOutlineRenderers[i].transform.localScale = customPreviewRenderer.transform.localScale;
                     customPreviewOutlineRenderers[i].color = canPlaceCurrent ? previewValidBorderColor : previewInvalidBorderColor;
                     customPreviewOutlineRenderers[i].enabled = true;

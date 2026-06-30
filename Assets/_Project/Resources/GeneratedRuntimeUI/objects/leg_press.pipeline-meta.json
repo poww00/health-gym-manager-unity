@@ -233,13 +233,13 @@
     118
   ],
   "runtime_machine_frame_map": [
-    0,
-    1,
     2,
-    1,
-    0
+    3,
+    4,
+    3,
+    2
   ],
-  "runtime_sequence_note": "Runtime leg press animation uses only machine frames 1,2,3,2,1 so the footplate returns after the third position and stays synced to the customer body 5-step sequence.",
+  "runtime_sequence_note": "Runtime leg press animation uses machine frames 3,4,5,4,3. Frame 6 is intentionally skipped because its footplate is lower than frame 5 and breaks the press progression.",
   "mapped_contact_preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\leg_press_5step_contact_preview.png",
   "mapped_preview_gif": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\objects\\leg_press_5step_preview.gif",
   "frame3_moving_layer_adjustment_pixels": [

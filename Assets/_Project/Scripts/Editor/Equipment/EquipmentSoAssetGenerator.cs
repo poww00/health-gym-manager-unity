@@ -246,10 +246,11 @@ public static class EquipmentSoAssetGenerator
         switch (typeId)
         {
             case "treadmill":
+                return new Vector2(0.27f, 0.12f);
             case "exercise_bike":
                 return new Vector2(0.35f, 0f);
             case "leg_press":
-                return new Vector2(0.55f, 0.55f);
+                return new Vector2(0.39f, -0.32f);
             default:
                 return Vector2.zero;
         }

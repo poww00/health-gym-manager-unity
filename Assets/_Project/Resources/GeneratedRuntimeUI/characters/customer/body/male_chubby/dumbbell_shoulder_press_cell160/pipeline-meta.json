@@ -1,0 +1,155 @@
+{
+  "target": "player",
+  "mode": "attack",
+  "prompt": "See prompt-used.txt",
+  "role": "",
+  "input": "Assets\\_Project\\Resources\\GeneratedRuntimeUI\\characters\\customer\\body\\male_chubby\\dumbbell_shoulder_press\\raw-sheet.png",
+  "threshold": 100,
+  "edge_threshold": 150,
+  "duration": 140,
+  "rows": 2,
+  "cols": 2,
+  "cell_size": 160,
+  "fit_scale": 0.85,
+  "trim_border": 4,
+  "edge_clean_depth": 3,
+  "align": "feet",
+  "shared_scale": true,
+  "component_mode": "all",
+  "component_padding": 8,
+  "min_component_area": 1,
+  "edge_touch_margin": 2,
+  "frame_labels": [
+    "body_male_chubby_dumbbell_shoulder_press_2x2-1",
+    "body_male_chubby_dumbbell_shoulder_press_2x2-2",
+    "body_male_chubby_dumbbell_shoulder_press_2x2-3",
+    "body_male_chubby_dumbbell_shoulder_press_2x2-4"
+  ],
+  "frames": [
+    {
+      "grid": [
+        0,
+        0
+      ],
+      "source_box": [
+        0,
+        0,
+        627,
+        627
+      ],
+      "component_mode": "all",
+      "component_count": 1,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        204,
+        238,
+        524,
+        544
+      ],
+      "edge_touch": false,
+      "output_size": [
+        105,
+        100
+      ],
+      "paste_position": [
+        27,
+        48
+      ]
+    },
+    {
+      "grid": [
+        0,
+        1
+      ],
+      "source_box": [
+        627,
+        0,
+        1254,
+        627
+      ],
+      "component_mode": "all",
+      "component_count": 1,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        87,
+        171,
+        401,
+        544
+      ],
+      "edge_touch": false,
+      "output_size": [
+        103,
+        122
+      ],
+      "paste_position": [
+        28,
+        26
+      ]
+    },
+    {
+      "grid": [
+        1,
+        0
+      ],
+      "source_box": [
+        0,
+        627,
+        627,
+        1254
+      ],
+      "component_mode": "all",
+      "component_count": 1,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        238,
+        40,
+        505,
+        453
+      ],
+      "edge_touch": false,
+      "output_size": [
+        87,
+        136
+      ],
+      "paste_position": [
+        36,
+        12
+      ]
+    },
+    {
+      "grid": [
+        1,
+        1
+      ],
+      "source_box": [
+        627,
+        627,
+        1254,
+        1254
+      ],
+      "component_mode": "all",
+      "component_count": 1,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        82,
+        150,
+        401,
+        453
+      ],
+      "edge_touch": false,
+      "output_size": [
+        105,
+        99
+      ],
+      "paste_position": [
+        27,
+        49
+      ]
+    }
+  ],
+  "edge_touch_frames": []
+}

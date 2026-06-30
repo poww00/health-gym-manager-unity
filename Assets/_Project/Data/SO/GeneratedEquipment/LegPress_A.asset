@@ -31,7 +31,7 @@ MonoBehaviour:
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
   debugColor: {r: 0.95, g: 0.72, b: 0.35, a: 1}
-  customerUseOffset: {x: 0.55, y: 0.55}
+  customerUseOffset: {x: 0.39, y: -0.32}
   useForegroundSprite: 0
   foregroundOffset: {x: 0, y: 0}
   unlockedByDefault: 1

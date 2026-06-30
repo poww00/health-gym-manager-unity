@@ -200,13 +200,13 @@
     7
   ],
   "runtime_machine_frame_map": [
-    0,
-    1,
     2,
-    1,
-    0
+    3,
+    4,
+    3,
+    2
   ],
-  "runtime_sequence_note": "Runtime leg press sync uses body frames 1,2,3,7,8 and machine frames 1,2,3,2,1; body frames 3-6 from the original sheet are collapsed to the single third pose.",
+  "runtime_sequence_note": "Runtime leg press sync uses body frames 1,2,3,7,8 and machine frames 3,4,5,4,3. Frame 6 is skipped because its footplate is lower than frame 5; per-body-frame local offsets keep the hips and torso fixed against the seat/backrest.",
   "mapped_sequence_preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\characters\\customer\\body\\male_chubby\\body_male_chubby_leg_press_5step_contact_preview.png",
   "mapped_overlay_preview": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\characters\\customer\\body\\male_chubby\\body_male_chubby_leg_press_5step_machine_overlay_preview.png",
   "mapped_preview_gif": "D:\\unity\\My project\\Assets\\_Project\\Resources\\GeneratedRuntimeUI\\characters\\customer\\body\\male_chubby\\body_male_chubby_leg_press_5step_preview.gif",

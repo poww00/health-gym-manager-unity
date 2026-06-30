@@ -13,6 +13,18 @@ public static class CustomerPrototypeSpriteSheetImporter
 
     private const string RawBodySheetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_idle_base_32x48_4x2.png";
     private const string ProcessedBodySheetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_idle_base_32x48_4x2_processed_transparent.png";
+    private const string DumbbellCurlBodySheetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_dumbbell_curl_2x2.png";
+    private const string DumbbellShoulderPressBodySheetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_dumbbell_shoulder_press_2x2.png";
+    private const string DumbbellExerciseImportSessionKey = "DumbbellExerciseSpriteImportsApplied_20260627";
+    private const string YogaMatSpritePath = "Assets/_Project/Resources/GeneratedRuntimeUI/objects/yoga_mat.png";
+    private const string YogaOverheadBodySheetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_yoga_overhead_2x2.png";
+    private const string YogaSideBendBodySheetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_yoga_side_bend_2x2.png";
+    private const string YogaToeTouchBodySheetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_yoga_toe_touch_2x2.png";
+    private const string YogaExerciseImportSessionKey = "YogaExerciseSpriteImportsApplied_20260628_v1";
+    private const string LockerSpritePath = "Assets/_Project/Resources/GeneratedRuntimeUI/objects/locker.png";
+    private const string LockerDoorSheetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/objects/locker_door_2x2.png";
+    private const string LockerUseBodySheetPath = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/body/male_chubby/body_male_chubby_locker_use_2x2.png";
+    private const string LockerSpriteImportSessionKey = "LockerSpriteImportsApplied_20260630_v2";
     private const string HeadRootFolder = "Assets/_Project/Resources/GeneratedRuntimeUI/characters/customer/head";
 
     private static readonly string[] BodyFrameNames =
@@ -33,6 +45,116 @@ public static class CustomerPrototypeSpriteSheetImporter
         "head_customer_01_side",
         "head_customer_01_back",
     };
+
+    private static readonly string[] DumbbellCurlFrameNames =
+    {
+        "body_male_chubby_dumbbell_curl_2x2_0",
+        "body_male_chubby_dumbbell_curl_2x2_1",
+        "body_male_chubby_dumbbell_curl_2x2_2",
+        "body_male_chubby_dumbbell_curl_2x2_3",
+    };
+
+    private static readonly string[] DumbbellShoulderPressFrameNames =
+    {
+        "body_male_chubby_dumbbell_shoulder_press_2x2_0",
+        "body_male_chubby_dumbbell_shoulder_press_2x2_1",
+        "body_male_chubby_dumbbell_shoulder_press_2x2_2",
+        "body_male_chubby_dumbbell_shoulder_press_2x2_3",
+    };
+
+    private static readonly string[] YogaOverheadFrameNames =
+    {
+        "body_male_chubby_yoga_overhead_2x2_0",
+        "body_male_chubby_yoga_overhead_2x2_1",
+        "body_male_chubby_yoga_overhead_2x2_2",
+        "body_male_chubby_yoga_overhead_2x2_3",
+    };
+
+    private static readonly string[] YogaSideBendFrameNames =
+    {
+        "body_male_chubby_yoga_side_bend_2x2_0",
+        "body_male_chubby_yoga_side_bend_2x2_1",
+        "body_male_chubby_yoga_side_bend_2x2_2",
+        "body_male_chubby_yoga_side_bend_2x2_3",
+    };
+
+    private static readonly string[] YogaToeTouchFrameNames =
+    {
+        "body_male_chubby_yoga_toe_touch_2x2_0",
+        "body_male_chubby_yoga_toe_touch_2x2_1",
+        "body_male_chubby_yoga_toe_touch_2x2_2",
+        "body_male_chubby_yoga_toe_touch_2x2_3",
+    };
+
+    private static readonly string[] LockerUseFrameNames =
+    {
+        "body_male_chubby_locker_use_2x2_0",
+        "body_male_chubby_locker_use_2x2_1",
+        "body_male_chubby_locker_use_2x2_2",
+        "body_male_chubby_locker_use_2x2_3",
+    };
+
+    private static readonly string[] LockerDoorFrameNames =
+    {
+        "locker_door_2x2_0",
+        "locker_door_2x2_1",
+        "locker_door_2x2_2",
+        "locker_door_2x2_3",
+    };
+
+    [InitializeOnLoadMethod]
+    private static void AutoApplyDumbbellExerciseSpriteImportsAfterReload()
+    {
+        if (SessionState.GetBool(DumbbellExerciseImportSessionKey, false))
+        {
+            return;
+        }
+
+        if (HasExpectedDumbbellSpriteMetadata())
+        {
+            SessionState.SetBool(DumbbellExerciseImportSessionKey, true);
+            return;
+        }
+
+        SessionState.SetBool(DumbbellExerciseImportSessionKey, true);
+        EditorApplication.delayCall += ApplyDumbbellExerciseSpriteImports;
+    }
+
+    [InitializeOnLoadMethod]
+    private static void AutoApplyYogaExerciseSpriteImportsAfterReload()
+    {
+        if (SessionState.GetBool(YogaExerciseImportSessionKey, false))
+        {
+            return;
+        }
+
+        if (HasExpectedYogaSpriteMetadata())
+        {
+            SessionState.SetBool(YogaExerciseImportSessionKey, true);
+            return;
+        }
+
+        SessionState.SetBool(YogaExerciseImportSessionKey, true);
+        EditorApplication.delayCall += ApplyYogaExerciseSpriteImports;
+    }
+
+    [InitializeOnLoadMethod]
+    private static void AutoApplyLockerSpriteImportsAfterReload()
+    {
+        if (SessionState.GetBool(LockerSpriteImportSessionKey, false))
+        {
+            return;
+        }
+
+        if (HasExpectedLockerSpriteMetadata())
+        {
+            SessionState.SetBool(LockerSpriteImportSessionKey, true);
+            return;
+        }
+
+        SessionState.SetBool(LockerSpriteImportSessionKey, true);
+        EditorApplication.delayCall += ApplyLockerSpriteImports;
+    }
 
     [MenuItem("Tools/Customer Prototype/Apply Layered Customer Sprite Imports")]
     public static void ApplyLayeredCustomerSpriteImports()
@@ -61,6 +183,149 @@ public static class CustomerPrototypeSpriteSheetImporter
             $"Processed head: {processedHeadSheetPath}\n" +
             $"Processed head size: {processedHeadSize.x}x{processedHeadSize.y}\n" +
             $"Head frame count: {HeadFrameNames.Length}");
+    }
+
+    [MenuItem("Tools/Customer Prototype/Apply Dumbbell Exercise Sprite Imports")]
+    public static void ApplyDumbbellExerciseSpriteImports()
+    {
+        SliceSheet(
+            DumbbellCurlBodySheetPath,
+            2,
+            2,
+            DumbbellCurlFrameNames,
+            96f,
+            SpriteAlignment.Center,
+            new Vector2(0.5f, 0.5f));
+
+        SliceSheet(
+            DumbbellShoulderPressBodySheetPath,
+            2,
+            2,
+            DumbbellShoulderPressFrameNames,
+            96f,
+            SpriteAlignment.Center,
+            new Vector2(0.5f, 0.5f));
+
+        AssetDatabase.Refresh();
+
+        Debug.Log(
+            "[CustomerPrototypeSpriteSheetImporter] Applied dumbbell exercise sprite imports.\n" +
+            $"Curl: {DumbbellCurlBodySheetPath}\n" +
+            $"Shoulder press: {DumbbellShoulderPressBodySheetPath}");
+    }
+
+    [MenuItem("Tools/Customer Prototype/Apply Yoga Exercise Sprite Imports")]
+    public static void ApplyYogaExerciseSpriteImports()
+    {
+        ConfigureSingleSprite(YogaMatSpritePath, 100f, new Vector2(0.5f, 0.5f));
+
+        SliceSheet(
+            YogaOverheadBodySheetPath,
+            2,
+            2,
+            YogaOverheadFrameNames,
+            96f,
+            SpriteAlignment.Center,
+            new Vector2(0.5f, 0.5f));
+
+        SliceSheet(
+            YogaSideBendBodySheetPath,
+            2,
+            2,
+            YogaSideBendFrameNames,
+            96f,
+            SpriteAlignment.Center,
+            new Vector2(0.5f, 0.5f));
+
+        SliceSheet(
+            YogaToeTouchBodySheetPath,
+            2,
+            2,
+            YogaToeTouchFrameNames,
+            96f,
+            SpriteAlignment.Center,
+            new Vector2(0.5f, 0.5f));
+
+        AssetDatabase.Refresh();
+
+        Debug.Log(
+            "[CustomerPrototypeSpriteSheetImporter] Applied yoga exercise sprite imports.\n" +
+            $"Mat: {YogaMatSpritePath}\n" +
+            $"Overhead: {YogaOverheadBodySheetPath}\n" +
+            $"Side bend: {YogaSideBendBodySheetPath}\n" +
+            $"Toe touch: {YogaToeTouchBodySheetPath}");
+    }
+
+    [MenuItem("Tools/Customer Prototype/Apply Locker Sprite Imports")]
+    public static void ApplyLockerSpriteImports()
+    {
+        ConfigureSingleSprite(LockerSpritePath, 100f, new Vector2(0.5f, 0.5f));
+
+        SliceSheet(
+            LockerDoorSheetPath,
+            2,
+            2,
+            LockerDoorFrameNames,
+            100f,
+            SpriteAlignment.Center,
+            new Vector2(0.5f, 0.5f));
+
+        SliceSheet(
+            LockerUseBodySheetPath,
+            2,
+            2,
+            LockerUseFrameNames,
+            96f,
+            SpriteAlignment.Center,
+            new Vector2(0.5f, 0.5f));
+
+        AssetDatabase.Refresh();
+
+        Debug.Log(
+            "[CustomerPrototypeSpriteSheetImporter] Applied locker sprite imports.\n" +
+            $"Locker: {LockerSpritePath}\n" +
+            $"Door: {LockerDoorSheetPath}\n" +
+            $"Customer: {LockerUseBodySheetPath}");
+    }
+
+    private static bool HasExpectedDumbbellSpriteMetadata()
+    {
+        return SpriteMetaContainsFrame(DumbbellCurlBodySheetPath, DumbbellCurlFrameNames[DumbbellCurlFrameNames.Length - 1]) &&
+            SpriteMetaContainsFrame(DumbbellShoulderPressBodySheetPath, DumbbellShoulderPressFrameNames[DumbbellShoulderPressFrameNames.Length - 1]);
+    }
+
+    private static bool HasExpectedYogaSpriteMetadata()
+    {
+        return IsSingleSpriteImportConfigured(YogaMatSpritePath) &&
+            SpriteMetaContainsFrame(YogaOverheadBodySheetPath, YogaOverheadFrameNames[YogaOverheadFrameNames.Length - 1]) &&
+            SpriteMetaContainsFrame(YogaSideBendBodySheetPath, YogaSideBendFrameNames[YogaSideBendFrameNames.Length - 1]) &&
+            SpriteMetaContainsFrame(YogaToeTouchBodySheetPath, YogaToeTouchFrameNames[YogaToeTouchFrameNames.Length - 1]);
+    }
+
+    private static bool HasExpectedLockerSpriteMetadata()
+    {
+        return IsSingleSpriteImportConfigured(LockerSpritePath) &&
+            SpriteMetaContainsFrame(LockerDoorSheetPath, LockerDoorFrameNames[LockerDoorFrameNames.Length - 1]) &&
+            SpriteMetaContainsFrame(LockerUseBodySheetPath, LockerUseFrameNames[LockerUseFrameNames.Length - 1]);
+    }
+
+    private static bool IsSingleSpriteImportConfigured(string assetPath)
+    {
+        TextureImporter importer = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+        return importer != null &&
+            importer.textureType == TextureImporterType.Sprite &&
+            importer.spriteImportMode == SpriteImportMode.Single;
+    }
+
+    private static bool SpriteMetaContainsFrame(string assetPath, string frameName)
+    {
+        string metaPath = assetPath + ".meta";
+        if (!File.Exists(metaPath))
+        {
+            return false;
+        }
+
+        return File.ReadAllText(metaPath).Contains(frameName);
     }
 
     private static string FindRawHeadSheetPath()
@@ -449,6 +714,18 @@ public static class CustomerPrototypeSpriteSheetImporter
 
     private static void SliceSheet(string assetPath, int columns, int rows, IReadOnlyList<string> frameNames)
     {
+        SliceSheet(assetPath, columns, rows, frameNames, PixelsPerUnit, SpriteAlignment.BottomCenter, new Vector2(0.5f, 0f));
+    }
+
+    private static void SliceSheet(
+        string assetPath,
+        int columns,
+        int rows,
+        IReadOnlyList<string> frameNames,
+        float pixelsPerUnit,
+        SpriteAlignment alignment,
+        Vector2 pivot)
+    {
         if (frameNames == null || frameNames.Count != columns * rows)
         {
             throw new System.InvalidOperationException($"Invalid sprite name count for {assetPath}");
@@ -461,7 +738,7 @@ public static class CustomerPrototypeSpriteSheetImporter
             throw new System.InvalidOperationException("Missing TextureImporter: " + assetPath);
         }
 
-        ConfigureImporter(importer);
+        ConfigureImporter(importer, pixelsPerUnit, pivot);
         importer.SaveAndReimport();
 
         importer = AssetImporter.GetAtPath(assetPath) as TextureImporter;
@@ -470,16 +747,16 @@ public static class CustomerPrototypeSpriteSheetImporter
             throw new System.InvalidOperationException("Missing TextureImporter after import: " + assetPath);
         }
 
-        SpriteRect[] rects = BuildSpriteRects(importer, columns, rows, frameNames);
+        SpriteRect[] rects = BuildSpriteRects(importer, columns, rows, frameNames, alignment, pivot);
         ApplySpriteRects(importer, assetPath, rects);
     }
 
-    private static void ConfigureImporter(TextureImporter importer)
+    private static void ConfigureImporter(TextureImporter importer, float pixelsPerUnit, Vector2 pivot)
     {
         importer.textureType = TextureImporterType.Sprite;
         importer.spriteImportMode = SpriteImportMode.Multiple;
-        importer.spritePixelsPerUnit = PixelsPerUnit;
-        importer.spritePivot = new Vector2(0.5f, 0f);
+        importer.spritePixelsPerUnit = pixelsPerUnit;
+        importer.spritePivot = pivot;
         importer.mipmapEnabled = false;
         importer.alphaIsTransparency = true;
         importer.alphaSource = TextureImporterAlphaSource.FromInput;
@@ -500,6 +777,40 @@ public static class CustomerPrototypeSpriteSheetImporter
         ApplyPlatformOverride(importer, "WebGL", true);
     }
 
+    private static void ConfigureSingleSprite(string assetPath, float pixelsPerUnit, Vector2 pivot)
+    {
+        AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
+        TextureImporter importer = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+        if (importer == null)
+        {
+            throw new System.InvalidOperationException("Missing TextureImporter: " + assetPath);
+        }
+
+        importer.textureType = TextureImporterType.Sprite;
+        importer.spriteImportMode = SpriteImportMode.Single;
+        importer.spritePixelsPerUnit = pixelsPerUnit;
+        importer.spritePivot = pivot;
+        importer.mipmapEnabled = false;
+        importer.alphaIsTransparency = true;
+        importer.alphaSource = TextureImporterAlphaSource.FromInput;
+        importer.filterMode = FilterMode.Point;
+        importer.wrapMode = TextureWrapMode.Clamp;
+        importer.textureCompression = TextureImporterCompression.Uncompressed;
+        importer.maxTextureSize = 4096;
+
+        TextureImporterSettings textureSettings = new TextureImporterSettings();
+        importer.ReadTextureSettings(textureSettings);
+        textureSettings.spriteMeshType = SpriteMeshType.FullRect;
+        importer.SetTextureSettings(textureSettings);
+
+        ApplyPlatformOverride(importer, "DefaultTexturePlatform", false);
+        ApplyPlatformOverride(importer, "Standalone", true);
+        ApplyPlatformOverride(importer, "Android", true);
+        ApplyPlatformOverride(importer, "iPhone", true);
+        ApplyPlatformOverride(importer, "WebGL", true);
+        importer.SaveAndReimport();
+    }
+
     private static void ApplyPlatformOverride(TextureImporter importer, string platformName, bool overridden)
     {
         TextureImporterPlatformSettings platformSettings = importer.GetPlatformTextureSettings(platformName);
@@ -516,7 +827,9 @@ public static class CustomerPrototypeSpriteSheetImporter
         TextureImporter importer,
         int columns,
         int rows,
-        IReadOnlyList<string> frameNames)
+        IReadOnlyList<string> frameNames,
+        SpriteAlignment alignment,
+        Vector2 pivot)
     {
         SpriteDataProviderFactories factories = new SpriteDataProviderFactories();
         factories.Init();
@@ -561,8 +874,8 @@ public static class CustomerPrototypeSpriteSheetImporter
                 {
                     name = spriteName,
                     rect = new Rect(x, y, frameWidth, frameHeight),
-                    alignment = SpriteAlignment.BottomCenter,
-                    pivot = new Vector2(0.5f, 0f),
+                    alignment = alignment,
+                    pivot = pivot,
                     border = Vector4.zero,
                     spriteID = existingIds.TryGetValue(spriteName, out GUID existingId)
                         ? existingId
